@@ -1,6 +1,12 @@
 <?php
 /**
  * @var $this \yii\web\View
+ *
+ * Russia coords
+ * left - 63.240863, 47.606875
+ * bottom - 54.182108, 98.191842
+ * top - 70.727999, 100.564889
+ * right - 65.687505, 132.805695
  */
 \app\assets\AppAsset::register($this);
 $json = file_get_contents('../web/data.json');

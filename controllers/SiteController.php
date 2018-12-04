@@ -66,4 +66,10 @@ class SiteController extends Controller
         return $this->render('index');
     }
 
+    public function actionWork()
+    {
+        ;
+        return $this->render('work');
+    }
+
 }
