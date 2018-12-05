@@ -2,6 +2,9 @@
 
 namespace app\controllers;
 
+use app\models\Autocolumn;
+use app\models\Organization;
+use app\models\Spot;
 use Yii;
 use yii\filters\AccessControl;
 use yii\web\Controller;
@@ -66,10 +69,20 @@ class SiteController extends Controller
         return $this->render('index');
     }
 
-    public function actionWork()
+    public function actionWork($cars)
     {
-        ;
-        return $this->render('work');
+        return $this->render('work', [
+            'cars' => $cars
+        ]);
+    }
+
+    public function actionIndex1()
+    {
+        return $this->render('index1', [
+            'spots' => \app\models\Spot::getActives(),
+            'autocolumns' => Autocolumn::getActives(),
+            'organizations' => Organization::getActives()
+        ]);
     }
 
 }

@@ -3,11 +3,11 @@
 use yii\db\Migration;
 
 /**
- * Class m181129_172200_create_table_organizations
+ * Class m181205_164227_create_table_cars
  */
-class m181129_172200_create_table_organizations extends Migration
+class m181205_164227_create_table_cars extends Migration
 {
-    private $tableName = 'organizations';
+    private $tableName = 'cars';
     /**
      * {@inheritdoc}
      */
@@ -15,14 +15,16 @@ class m181129_172200_create_table_organizations extends Migration
     {
         $this->createTable($this->tableName, [
             'id' =>  $this->string(36),
-            'company_id' => $this->string(36),
+            'spot_id' => $this->integer(36),
+            'number' => $this->string(15),
+            'type' => $this->tinyInteger(1),
+            'model' => $this->string(32),
             'description' => $this->string(512),
-            'address' => $this->text(),
+            'year' => $this->integer(4),
             'x_pos' => $this->float(6),
             'y_pos' => $this->float(6)
         ]);
-        $this->addPrimaryKey('pk-organizations', $this->tableName, 'id');
-        $this->addForeignKey('fk-organizations-company_id-companies-id', $this->tableName, 'company_id', 'companies','id');
+        $this->addPrimaryKey('pk-cars', $this->tableName, 'id');
     }
 
     /**
@@ -31,11 +33,11 @@ class m181129_172200_create_table_organizations extends Migration
     public function safeDown()
     {
         try {
-            $this->dropForeignKey('fk-organizations-company_id-companies-id', $this->tableName);
+            $this->dropPrimaryKey('pk-cars', $this->tableName);
             $this->dropTable($this->tableName);
             return true;
         } catch (Exception $e) {
-            echo "m181129_172200_create_table_organizations cannot be reverted.\n";
+            echo "m181204_090819_create_table_cars cannot be reverted.\n";
             echo $e->getMessage();
             echo $e->getTraceAsString();
             return false;
@@ -51,7 +53,7 @@ class m181129_172200_create_table_organizations extends Migration
 
     public function down()
     {
-        echo "m181129_172200_create_table_organizations cannot be reverted.\n";
+        echo "m181205_164227_create_table_cars cannot be reverted.\n";
 
         return false;
     }

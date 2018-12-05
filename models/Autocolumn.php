@@ -9,14 +9,15 @@ use Yii;
  *
  * @property string $id
  * @property string $company_id
- * @property string $spot_id
+ * @property string $organization_id
  * @property string $description
  * @property string $address
  * @property double $x_pos
  * @property double $y_pos
  *
- * @property Companies $company
- * @property Spots $spot
+ * @property Company $company
+ * @property Organization $organization
+ * @property Spot[] $spots
  */
 class Autocolumn extends \yii\db\ActiveRecord
 {
@@ -37,11 +38,11 @@ class Autocolumn extends \yii\db\ActiveRecord
             [['id'], 'required'],
             [['address'], 'string'],
             [['x_pos', 'y_pos'], 'number'],
-            [['id', 'company_id', 'spot_id'], 'string', 'max' => 36],
+            [['id', 'company_id', 'organization_id'], 'string', 'max' => 36],
             [['description'], 'string', 'max' => 512],
             [['id'], 'unique'],
-            [['company_id'], 'exist', 'skipOnError' => true, 'targetClass' => Companies::className(), 'targetAttribute' => ['company_id' => 'id']],
-            [['spot_id'], 'exist', 'skipOnError' => true, 'targetClass' => Spots::className(), 'targetAttribute' => ['spot_id' => 'id']],
+            [['company_id'], 'exist', 'skipOnError' => true, 'targetClass' => Company::className(), 'targetAttribute' => ['company_id' => 'id']],
+            [['organization_id'], 'exist', 'skipOnError' => true, 'targetClass' => Organization::className(), 'targetAttribute' => ['organization_id' => 'id']],
         ];
     }
 
@@ -53,7 +54,7 @@ class Autocolumn extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'company_id' => 'Company ID',
-            'spot_id' => 'Spot ID',
+            'organization_id' => 'Organization ID',
             'description' => 'Description',
             'address' => 'Address',
             'x_pos' => 'X Pos',
@@ -66,14 +67,40 @@ class Autocolumn extends \yii\db\ActiveRecord
      */
     public function getCompany()
     {
-        return $this->hasOne(Companies::className(), ['id' => 'company_id']);
+        return $this->hasOne(Company::className(), ['id' => 'company_id']);
     }
 
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getSpot()
+    public function getOrganization()
     {
-        return $this->hasOne(Spots::className(), ['id' => 'spot_id']);
+        return $this->hasOne(Organization::className(), ['id' => 'organization_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getSpots()
+    {
+        return $this->hasMany(Spot::className(), ['autocolumn_id' => 'id']);
+    }
+
+    /**
+     * @param $id
+     * @return self|null|static
+     */
+    public static function getOrCreate($id)
+    {
+        $model = self::findOne($id);
+        return $model === null ? new self() : $model;
+    }
+
+    /**
+     * @return array|self[]
+     */
+    public static function getActives()
+    {
+        return self::find()->where(['!=', 'x_pos', 0])->all();
     }
 }
