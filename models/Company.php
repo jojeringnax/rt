@@ -73,4 +73,27 @@ class Company extends \yii\db\ActiveRecord
     }
 
 
+    public static function getBoundsOfElement($el, $xMin, $xMax, $yMin, $yMax)
+    {
+        if($el->x_pos < $xMin) {
+            $xMin = $el->x_pos;
+        }
+        if($el->x_pos > $xMax) {
+            $xMax = $el->x_pos;
+        }
+        if($el->y_pos < $yMin) {
+            $yMin = $el->y_pos;
+        }
+        if($el->y_pos > $yMax) {
+            $yMax = $el->y_pos;
+        }
+        return array(
+            'xMax' => $xMax,
+            'yMax' => $yMax,
+            'xMin' => $xMin,
+            'yMin' => $yMin
+        );
+    }
+
+
 }

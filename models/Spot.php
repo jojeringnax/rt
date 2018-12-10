@@ -23,6 +23,11 @@ use Yii;
 class Spot extends \yii\db\ActiveRecord
 {
     /**
+     * @var string
+     */
+    public $bounds;
+
+    /**
      * {@inheritdoc}
      */
     public static function tableName()
@@ -116,5 +121,15 @@ class Spot extends \yii\db\ActiveRecord
             $resultArray[] = $spot->id;
         }
         return isset($resultArray) ? $resultArray : null;
+    }
+
+    /**
+     * @return string
+     */
+    public function getIdWithoutNumbers()
+    {
+        $s = array('/0/','/1/','/2/','/3/','/4/','/5/','/6/','/7/','/8/','/9/', '/-/');
+        $a = array('a','b','c','d','e','f','g','h','i','j','');
+        return preg_replace($s, $a, $this->id);
     }
 }

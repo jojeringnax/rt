@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use yii\db\ActiveQuery;
 
 /**
  * This is the model class for table "organizations".
@@ -15,6 +16,7 @@ use Yii;
  * @property double $y_pos
  *
  * @property Company $company
+ * @property Autocolumn[] $autocolumns
  * @property Spot[] $spots
  */
 class Organization extends \yii\db\ActiveRecord
@@ -75,6 +77,14 @@ class Organization extends \yii\db\ActiveRecord
     }
 
     /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getAutocolumns()
+    {
+        return $this->hasMany(Autocolumn::className(), ['organization_id' => 'id']);
+    }
+
+    /**
      * @param $id
      * @return self|null|static
      */
@@ -90,5 +100,37 @@ class Organization extends \yii\db\ActiveRecord
     public static function getActives()
     {
         return self::find()->where(['!=', 'x_pos', 0])->all();
+    }
+
+    /**
+     * @return string
+     */
+    public static function getMaxAndMinCoordinatesForAPI()
+    {
+        $xPosMin = self::find()->min('x_pos');
+        $yPosMin = self::find()->min('y_pos');
+        $xPosMax = self::find()->max('x_pos');
+        $yPosMax = self::find()->max('y_pos');
+        return "[[$xPosMin, $yPosMin],[$xPosMax, $yPosMax]]";
+    }
+
+    /**
+     * @return string
+     */
+    public function getIdWithoutNumbers()
+    {
+        $s = array('/0/','/1/','/2/','/3/','/4/','/5/','/6/','/7/','/8/','/9/', '/-/');
+        $a = array('a','b','c','d','e','f','g','h','i','j','');
+        return preg_replace($s, $a, $this->id);
+    }
+
+    /**
+     * @return bool|string
+     */
+    public function getTown()
+    {
+        $result = strripos($this->description, 'г.');
+        $length = -(strlen($this->description) - $result);
+        return substr($this->description, $length);
     }
 }

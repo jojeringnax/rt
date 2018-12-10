@@ -69,7 +69,7 @@ class SiteController extends Controller
         return $this->render('index');
     }
 
-    public function actionWork($cars)
+    public function actionWork($cars=0)
     {
         return $this->render('work', [
             'cars' => $cars
@@ -78,10 +78,65 @@ class SiteController extends Controller
 
     public function actionIndex1()
     {
+        $organizations = Organization::getActives();
+        $spots = Spot::getActives();
+        $autocolumns = Autocolumn::getActives();
+        foreach ($organizations as $organization) {
+            $organizationGoodId = $organization->getIdWithoutNumbers();
+            $xMinAutocolumns = 1000;
+            $xMaxAutocolumns = 0;
+            $yMinAutocolumns = 1000;
+            $yMaxAutolumns = 0;
+            foreach ($autocolumns as $autocolumn) {
+                $autocolumnGoodId = $autocolumn->getIdWithoutNumbers();
+                if ($autocolumn->organization_id !== $organization->id) {
+                    continue;
+                }
+                $orgAutocolumns[$organizationGoodId][] = $autocolumn;
+                if($autocolumn->x_pos < $xMinAutocolumns) {
+                    $xMinAutocolumns = $autocolumn->x_pos;
+                }
+                if($autocolumn->x_pos > $xMaxAutocolumns) {
+                    $xMaxAutocolumns = $autocolumn->x_pos;
+                }
+                if($autocolumn->y_pos < $yMinAutocolumns) {
+                    $yMinAutocolumns = $autocolumn->y_pos;
+                }
+                if($autocolumn->y_pos > $yMaxAutolumns) {
+                    $yMaxAutolumns = $autocolumn->y_pos;
+                }
+                $xMinSpots = 1000;
+                $xMaxSpots = 0;
+                $yMinSpots = 1000;
+                $yMaxSpots = 0;
+                foreach ($spots as $spot) {
+                    if ($spot->autocolumn_id !== $autocolumn->id) {
+                        continue;
+                    }
+                    $spotsAutocolumn[$autocolumnGoodId][] = $spot;
+                    if($spot->x_pos < $xMinSpots) {
+                        $xMinSpots = $spot->x_pos;
+                    }
+                    if($spot->x_pos > $xMaxSpots) {
+                        $xMaxSpots = $spot->x_pos;
+                    }
+                    if($spot->y_pos < $yMinSpots) {
+                        $yMinSpots = $spot->y_pos;
+                    }
+                    if($spot->y_pos > $yMaxSpots) {
+                        $yMaxSpots = $spot->y_pos;
+                    }
+                }
+                if($yMinSpots === 1000) {continue;}
+                $spotsAutocolumn[$autocolumnGoodId]["bounds"] = "[[$xMinSpots,$yMinSpots], [$xMaxSpots,$yMaxSpots]]";
+            }
+            $orgAutocolumns[$organizationGoodId]['bounds'] = $yMaxAutolumns ? "[[$xMinAutocolumns,$yMinAutocolumns], [$xMaxAutocolumns,$yMaxAutolumns]]" : false;
+
+        }
         return $this->render('index1', [
-            'spots' => \app\models\Spot::getActives(),
-            'autocolumns' => Autocolumn::getActives(),
-            'organizations' => Organization::getActives()
+            'spots' => $spotsAutocolumn,
+            'autocolumns' => $orgAutocolumns,
+            'organizations' => $organizations
         ]);
     }
 

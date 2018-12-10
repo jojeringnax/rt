@@ -33,16 +33,14 @@ if ($cars === 0) {
      */
 
     foreach ($organizations as $organization) {
-        if (isset($organization['Аddress'])) {
-            $organizationModel = \app\models\Organization::getOrCreate($organization['ID']);
-            $organizationModel->id = $organization['ID'];
-            $organizationModel->company_id = '762b8f6f-1a46-11e5-be74-00155dc6002b';
-            $organizationModel->description = $organization['Description'];
-            $organizationModel->address = $organization['Аddress'];
-            $organizationModel->x_pos = $organization['XPos'];
-            $organizationModel->y_pos = $organization['YPos'];
-            $organizationModel->save();
-        }
+        $organizationModel = \app\models\Organization::getOrCreate($organization['ID']);
+        $organizationModel->id = $organization['ID'];
+        $organizationModel->company_id = '762b8f6f-1a46-11e5-be74-00155dc6002b';
+        $organizationModel->description = $organization['Description'];
+        $organizationModel->address = $organization['Address'];
+        $organizationModel->x_pos = $organization['XPos'];
+        $organizationModel->y_pos = $organization['YPos'];
+        $organizationModel->save();
     }
 
     /**
@@ -56,7 +54,7 @@ if ($cars === 0) {
     foreach ($divisions as $division) {
         if (in_array($division['ID'], $parentIds)) {
             $div = \app\models\Autocolumn::getOrCreate($division['ID']);
-            $div->organization_id = $division['ParentID'];
+            $div->organization_id = $division['FirmsID'];
         } else {
             $div = \app\models\Spot::getOrCreate($division['ID']);
             $div->organization_id = $division['FirmsID'];
@@ -65,7 +63,7 @@ if ($cars === 0) {
         $div->company_id = '762b8f6f-1a46-11e5-be74-00155dc6002b';
         $div->id = $division['ID'];
         $div->description = $division['Description'];
-        $div->address = $division['Аddress'];
+        $div->address = $division['Address'];
         $div->x_pos = $division['XPos'];
         $div->y_pos = $division['YPos'];
         $div->save();
