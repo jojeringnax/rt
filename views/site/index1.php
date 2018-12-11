@@ -78,9 +78,6 @@
 
                     <?php   }
                         } ?>
-
-
-
                             if(s_array.length) {
                                 addArrayOnMap(s_array, myMap);
                                 if(s_array.length === 1) {
