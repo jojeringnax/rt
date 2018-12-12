@@ -99,7 +99,7 @@ $regions = file_get_contents('../web/regions.json');
         for(var i = 0, d_len = regions.length, d_array = [];i < d_len;i++) {
             autocolumns = regions[i].autocolumns;
             d_point = new ymaps.Placemark(regions[i].geometry.coordinates,{
-                iconContent: '43'
+                iconContent: 'Ф'
                 },{
                 iconLayout: 'default#imageWithContent',
                 iconImageHref: 'yan/img/union.png',
@@ -111,7 +111,7 @@ $regions = file_get_contents('../web/regions.json');
             for(var j = 0, a_len = autocolumns.length, a_array = [];j < a_len;j++) {
                 spots = autocolumns[j].spots;
                 a_point = new ymaps.Placemark(autocolumns[j].geometry.coordinates,{
-                  iconContent: '12'
+                  iconContent: 'АК'
                   },{
                     iconLayout: 'default#imageWithContent',
                     iconContentOffset: [15, 15],
@@ -123,12 +123,12 @@ $regions = file_get_contents('../web/regions.json');
                 for (var k = 0, s_len = spots.length, s_array = [];k < s_len;k++) {
                     cars = spots[k].cars;
                     s_point = new ymaps.Placemark(spots[k].geometry.coordinates,{
-                      iconContent: '1123'
+                      iconContent: 'У'
                       },{
                       iconLayout: 'default#imageWithContent',
                       iconImageHref: 'yan/img/union.png',
                       iconImageSize: [42, 47.5],
-                      iconContentOffset: [9, 13],
+                      iconContentOffset: [16, 13],
                       iconImageOffset: [-24, -24],
                       iconContentLayout: MyIconContentLayout
                     });
