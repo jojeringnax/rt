@@ -10,8 +10,11 @@ body {
     padding: 0 0 60px;
 }
 
-.wrap > .container {
+/*.wrap > .container {
     padding: 70px 15px 20px;
+}*/
+.ymaps-2-1-63-gotoymaps {
+    display: none;
 }
 
 .footer {
