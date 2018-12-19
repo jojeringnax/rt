@@ -19,7 +19,6 @@
         };
         var removeArrayFromMap = function(array, map) {
             array.forEach(function(el) {
-                console.log(el)
              map.geoObjects.remove(el)
             });
         };
@@ -55,7 +54,6 @@
             });
             o_array.push(o_pm);
             o_pm.events.add('click', function(e) {
-                console.log(o_array);
                 removeArrayFromMap(o_array, myMap);
                 o_array = [];
 

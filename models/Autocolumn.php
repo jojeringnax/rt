@@ -127,6 +127,7 @@ class Autocolumn extends \yii\db\ActiveRecord
         foreach ($autocolumns as $autocolumn) {
             try {
                 $autocolumnMod = self::getOrCreate($autocolumn->ID);
+                $autocolumnMod->id = $autocolumn->ID;
                 $autocolumnMod->company_id = '762b8f6f-1a46-11e5-be74-00155dc6002b';
                 $autocolumnMod->organization_id = $autocolumn->FirmsID;
                 $autocolumnMod->description = $autocolumn->Description;

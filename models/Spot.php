@@ -141,6 +141,7 @@ class Spot extends \yii\db\ActiveRecord
         foreach ($spots as $spot) {
             try {
                 $spotMod = self::getOrCreate($spot->ID);
+                $spotMod->id = $spot->ID;
                 $spotMod->company_id = '762b8f6f-1a46-11e5-be74-00155dc6002b';
                 $spotMod->organization_id = $spot->FirmsID;
                 $spotMod->autocolumn_id = $spot->ParentID;
@@ -150,11 +151,12 @@ class Spot extends \yii\db\ActiveRecord
                 $spotMod->y_pos = $spot->YPos;
                 $spotMod->save();
             } catch (Exception $e) {
-                $log = new Log();
+                $log = new Logs();
                 $log->message = $e->getTraceAsString();
                 $log->created_at = date('Y-m-d H:i:s');
                 $log->save();
             }
         }
+        return true;
     }
 }

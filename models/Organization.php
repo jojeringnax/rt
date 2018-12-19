@@ -143,6 +143,7 @@ class Organization extends \yii\db\ActiveRecord
         foreach ($organizations as $organization) {
             try {
                 $organizationMod = self::getOrCreate($organization->ID);
+                $organizationMod->id = $organization->ID;
                 $organizationMod->company_id = '762b8f6f-1a46-11e5-be74-00155dc6002b';
                 $organizationMod->description = $organization->Description;
                 $organizationMod->address = $organization->Address;
@@ -156,5 +157,6 @@ class Organization extends \yii\db\ActiveRecord
                 $log->save();
             }
         }
+        return true;
     }
 }

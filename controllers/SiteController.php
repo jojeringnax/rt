@@ -79,8 +79,7 @@ class SiteController extends Controller
 
     public function actionOrganizations()
     {
-        Organization::getOrganizationsFromSoapAndSaveInDB();
-        return 1;
+        return Organization::getOrganizationsFromSoapAndSaveInDB();
     }
 
     public function actionAutocolumns()
@@ -91,14 +90,13 @@ class SiteController extends Controller
 
     public function actionSpots()
     {
-        Spot::getSpotsFromSoapAndSaveInDB();
-        return 1;
+        return Spot::getSpotsFromSoapAndSaveInDB();
+
     }
 
     public function actionCars()
     {
-        Car::getCarsFromSoapAndSaveInDB();
-        return 1;
+        return var_dump(Car::getCarsFromSoapAndSaveInDB());
     }
 
     public function actionIndex1()
@@ -114,7 +112,7 @@ class SiteController extends Controller
             $yMaxAutolumns = 0;
             foreach ($autocolumns as $autocolumn) {
                 $autocolumnGoodId = $autocolumn->getIdWithoutNumbers();
-                if ($autocolumn->organization_id !== $organization->id) {
+                if ($autocolumn->organization_id != $organization->id) {
                     continue;
                 }
                 $orgAutocolumns[$organizationGoodId][] = $autocolumn;

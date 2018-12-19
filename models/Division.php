@@ -44,7 +44,7 @@ class Division
         $resultArray = [];
         $divisions = $this->getAllDivisionsFromSoap();
         foreach ($divisions as $division) {
-            if ($division->Priznak === 'A') {
+            if ($division->Priznak === 'U') {
                 $resultArray[] = $division;
             }
         }

@@ -44,9 +44,9 @@ class Car extends \yii\db\ActiveRecord
     {
         return [
             [['id'], 'required'],
-            [['spot_id', 'type', 'year'], 'integer'],
+            [['type', 'year'], 'integer'],
             [['x_pos', 'y_pos'], 'number'],
-            [['id'], 'string', 'max' => 36],
+            [['id', 'spot_id'], 'string', 'max' => 36],
             [['number'], 'string', 'max' => 15],
             [['model'], 'string', 'max' => 32],
             [['description'], 'string', 'max' => 512],
@@ -97,24 +97,38 @@ class Car extends \yii\db\ActiveRecord
         $carsStatuses = json_decode($client->getGarsStatus()->return);
         $carsPositions = json_decode($client->getCarsPosition()->return);
         foreach ($cars as $car) {
+            $resultArray[$car->ID] = [
+                'number' => null,
+                'spot_id' => null,
+                'status' => null,
+                'inline' => null,
+                'type' => null,
+                'model' => null,
+                'description' => null,
+                'year' => null,
+                'x_pos' => null,
+                'y_pos' => null
+            ];
             foreach($carsStatuses as $carsStatus) {
                 if($carsStatus->CarsID === $car->ID) {
-                    $resultArray[$car->ID] = [
-                        'number' => $car->Number,
-                        'spot_id' => $carsStatus->DivisionID,
-                        'status' => $carsStatus->Status,
-                        'inline' => $carsStatus->InLine,
-                        'type' => $car->Type,
-                        'model' => $car->Model,
-                        'description' => $car->Description,
-                        'year' => $car->Year
-                    ];
+                    $resultArray[$car->ID]['number'] = isset($car->Number) ? $car->Number  : null;
+                    $resultArray[$car->ID]['spot_id'] = isset($carsStatus->DivisionID) ? $carsStatus->DivisionID  : null;
+                    $resultArray[$car->ID]['status'] = isset($carsStatus->Status) ? $carsStatus->Status  : null;
+                    $resultArray[$car->ID]['inline'] = isset($carsStatus->InLine) ? $carsStatus->InLine  : null;
+                    $resultArray[$car->ID]['type'] = isset($car->Type) ? $car->Type  : null;
+                    $resultArray[$car->ID]['model'] = isset($car->Model) ? $car->Model  : null;
+                    $resultArray[$car->ID]['description'] = isset($car->Description) ? $car->Description  : null;
+                    $resultArray[$car->ID]['year'] = isset($car->Year) ? $car->Year  : null;
+                } else {
+                    continue;
                 }
             }
             foreach($carsPositions as $carsPosition) {
                 if($carsPosition->CarsID === $car->ID) {
                     $resultArray[$car->ID]['x_pos'] = preg_replace('/,/', '.',$carsPosition->XPos);
                     $resultArray[$car->ID]['y_pos'] = preg_replace('/,/', '.',$carsPosition->YPos);
+                } else {
+                    continue;
                 }
             }
         }
@@ -131,11 +145,11 @@ class Car extends \yii\db\ActiveRecord
         ini_set('max_execution_time', '300');
         $cars = self::getSoapCars();
         foreach($cars as $id => $car) {
-            $carModel = self::getOrCreate($car['ID']);
+            $carModel = self::getOrCreate($id);
             $carModel->id = $id;
             $carModel->number = $car['number'];
             $carModel->spot_id = $car['spot_id'];
-            $carModel->type = self::MODELS[$car['model']];
+            $carModel->type = $car['type'] === null ? null : self::MODELS[$car['type']];
             $carModel->model = $car['model'];
             $carModel->description = $car['description'];
             $carModel->year = $car['year'];

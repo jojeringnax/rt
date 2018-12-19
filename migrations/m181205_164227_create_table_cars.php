@@ -15,7 +15,7 @@ class m181205_164227_create_table_cars extends Migration
     {
         $this->createTable($this->tableName, [
             'id' =>  $this->string(36),
-            'spot_id' => $this->integer(36),
+            'spot_id' => $this->string(36),
             'number' => $this->string(15),
             'type' => $this->tinyInteger(1),
             'model' => $this->string(32),
