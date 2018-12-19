@@ -9,6 +9,9 @@
 
 <script>
     ymaps.ready( function() {
+        let MyIconContentLayout = ymaps.templateLayoutFactory.createClass(
+            '<div style="color: #FFFFFF; font-weight: bold; display: flex; justify-content: around; flex-direction: column; align-items: center">$[properties.iconContent] <span>1120</span></div>'
+        );
         var addArrayOnMap = function(array, map) {
             array.forEach(function (el) {
                map.geoObjects.add(el);
@@ -16,17 +19,21 @@
         };
         var removeArrayFromMap = function(array, map) {
             array.forEach(function(el) {
+                console.log(el)
              map.geoObjects.remove(el)
             });
         };
+
 
         var s_array = [], a_array = [], o_array = [];
         var myMap = new ymaps.Map('map', {
             center: [55.751574, 37.573856],
             zoom: 11,
-            behaviors: ['default', 'scrollZoom']
+            behaviors: ['default', 'scrollZoom'],
+            controls: []
         }, {
-            searchControlProvider: 'yandex#search'
+            searchControlProvider: 'yandex#search',
+            suppressMapOpenBlock: true
         });
         var clustererOrg = new ymaps.Clusterer({});
         <?php foreach ($organizations as $organization) {
@@ -34,16 +41,31 @@
             ?>
 
             o_pm = new ymaps.Placemark([<?= $organization->x_pos ?>, <?= $organization->y_pos ?>], {
-                iconCaption : '<?= $organization->getTown() ?>'
+                iconCaption : '<?= $organization->getTown() ?>',
+                iconContent: 'Ф',
+                hintContent: '<?= $organization->getTown() ?>'
             }, {
-                preset: 'islands#greenDotIconWithCaption'
+                iconLayout: 'default#imageWithContent',
+                iconImageHref: 'yan/img/union.png',
+                iconImageSize: [42, 47.5],
+                iconContentOffset: [16, 8],
+                iconImageOffset: [-24, -24],
+                preset: 'islands#greenDotIconWithCaption',
+                iconContentLayout: MyIconContentLayout
             });
+            o_array.push(o_pm);
             o_pm.events.add('click', function(e) {
+                console.log(o_array);
+                removeArrayFromMap(o_array, myMap);
+                o_array = [];
+
                 if (a_array) {
                     removeArrayFromMap(a_array, myMap);
                     a_array = [];
                 }
-        <?php foreach ($autocolumns[$organizationPrettyId] as $key => $autocolumn) {
+
+                <?php
+                foreach ($autocolumns[$organizationPrettyId] as $key => $autocolumn) {
                     if ($key !== 'bounds') {
                         $autocolumnPrettyId = $autocolumn->getIdWithoutNumbers(); ?>
                         a_pm = new ymaps.Placemark([<?= $autocolumn->x_pos ?>, <?= $autocolumn->y_pos ?>], {
@@ -57,15 +79,20 @@
                                 removeArrayFromMap(s_array, myMap);
                                 s_array = [];
                             }
+
+
               <?php
                     if (array_key_exists($autocolumnPrettyId, $spots)) {
                         foreach ($spots[$autocolumnPrettyId] as $key => $spot) {
                             if ($key !== 'bounds') {
                                 $spotPrettyId = $spot->getIdWithoutNumbers(); ?>
+
                                 s_pm = new ymaps.Placemark([<?= $spot->x_pos ?>, <?= $spot->y_pos ?>],{
                                     hintContent: '<?= $spot->description ?>'
                                 });
                                 s_array.push(s_pm);
+
+
                     <?php   }
                         } ?>
                             if(s_array.length) {
@@ -87,7 +114,7 @@
 
 
 
-                        }); // Autocolumn click
+                        }); //Autocolumn click
 
 
 
@@ -106,5 +133,6 @@
         <?php } ?>
         myMap.geoObjects.add(clustererOrg);
         myMap.setBounds(<?= \app\models\Organization::getMaxAndMinCoordinatesForAPI() ?>);
+        myMap.controls.add('zoomControl');
     });
 </script>
