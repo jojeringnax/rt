@@ -3,6 +3,7 @@
 namespace app\controllers;
 
 use app\models\Autocolumn;
+use app\models\Car;
 use app\models\Organization;
 use app\models\Spot;
 use Yii;
@@ -74,6 +75,30 @@ class SiteController extends Controller
         return $this->render('work', [
             'cars' => $cars
         ]);
+    }
+
+    public function actionOrganizations()
+    {
+        Organization::getOrganizationsFromSoapAndSaveInDB();
+        return 1;
+    }
+
+    public function actionAutocolumns()
+    {
+        Autocolumn::getAutocolumnsFromSoapAndSaveInDB();
+        return 1;
+    }
+
+    public function actionSpots()
+    {
+        Spot::getSpotsFromSoapAndSaveInDB();
+        return 1;
+    }
+
+    public function actionCars()
+    {
+        Car::getCarsFromSoapAndSaveInDB();
+        return 1;
     }
 
     public function actionIndex1()

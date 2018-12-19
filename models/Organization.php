@@ -4,6 +4,7 @@ namespace app\models;
 
 use Yii;
 use yii\db\ActiveQuery;
+use yii\db\Exception;
 
 /**
  * This is the model class for table "organizations".
@@ -132,5 +133,28 @@ class Organization extends \yii\db\ActiveRecord
         $result = strripos($this->description, 'г.');
         $length = -(strlen($this->description) - $result);
         return substr($this->description, $length);
+    }
+
+
+    public static function getOrganizationsFromSoapAndSaveInDB()
+    {
+        $client = new \SoapClient('http://d.rg24.ru:5601/PUP_WS/ws/PUP.1cws?wsdl');
+        $organizations = json_decode($client->getOrganization()->return);
+        foreach ($organizations as $organization) {
+            try {
+                $organizationMod = self::getOrCreate($organization->ID);
+                $organizationMod->company_id = '762b8f6f-1a46-11e5-be74-00155dc6002b';
+                $organizationMod->description = $organization->Description;
+                $organizationMod->address = $organization->Address;
+                $organizationMod->x_pos = $organization->XPos;
+                $organizationMod->y_pos = $organization->YPos;
+                $organizationMod->save();
+            } catch (Exception $e) {
+                $log = new Log();
+                $log->message = $e->getTraceAsString();
+                $log->created_at = date('Y-m-d H:i:s');
+                $log->save();
+            }
+        }
     }
 }

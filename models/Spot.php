@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use yii\db\Exception;
 
 /**
  * This is the model class for table "spots".
@@ -131,5 +132,29 @@ class Spot extends \yii\db\ActiveRecord
         $s = array('/0/','/1/','/2/','/3/','/4/','/5/','/6/','/7/','/8/','/9/', '/-/');
         $a = array('a','b','c','d','e','f','g','h','i','j','');
         return preg_replace($s, $a, $this->id);
+    }
+
+    public static function getSpotsFromSoapAndSaveInDB()
+    {
+        $divis = new Division();
+        $spots = $divis->getSpots();
+        foreach ($spots as $spot) {
+            try {
+                $spotMod = self::getOrCreate($spot->ID);
+                $spotMod->company_id = '762b8f6f-1a46-11e5-be74-00155dc6002b';
+                $spotMod->organization_id = $spot->FirmsID;
+                $spotMod->autocolumn_id = $spot->ParentID;
+                $spotMod->description = $spot->Description;
+                $spotMod->address = $spot->Address;
+                $spotMod->x_pos = $spot->XPos;
+                $spotMod->y_pos = $spot->YPos;
+                $spotMod->save();
+            } catch (Exception $e) {
+                $log = new Log();
+                $log->message = $e->getTraceAsString();
+                $log->created_at = date('Y-m-d H:i:s');
+                $log->save();
+            }
+        }
     }
 }

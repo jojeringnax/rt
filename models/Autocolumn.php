@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use yii\db\Exception;
 
 /**
  * This is the model class for table "autocolumns".
@@ -117,5 +118,28 @@ class Autocolumn extends \yii\db\ActiveRecord
         $s = array('/0/','/1/','/2/','/3/','/4/','/5/','/6/','/7/','/8/','/9/', '/-/');
         $a = array('a','b','c','d','e','f','g','h','i','j','');
         return preg_replace($s, $a, $this->id);
+    }
+
+    public static function getAutocolumnsFromSoapAndSaveInDB()
+    {
+        $divis = new Division();
+        $autocolumns = $divis->getAutocolumns();
+        foreach ($autocolumns as $autocolumn) {
+            try {
+                $autocolumnMod = self::getOrCreate($autocolumn->ID);
+                $autocolumnMod->company_id = '762b8f6f-1a46-11e5-be74-00155dc6002b';
+                $autocolumnMod->organization_id = $autocolumn->FirmsID;
+                $autocolumnMod->description = $autocolumn->Description;
+                $autocolumnMod->address = $autocolumn->Address;
+                $autocolumnMod->x_pos = $autocolumn->XPos;
+                $autocolumnMod->y_pos = $autocolumn->YPos;
+                $autocolumnMod->save();
+            } catch (Exception $e) {
+                $log = new Log();
+                $log->message = $e->getTraceAsString();
+                $log->created_at = date('Y-m-d H:i:s');
+                $log->save();
+            }
+        }
     }
 }

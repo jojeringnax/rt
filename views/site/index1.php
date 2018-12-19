@@ -20,7 +20,6 @@
             });
         };
 
-
         var s_array = [], a_array = [], o_array = [];
         var myMap = new ymaps.Map('map', {
             center: [55.751574, 37.573856],
@@ -44,10 +43,7 @@
                     removeArrayFromMap(a_array, myMap);
                     a_array = [];
                 }
-
-
-                <?php
-                foreach ($autocolumns[$organizationPrettyId] as $key => $autocolumn) {
+        <?php foreach ($autocolumns[$organizationPrettyId] as $key => $autocolumn) {
                     if ($key !== 'bounds') {
                         $autocolumnPrettyId = $autocolumn->getIdWithoutNumbers(); ?>
                         a_pm = new ymaps.Placemark([<?= $autocolumn->x_pos ?>, <?= $autocolumn->y_pos ?>], {
@@ -61,21 +57,15 @@
                                 removeArrayFromMap(s_array, myMap);
                                 s_array = [];
                             }
-
-
               <?php
                     if (array_key_exists($autocolumnPrettyId, $spots)) {
                         foreach ($spots[$autocolumnPrettyId] as $key => $spot) {
                             if ($key !== 'bounds') {
                                 $spotPrettyId = $spot->getIdWithoutNumbers(); ?>
-
-
                                 s_pm = new ymaps.Placemark([<?= $spot->x_pos ?>, <?= $spot->y_pos ?>],{
                                     hintContent: '<?= $spot->description ?>'
                                 });
                                 s_array.push(s_pm);
-
-
                     <?php   }
                         } ?>
                             if(s_array.length) {
@@ -97,7 +87,7 @@
 
 
 
-                        }); //Autocolumn click
+                        }); // Autocolumn click
 
 
 
