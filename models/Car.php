@@ -4,6 +4,7 @@ namespace app\models;
 ini_set('memory_limit', '1000M');
 ini_set('max_execution_time', '300');
 
+use Codeception\Util\Soap;
 use Yii;
 
 /**
@@ -28,6 +29,7 @@ class Car extends \yii\db\ActiveRecord
         'Автобусы' => 2,
         'Спецтехника' => 3
     );
+
 
     /**
      * {@inheritdoc}
@@ -158,5 +160,30 @@ class Car extends \yii\db\ActiveRecord
             $carModel->save();
         }
         return true;
+    }
+
+    public static function resetCoordinates($carsId)
+    {
+        $client = new \SoapClient('http://d.rg24.ru:5601/PUP_WS/ws/PUP.1cws?wsdl');
+        $carsPositions = json_decode($client->getCarsPosition()->return);
+        foreach($carsPositions as $carsPosition) {
+            if(!in_array($carsPosition->CarsID, $carsId)) {
+                continue;
+            }
+            $car = self::find($carsPosition->CarsID)->one();
+            $car->update(true,['x_pos' => $carsPosition->XPos, 'y_pos' => $carsPosition->YPos]);
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * @return string
+     */
+    public function getIdWithoutNumbers()
+    {
+        $s = array('/0/','/1/','/2/','/3/','/4/','/5/','/6/','/7/','/8/','/9/', '/-/');
+        $a = array('a','b','c','d','e','f','g','h','i','j','');
+        return preg_replace($s, $a, $this->id);
     }
 }

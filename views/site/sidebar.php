@@ -1,16 +1,4 @@
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <script src="https://api-maps.yandex.ru/2.1/?apikey=27544797-3131-4759-9f4b-54f17c827eb2&lang=ru_RU" type="text/javascript"></script>
-
-    <meta charset="UTF-8">
-    <title>Title</title>
-    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
-
-
-</head>
-<body>
 <div class="result" style="position:fixed;width: 20%; height: 100%;left:0;">
     <section id="info-company" class="section-info">
         <div class="main-item-result">
@@ -369,5 +357,3 @@
     </section>
 </div>
 <div id="map" style="position:fixed;width: 80%; height: 100%;right:0;"></div>
-
-</body>

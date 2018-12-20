@@ -8,6 +8,7 @@ use app\models\Organization;
 use app\models\Spot;
 use Yii;
 use yii\filters\AccessControl;
+use yii\helpers\ArrayHelper;
 use yii\web\Controller;
 use yii\web\Response;
 use yii\filters\VerbFilter;
@@ -99,6 +100,18 @@ class SiteController extends Controller
         return var_dump(Car::getCarsFromSoapAndSaveInDB());
     }
 
+    public function actionCarsforspot($id) {
+        $spot = Spot::find()->where(['id' => $id])->one();
+        $cars = $spot->getCars()->all();
+        $carsArray = ArrayHelper::toArray($cars);
+        $array = ArrayHelper::getColumn($carsArray, 'id');
+        Car::resetCoordinates($array);
+        foreach ($cars as $car) {
+            $car->refresh();
+        }
+        return json_encode(ArrayHelper::toArray($cars), JSON_UNESCAPED_UNICODE);
+    }
+
     public function actionIndex1()
     {
         $organizations = Organization::getActives();
@@ -128,6 +141,7 @@ class SiteController extends Controller
                 if($autocolumn->y_pos > $yMaxAutolumns) {
                     $yMaxAutolumns = $autocolumn->y_pos;
                 }
+                if($xMaxAutocolumns === 0) {continue;}
                 $xMinSpots = 1000;
                 $xMaxSpots = 0;
                 $yMinSpots = 1000;
@@ -149,8 +163,8 @@ class SiteController extends Controller
                     if($spot->y_pos > $yMaxSpots) {
                         $yMaxSpots = $spot->y_pos;
                     }
+                    if($xMaxSpots === 0) {continue;}
                 }
-                if($yMinSpots === 1000) {continue;}
                 $spotsAutocolumn[$autocolumnGoodId]["bounds"] = "[[$xMinSpots,$yMinSpots], [$xMaxSpots,$yMaxSpots]]";
             }
             $orgAutocolumns[$organizationGoodId]['bounds'] = $yMaxAutolumns ? "[[$xMinAutocolumns,$yMinAutocolumns], [$xMaxAutocolumns,$yMaxAutolumns]]" : false;

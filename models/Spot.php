@@ -105,6 +105,12 @@ class Spot extends \yii\db\ActiveRecord
         return $model === null ? new self() : $model;
     }
 
+
+    public function getCars()
+    {
+        return Car::find()->where(['spot_id' => $this->id])->andWhere(['!=','x_pos',0]);
+    }
+
     /**
      * @return array|self[]
      */

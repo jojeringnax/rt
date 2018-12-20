@@ -9,14 +9,17 @@
 
 <script>
     ymaps.ready( function() {
+
         let MyIconContentLayout = ymaps.templateLayoutFactory.createClass(
             '<div style="color: #FFFFFF; font-weight: bold; display: flex; justify-content: around; flex-direction: column; align-items: center">$[properties.iconContent] <span>1120</span></div>'
         );
+
         var addArrayOnMap = function(array, map) {
             array.forEach(function (el) {
                map.geoObjects.add(el);
             });
         };
+
         var removeArrayFromMap = function(array, map) {
             array.forEach(function(el) {
              map.geoObjects.remove(el)
@@ -24,7 +27,7 @@
         };
 
 
-        var s_array = [], a_array = [], o_array = [];
+        var c_array = [], s_array = [], a_array = [], o_array = [];
         var myMap = new ymaps.Map('map', {
             center: [55.751574, 37.573856],
             zoom: 11,
@@ -56,16 +59,19 @@
             o_pm.events.add('click', function(e) {
                 removeArrayFromMap(o_array, myMap);
                 o_array = [];
-
-                if (a_array) {
+                if (a_array.length) {
                     removeArrayFromMap(a_array, myMap);
                     a_array = [];
                 }
-
+                if (s_array.length) {
+                    removeArrayFromMap(s_array, myMap);
+                    s_array = [];
+                }
                 <?php
                 foreach ($autocolumns[$organizationPrettyId] as $key => $autocolumn) {
                     if ($key !== 'bounds') {
                         $autocolumnPrettyId = $autocolumn->getIdWithoutNumbers(); ?>
+
                         a_pm = new ymaps.Placemark([<?= $autocolumn->x_pos ?>, <?= $autocolumn->y_pos ?>], {
                             hintContent: '<?= $autocolumn->description ?>'
                         }, {
@@ -78,7 +84,6 @@
                                 s_array = [];
                             }
 
-
               <?php
                     if (array_key_exists($autocolumnPrettyId, $spots)) {
                         foreach ($spots[$autocolumnPrettyId] as $key => $spot) {
@@ -89,8 +94,26 @@
                                     hintContent: '<?= $spot->description ?>'
                                 });
                                 s_array.push(s_pm);
-
-
+                                s_pm.events.add('click', function() {
+                                  $.ajax({
+                                      url: 'index.php?r=site/carsforspot&id=<?= $spot->id ?>',
+                                      method: 'GET',
+                                      dataType: 'json',
+                                      success: function(data) {
+                                          if(c_array.length) {
+                                              removeArrayFromMap(c_array, myMap);
+                                              c_array = [];
+                                          }
+                                          data.forEach(function(el) {
+                                              c_pm = new ymaps.Placemark([el.x_pos, el.y_pos], {
+                                                  hintContent: el.description
+                                              });
+                                              c_array.push(c_pm);
+                                          });
+                                          addArrayOnMap(c_array, myMap);
+                                      }
+                                  });
+                                });
                     <?php   }
                         } ?>
                             if(s_array.length) {
@@ -110,8 +133,6 @@
 
               <?php } // if (array_key_exists($autocolumnPrettyId, $spots)) ?>
 
-
-
                         }); //Autocolumn click
 
 
@@ -126,6 +147,8 @@
                     level: 'organization',
                     id: '<?= $organizationPrettyId ?>'
                 };
+                console.log(s_array);
+                console.log(a_array);
             }); // Organization click
             clustererOrg.add(o_pm);
         <?php } ?>

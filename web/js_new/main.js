@@ -118,9 +118,6 @@ function dBar(obj) {
 
 // longbar4.animate(1.0);  // Number from 0.0 to 1.0
 
-function $(e) {
-  return document.querySelector(e);
-};
 
 // console.log($('.result'));
 // let key = 'result';
