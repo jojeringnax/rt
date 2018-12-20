@@ -27,6 +27,25 @@
         };
 
 
+        var removeAllDontNeed = function() {
+            if (o_array.length) {
+                removeArrayFromMap(o_array, myMap);
+            }
+            if (a_array.length) {
+                removeArrayFromMap(a_array, myMap);
+                a_array = [];
+            }
+            if (s_array.length) {
+                removeArrayFromMap(s_array, myMap);
+                s_array = [];
+            }
+            if(c_array.length) {
+                removeArrayFromMap(c_array, myMap);
+                c_array = [];
+            }
+        };
+
+
         var c_array = [], s_array = [], a_array = [], o_array = [];
         var myMap = new ymaps.Map('map', {
             center: [55.751574, 37.573856],
@@ -57,17 +76,8 @@
             });
             o_array.push(o_pm);
             o_pm.events.add('click', function(e) {
-                removeArrayFromMap(o_array, myMap);
-                o_array = [];
-                if (a_array.length) {
-                    removeArrayFromMap(a_array, myMap);
-                    a_array = [];
-                }
-                if (s_array.length) {
-                    removeArrayFromMap(s_array, myMap);
-                    s_array = [];
-                }
-                <?php
+                removeAllDontNeed();
+            <?php
                 foreach ($autocolumns[$organizationPrettyId] as $key => $autocolumn) {
                     if ($key !== 'bounds') {
                         $autocolumnPrettyId = $autocolumn->getIdWithoutNumbers(); ?>
@@ -83,7 +93,10 @@
                                 removeArrayFromMap(s_array, myMap);
                                 s_array = [];
                             }
-
+                            if(c_array.length) {
+                                removeArrayFromMap(c_array, myMap);
+                                c_array = [];
+                            }
               <?php
                     if (array_key_exists($autocolumnPrettyId, $spots)) {
                         foreach ($spots[$autocolumnPrettyId] as $key => $spot) {
@@ -147,12 +160,9 @@
                     level: 'organization',
                     id: '<?= $organizationPrettyId ?>'
                 };
-                console.log(s_array);
-                console.log(a_array);
             }); // Organization click
-            clustererOrg.add(o_pm);
         <?php } ?>
-        myMap.geoObjects.add(clustererOrg);
+        addArrayOnMap(o_array, myMap);
         myMap.setBounds(<?= \app\models\Organization::getMaxAndMinCoordinatesForAPI() ?>);
         myMap.controls.add('zoomControl');
     });

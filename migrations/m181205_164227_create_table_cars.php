@@ -15,14 +15,16 @@ class m181205_164227_create_table_cars extends Migration
     {
         $this->createTable($this->tableName, [
             'id' =>  $this->string(36),
-            'spot_id' => $this->string(36),
-            'number' => $this->string(15),
-            'type' => $this->tinyInteger(1),
-            'model' => $this->string(32),
-            'description' => $this->string(512),
-            'year' => $this->integer(4),
-            'x_pos' => $this->float(6),
-            'y_pos' => $this->float(6)
+            'spot_id' => $this->string(36)->null(),
+            'number' => $this->string(15)->null(),
+            'type' => $this->tinyInteger(1)->null(),
+            'model' => $this->string(32)->null(),
+            'description' => $this->string(512)->null(),
+            'status' => $this->text()->null(),
+            'inline' => $this->boolean()->null(),
+            'year' => $this->integer(4)->null(),
+            'x_pos' => $this->float(8)->null(),
+            'y_pos' => $this->float(8)->null()
         ]);
         $this->addPrimaryKey('pk-cars', $this->tableName, 'id');
     }

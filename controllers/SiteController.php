@@ -103,9 +103,6 @@ class SiteController extends Controller
     public function actionCarsforspot($id) {
         $spot = Spot::find()->where(['id' => $id])->one();
         $cars = $spot->getCars()->all();
-        $carsArray = ArrayHelper::toArray($cars);
-        $array = ArrayHelper::getColumn($carsArray, 'id');
-        Car::resetCoordinates($array);
         foreach ($cars as $car) {
             $car->refresh();
         }

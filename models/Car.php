@@ -6,6 +6,8 @@ ini_set('max_execution_time', '300');
 
 use Codeception\Util\Soap;
 use Yii;
+use yii\db\Exception;
+use yii\helpers\Console;
 
 /**
  * This is the model class for table "cars".
@@ -19,6 +21,8 @@ use Yii;
  * @property int $year
  * @property double $x_pos
  * @property double $y_pos
+ * @property string $status
+ * @property bool $inline
  */
 class Car extends \yii\db\ActiveRecord
 {
@@ -144,9 +148,13 @@ class Car extends \yii\db\ActiveRecord
     public static function getCarsFromSoapAndSaveInDB()
     {
         ini_set('memory_limit', '1000M');
-        ini_set('max_execution_time', '300');
+        ini_set('max_execution_time', '600');
         $cars = self::getSoapCars();
+        $count = count($cars);
+        Console::startProgress(0, $count);
+        $i = 0;
         foreach($cars as $id => $car) {
+            $i++;
             $carModel = self::getOrCreate($id);
             $carModel->id = $id;
             $carModel->number = $car['number'];
@@ -154,27 +162,79 @@ class Car extends \yii\db\ActiveRecord
             $carModel->type = $car['type'] === null ? null : self::MODELS[$car['type']];
             $carModel->model = $car['model'];
             $carModel->description = $car['description'];
+            $carModel->status = $car['status'];
+            $carModel->inline = $car['inline'];
             $carModel->year = $car['year'];
             $carModel->x_pos = $car['x_pos'];
             $carModel->y_pos = $car['y_pos'];
             $carModel->save();
+            Console::updateProgress($i, $count);
         }
+        Console::endProgress();
         return true;
     }
 
-    public static function resetCoordinates($carsId)
+    public static function resetCoordinates()
     {
+        ini_set('memory_limit', '1000M');
+        ini_set('max_execution_time', '600');
         $client = new \SoapClient('http://d.rg24.ru:5601/PUP_WS/ws/PUP.1cws?wsdl');
         $carsPositions = json_decode($client->getCarsPosition()->return);
+        $i = 0;
+        $count = count($carsPositions);
+        Console::startProgress(0,$count);
         foreach($carsPositions as $carsPosition) {
-            if(!in_array($carsPosition->CarsID, $carsId)) {
-                continue;
+            $i++;
+            usleep(100);
+            $car = self::getOrCreate($carsPosition->CarsID);
+            try {
+                if($car->x_pos == $carsPosition->XPos && $car->y_pos == $carsPosition->YPos) {
+                    echo 'Нечего менять';
+                    continue;
+                }
+                $car->x_pos = $carsPosition->XPos;
+                $car->y_pos = $carsPosition->YPos;
+                $car->save();
+                Console::updateProgress($i, $count);
+            } catch (Exception $e) {
+                echo 'Не получилось обновить'.PHP_EOL;
+                if($car === null) {
+                    echo 'Нет машины в БД;';
+                } else {
+                    echo $e->getMessage();
+                    echo $e->getTraceAsString();
+                }
+                return false;
             }
-            $car = self::find($carsPosition->CarsID)->one();
-            $car->update(true,['x_pos' => $carsPosition->XPos, 'y_pos' => $carsPosition->YPos]);
-            return true;
         }
-        return false;
+        Console::endProgress();
+        return true;
+    }
+
+    public static function resetStatuses()
+    {
+        ini_set('memory_limit', '1000M');
+        ini_set('max_execution_time', '600');
+        $client = new \SoapClient('http://d.rg24.ru:5601/PUP_WS/ws/PUP.1cws?wsdl');
+        $carsStatuses = json_decode($client->getGarsStatus()->return);
+        $count = count($carsStatuses);
+        $i = 0;
+        Console::startProgress(0,$count);
+        foreach ($carsStatuses as $carsStatus) {
+            $i++;
+            Console::updateProgress($i, $count);
+            $car = Car::getOrCreate($carsStatus->CarsID);
+            try {
+                $car->spot_id = isset($carsStatus->DivisionID) ? $carsStatus->DivisionID : null;
+            } catch (Exception $e) {
+                $car->spot_id = null;
+            };
+            $car->status = isset($carsStatus->Status) ? $carsStatus->Status : null;
+            $car->inline = isset($carsStatus->InLine) ? $carsStatus->InLine : null;
+            $car->save();
+        }
+        Console::endProgress();
+        return true;
     }
 
     /**
