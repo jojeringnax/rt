@@ -110,7 +110,7 @@ class SiteController extends Controller
         $cars = Car::find()->where(['spot_id' => $id])->andWhere(['not',['x_pos' => null]])->all();
         $ids = ArrayHelper::getColumn(ArrayHelper::toArray($cars), 'id');
         Car::resetPositions($ids, $id);
-        $cars = Car::find()->where(['spot_id' => $id])->all();
+        $cars = Car::find()->where(['spot_id' => $id])->andWhere(['not',['x_pos' => null]])->all();
         return json_encode(ArrayHelper::toArray($cars), JSON_UNESCAPED_UNICODE);
     }
 
