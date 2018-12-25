@@ -101,7 +101,7 @@ class Car extends \yii\db\ActiveRecord
         $client = new \SoapClient("http://d.rg24.ru:5601/PUP_WS/ws/PUP.1cws?wsdl");
         $cars = json_decode($client->getCars()->return);
         $carsStatuses = json_decode($client->getGarsStatus()->return);
-        $carsPositions = json_decode($client->getCarsPosition()->return);
+        $carsPositions = json_decode($client->getCarsPosition([])->return);
         foreach ($cars as $car) {
             $resultArray[$car->ID] = [
                 'number' => null,
