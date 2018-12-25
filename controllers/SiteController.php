@@ -107,7 +107,7 @@ class SiteController extends Controller
     }
 
     public function actionCarsforspot($id) {
-        $cars = Car::find()->where(['spot_id' => $id])->andWhere(['!=', 'x_pos', 0])->all();
+        $cars = Car::find()->where(['spot_id' => $id])->andWhere(['!=', 'x_pos', null])->all();
         $ids = ArrayHelper::getColumn(ArrayHelper::toArray($cars), 'id');
         Car::resetPositions($ids);
         $cars = Car::find()->where(['spot_id' => $id])->all();

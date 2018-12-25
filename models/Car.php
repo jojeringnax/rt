@@ -179,7 +179,7 @@ class Car extends \yii\db\ActiveRecord
         ini_set('memory_limit', '1000M');
         ini_set('max_execution_time', '600');
         $client = new \SoapClient('http://d.rg24.ru:5601/PUP_WS/ws/PUP.1cws?wsdl');
-        $carsPositions = json_decode($client->getCarsPosition()->return);
+        $carsPositions = json_decode($client->getCarsPosition([])->return);
         $i = 0;
         $count = count($carsPositions);
         Console::startProgress(0,$count);
