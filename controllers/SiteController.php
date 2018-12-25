@@ -78,6 +78,12 @@ class SiteController extends Controller
         ]);
     }
 
+
+    public function actionPhpinfo()
+    {
+        return phpinfo();
+    }
+
     public function actionOrganizations()
     {
         return Organization::getOrganizationsFromSoapAndSaveInDB();
