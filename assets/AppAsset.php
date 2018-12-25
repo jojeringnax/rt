@@ -17,6 +17,7 @@ use yii\web\AssetBundle;
  */
 class AppAsset extends AssetBundle
 {
+    public $jsOptions = ['position' => \yii\web\View::POS_HEAD];
     public $basePath = '@webroot';
     public $baseUrl = '@web';
     public $css = [
@@ -27,6 +28,7 @@ class AppAsset extends AssetBundle
         'js_new/accounting.min.js',
         'js_new/progressbar.min.js',
         'js_new/main.js',
+        'js_new/jquery.soap.js'
     ];
     public $depends = [
         'yii\web\YiiAsset',

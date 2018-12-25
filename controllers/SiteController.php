@@ -103,9 +103,9 @@ class SiteController extends Controller
     public function actionCarsforspot($id) {
         $spot = Spot::find()->where(['id' => $id])->one();
         $cars = $spot->getCars()->all();
-        foreach ($cars as $car) {
-            $car->refresh();
-        }
+        $ids = ArrayHelper::getColumn(ArrayHelper::toArray($cars), 'id');
+        Car::resetPositions($ids);
+        $cars = $spot->getCars()->all();
         return json_encode(ArrayHelper::toArray($cars), JSON_UNESCAPED_UNICODE);
     }
 
@@ -165,7 +165,6 @@ class SiteController extends Controller
                 $spotsAutocolumn[$autocolumnGoodId]["bounds"] = "[[$xMinSpots,$yMinSpots], [$xMaxSpots,$yMaxSpots]]";
             }
             $orgAutocolumns[$organizationGoodId]['bounds'] = $yMaxAutolumns ? "[[$xMinAutocolumns,$yMinAutocolumns], [$xMaxAutocolumns,$yMaxAutolumns]]" : false;
-
         }
         return $this->render('index1', [
             'spots' => $spotsAutocolumn,

@@ -237,6 +237,33 @@ class Car extends \yii\db\ActiveRecord
         return true;
     }
 
+    public function resetPosition()
+    {
+        $client = new \SoapClient('http://d.rg24.ru:5601/PUP_WS/ws/PUP.1cws?wsdl');
+        $res = json_decode($client->GetCarsPosition(array('CarsJson' => json_encode(['CarsID' => $this->id])))->return[0]);
+        $this->x_pos = $res->XPos;
+        $this->y_pos = $res->YPos;
+        $this->save();
+    }
+
+    public static function resetPositions($carIDs, $spotID = null)
+    {
+        $client = new \SoapClient('http://d.rg24.ru:5601/PUP_WS/ws/PUP.1cws?wsdl');
+        foreach($carIDs as $ID) {
+            $array[] = ['CarsID' => $ID];
+        }
+
+        $res = json_decode($client->GetCarsPosition(['CarsJson' => json_encode($array)])->return);
+        foreach ($res as $position) {
+            $car = Car::getOrCreate($position->CarsID);
+            $car->spot_id = $spotID;
+            $car->x_pos = $position->XPos;
+            $car->y_pos = $position->YPos;
+            $car->save();
+        }
+        return $carIDs;
+    }
+
     /**
      * @return string
      */

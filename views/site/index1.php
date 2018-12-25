@@ -97,54 +97,54 @@
                                 removeArrayFromMap(c_array, myMap);
                                 c_array = [];
                             }
-              <?php
-                    if (array_key_exists($autocolumnPrettyId, $spots)) {
-                        foreach ($spots[$autocolumnPrettyId] as $key => $spot) {
-                            if ($key !== 'bounds') {
-                                $spotPrettyId = $spot->getIdWithoutNumbers(); ?>
+            <?php
+                if (array_key_exists($autocolumnPrettyId, $spots)) {
+                    foreach ($spots[$autocolumnPrettyId] as $key => $spot) {
+                        if ($key !== 'bounds') {
+                            $spotPrettyId = $spot->getIdWithoutNumbers(); ?>
 
-                                s_pm = new ymaps.Placemark([<?= $spot->x_pos ?>, <?= $spot->y_pos ?>],{
-                                    hintContent: '<?= $spot->description ?>'
-                                });
-                                s_array.push(s_pm);
-                                s_pm.events.add('click', function() {
-                                  $.ajax({
-                                      url: 'index.php?r=site/carsforspot&id=<?= $spot->id ?>',
-                                      method: 'GET',
-                                      dataType: 'json',
-                                      success: function(data) {
-                                          if(c_array.length) {
-                                              removeArrayFromMap(c_array, myMap);
-                                              c_array = [];
-                                          }
-                                          data.forEach(function(el) {
-                                              c_pm = new ymaps.Placemark([el.x_pos, el.y_pos], {
-                                                  hintContent: el.description
-                                              });
-                                              c_array.push(c_pm);
-                                          });
-                                          addArrayOnMap(c_array, myMap);
+                            s_pm = new ymaps.Placemark([<?= $spot->x_pos ?>, <?= $spot->y_pos ?>],{
+                                hintContent: '<?= $spot->description ?>'
+                            });
+                            s_array.push(s_pm);
+                            s_pm.events.add('click', function() {
+                                $.ajax({
+                                  url: 'index.php?r=site/carsforspot&id=<?= $spot->id ?>',
+                                  method: 'GET',
+                                  dataType: 'json',
+                                  success: function(data) {
+                                      if(c_array.length) {
+                                          removeArrayFromMap(c_array, myMap);
+                                          c_array = [];
                                       }
-                                  });
+                                      data.forEach(function(el) {
+                                          c_pm = new ymaps.Placemark([el.x_pos, el.y_pos], {
+                                              hintContent: el.description
+                                          });
+                                          c_array.push(c_pm);
+                                      });
+                                      addArrayOnMap(c_array, myMap);
+                                  }
                                 });
-                    <?php   }
-                        } ?>
-                            if(s_array.length) {
-                                addArrayOnMap(s_array, myMap);
-                                if(s_array.length === 1) {
-                                    myMap.setCenter(s_array[0].geometry._coordinates, 6);
-                                } else {
-                                    myMap.setBounds(<?= $spots[$autocolumnPrettyId]['bounds'] ?>);
-                                }
+                            });
+                <?php   }
+                    } ?>
+                        if(s_array.length) {
+                            addArrayOnMap(s_array, myMap);
+                            if(s_array.length === 1) {
+                                myMap.setCenter(s_array[0].geometry._coordinates, 6);
+                            } else {
+                                myMap.setBounds(<?= $spots[$autocolumnPrettyId]['bounds'] ?>);
                             }
-                            window.currentElement = {
-                                level: 'autocolumn',
-                                id: '<?= $autocolumnPrettyId ?>'
-                            };
+                        }
+                        window.currentElement = {
+                            level: 'autocolumn',
+                            id: '<?= $autocolumnPrettyId ?>'
+                        };
 
 
 
-              <?php } // if (array_key_exists($autocolumnPrettyId, $spots)) ?>
+            <?php } // if (array_key_exists($autocolumnPrettyId, $spots)) ?>
 
                         }); //Autocolumn click
 
