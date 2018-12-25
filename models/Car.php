@@ -252,7 +252,6 @@ class Car extends \yii\db\ActiveRecord
         foreach($carIDs as $ID) {
             $array[] = ['CarsID' => $ID];
         }
-
         $res = json_decode($client->GetCarsPosition(['CarsJson' => json_encode($array)])->return);
         foreach ($res as $position) {
             $car = Car::getOrCreate($position->CarsID);
