@@ -111,7 +111,26 @@ class SiteController extends Controller
         $ids = ArrayHelper::getColumn(ArrayHelper::toArray($cars), 'id');
         Car::resetPositions($ids, $id);
         $cars = Car::find()->where(['spot_id' => $id])->andWhere(['not',['x_pos' => null]])->all();
-        return json_encode(ArrayHelper::toArray($cars), JSON_UNESCAPED_UNICODE);
+        $xMinCars = 1000;
+        $xMaxCars = 0;
+        $yMinCars = 1000;
+        $yMaxCars = 0;
+        foreach ($cars as $car) {
+            if($car->x_pos < $xMinCars) {
+                $xMinCars = $car->x_pos;
+            }
+            if($car->x_pos > $xMaxCars) {
+                $xMaxCars = $car->x_pos;
+            }
+            if($car->y_pos < $yMinCars) {
+                $yMinCars = $car->y_pos;
+            }
+            if($car->y_pos > $yMaxCars) {
+                $yMaxCars = $car->y_pos;
+            }
+        }
+        $resultArray = ArrayHelper::toArray($cars);
+        return json_encode(['cars' => $resultArray, 'bounds' => [[$xMinCars, $yMinCars],[$xMaxCars, $yMaxCars]]], JSON_UNESCAPED_UNICODE);
     }
 
     public function actionIndex1()

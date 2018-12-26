@@ -14,6 +14,7 @@
     </div>
 <?= $this->render('sidebar') ?>
 
+<?php $breadcrumps = []; ?>
 <script>
     ymaps.ready( function() {
 
@@ -83,8 +84,10 @@
 
             o_array.push(o_pm);
             o_pm.events.add('click', function(e) {
-                $('.bbb > span').append('Филиал '+'<?= $organization->getTown() ?>'+ ' => ');
+                <?php $breadcrumps['filial'] = 'Филиал '.$organization->getTown(); ?>
+                $('.bbb > span').html("<?= $breadcrumps['filial'] ?>");
                 $('#info-company').addClass('hide');
+                $('#ts-info').addClass('hide');
                 $('#info-department').removeClass('hide');
                 removeAllDontNeed();
             <?php
@@ -107,8 +110,10 @@
                         });
                         a_array.push(a_pm);
                         a_pm.events.add('click', function(e) {
-                            $('.bbb > span').append(' '+'<?= $autocolumn->description ?>'+ ' => ');
-                            $('#info-department').addClass('hide');
+                            <?php $breadcrumps['autocolumn'] = $autocolumn->description ?>
+                            $('.bbb > span').html('<?= $breadcrumps['filial'].' => '.$breadcrumps['autocolumn'] ?>');
+                            $('#info-company').addClass('hide');
+                            $('#ts-info').addClass('hide');
                             $('#info-department').removeClass('hide');
                             if (s_array) {
                                 removeArrayFromMap(s_array, myMap);
@@ -139,7 +144,9 @@
                             });
                             s_array.push(s_pm);
                             s_pm.events.add('click', function() {
-                                $('.bbb > span').append(' '+'<?= $spot->description ?>'+ ' => ');
+                                <?php $breadcrumps['spot'] = $spot->description ?>
+                                $('.bbb > span').html('<?= $breadcrumps['filial'].' => '.$breadcrumps['autocolumn'].' => '.$breadcrumps['spot'] ?>');
+                                $('#info-company').addClass('hide');
                                 $('#info-department').addClass('hide');
                                 $('#ts-info').removeClass('hide');
 
@@ -152,7 +159,7 @@
                                           removeArrayFromMap(c_array, myMap);
                                           c_array = [];
                                       }
-                                      data.forEach(function(el) {
+                                      data.cars.forEach(function(el) {
                                           c_pm = new ymaps.Placemark([el.x_pos, el.y_pos], {
                                               hintContent: el.description
                                           },{
@@ -160,13 +167,22 @@
                                                   iconImageHref: 'yan/img/icon/point_'+ el.type+'.svg',
                                                   iconImageSize: [42, 47.5],
                                                   iconContentOffset: [20, 13],
-                                                  iconImageOffset: [-24, -24],
-                                                  iconContentLayout: 'asd'});
+                                                  iconImageOffset: [-24, -24]
+                                          });
                                           c_array.push(c_pm);
+                                          if (data.cars.length === 1) {
+                                              myMap.setCenter(data.cars[0].geometry._coordinates, 6);
+                                          } else {
+                                              myMap.setBounds(data.bounds);
+                                          }
                                       });
                                       addArrayOnMap(c_array, myMap);
                                   }
                                 });
+                                window.currentElement = {
+                                    level: 'spot',
+                                    id: '<?= $spotPrettyId ?>'
+                                };
                             });
                 <?php   }
                     } ?>
