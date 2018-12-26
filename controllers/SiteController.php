@@ -148,6 +148,7 @@ class SiteController extends Controller
                 $xMaxSpots = 0;
                 $yMinSpots = 1000;
                 $yMaxSpots = 0;
+                $spotIDs = [];
                 foreach ($spots as $spot) {
                     if ($spot->autocolumn_id !== $autocolumn->id) {
                         continue;
@@ -166,9 +167,11 @@ class SiteController extends Controller
                         $yMaxSpots = $spot->y_pos;
                     }
                     if($xMaxSpots === 0) {continue;}
+                    $spotIDs[] = $spot->id;
                 }
                 $spotsAutocolumn[$autocolumnGoodId]["bounds"] = "[[$xMinSpots,$yMinSpots], [$xMaxSpots,$yMaxSpots]]";
             }
+            $orgAutocolumns[$organizationGoodId]['cars'] = Car::find()->where(['spot_id' => $spotIDs])->count();
             $orgAutocolumns[$organizationGoodId]['bounds'] = $yMaxAutolumns ? "[[$xMinAutocolumns,$yMinAutocolumns], [$xMaxAutocolumns,$yMaxAutolumns]]" : false;
         }
         return $this->render('index1', [
