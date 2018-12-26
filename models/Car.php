@@ -148,7 +148,7 @@ class Car extends \yii\db\ActiveRecord
     public static function getCarsFromSoapAndSaveInDB()
     {
         ini_set('memory_limit', '1000M');
-        ini_set('max_execution_time', '600');
+        ini_set('max_execution_time', '0');
         $cars = self::getSoapCars();
         $count = count($cars);
         Console::startProgress(0, $count);
