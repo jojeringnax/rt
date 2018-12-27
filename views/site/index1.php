@@ -95,7 +95,7 @@
                     if ($key !== 'bounds' && $key !== 'cars') {
                         $autocolumnPrettyId = $autocolumn->getIdWithoutNumbers(); ?>
                 var AutoColLayout = ymaps.templateLayoutFactory.createClass(
-                    '<div class="autocolumn" style="color: black; font-weight: bold; display: flex; justify-content: space-between; flex-direction: column; align-items: center; height: 80px; width: 200px;"><span style="color:white"><?= $autocolumns[$organizationPrettyId]["cars"] ?></span> <span style="width: 200px; display:none;"><?= $autocolumn->description ?></span></div>'
+                    '<div class="autocolumn" style="color: black; font-weight: bold; display: flex; justify-content: space-between; flex-direction: column; align-items: center; height: 80px; width: 200px;"><span style="color:white"><?= $spots[$autocolumnPrettyId]["cars"] ?></span> <span style="width: 200px; display:none;"><?= $autocolumn->description ?></span></div>'
                 );
                         a_pm = new ymaps.Placemark([<?= $autocolumn->x_pos ?>, <?= $autocolumn->y_pos ?>], {
                             hintContent: '<?= $autocolumn->description ?>'
@@ -126,10 +126,10 @@
             <?php
                 if (array_key_exists($autocolumnPrettyId, $spots)) {
                     foreach ($spots[$autocolumnPrettyId] as $key => $spot) {
-                        if ($key !== 'bounds') {
+                        if ($key !== 'bounds' && $key !== 'cars') {
                             $spotPrettyId = $spot->getIdWithoutNumbers(); ?>
                             var SpotsLayout = ymaps.templateLayoutFactory.createClass(
-                                '<div class="spots" style="color: black; font-weight: bold; display: flex; justify-content: space-between; flex-direction: column; align-items: center; height: 100px; width: 200px;"><span style="color:white"><?= $autocolumns[$organizationPrettyId]["cars"] ?></span> <span style="width: 200px; display: none;"><?= $spot->description ?></span></div>'
+                                '<div class="spots" style="color: black; font-weight: bold; display: flex; justify-content: space-between; flex-direction: column; align-items: center; height: 100px; width: 200px;"><span style="color:white"><?= $spot->carsNumber ?></span> <span style="width: 200px; display: none;"><?= $spot->description ?></span></div>'
                             );
                             s_pm = new ymaps.Placemark([<?= $spot->x_pos ?>, <?= $spot->y_pos ?>],{
                                 hintContent: '<?= $spot->description ?>'

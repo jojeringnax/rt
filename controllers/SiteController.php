@@ -144,6 +144,7 @@ class SiteController extends Controller
             $xMaxAutocolumns = 0;
             $yMinAutocolumns = 1000;
             $yMaxAutolumns = 0;
+            $carsSumsTotalOrganization = 0;
             foreach ($autocolumns as $autocolumn) {
                 $autocolumnGoodId = $autocolumn->getIdWithoutNumbers();
                 if ($autocolumn->organization_id != $organization->id) {
@@ -167,11 +168,13 @@ class SiteController extends Controller
                 $xMaxSpots = 0;
                 $yMinSpots = 1000;
                 $yMaxSpots = 0;
-                $spotIDs = [];
+                $carsSumTotalAutocolumns = 0;
                 foreach ($spots as $spot) {
                     if ($spot->autocolumn_id !== $autocolumn->id) {
                         continue;
                     }
+                    $carsSum = Car::find()->where(['spot_id' => $spot->id])->andWhere(['not', ['x_pos' => null]])->count();
+                    $spot->carsNumber = $carsSum;
                     $spotsAutocolumn[$autocolumnGoodId][] = $spot;
                     if($spot->x_pos < $xMinSpots) {
                         $xMinSpots = $spot->x_pos;
@@ -186,11 +189,13 @@ class SiteController extends Controller
                         $yMaxSpots = $spot->y_pos;
                     }
                     if($xMaxSpots === 0) {continue;}
-                    $spotIDs[] = $spot->id;
+                    $carsSumsTotalOrganization += $carsSum;
+                    $carsSumTotalAutocolumns += $carsSum;
                 }
+                $spotsAutocolumn[$autocolumnGoodId]['cars'] = $carsSumTotalAutocolumns;
                 $spotsAutocolumn[$autocolumnGoodId]["bounds"] = "[[$xMinSpots,$yMinSpots], [$xMaxSpots,$yMaxSpots]]";
             }
-            $orgAutocolumns[$organizationGoodId]['cars'] = Car::find()->where(['spot_id' => $spotIDs])->count();
+            $orgAutocolumns[$organizationGoodId]['cars'] = $carsSumsTotalOrganization;
             $orgAutocolumns[$organizationGoodId]['bounds'] = $yMaxAutolumns ? "[[$xMinAutocolumns,$yMinAutocolumns], [$xMaxAutocolumns,$yMaxAutolumns]]" : false;
         }
         return $this->render('index1', [
