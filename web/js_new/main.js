@@ -1,5 +1,5 @@
 
-var bar1 = new ProgressBar.Circle('#spb1', {
+var bar1 = new ProgressBar.Circle('#circle1', {
   strokeWidth: 12,
   easing: 'easeInOut',
   duration: 1400,

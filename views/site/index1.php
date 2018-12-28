@@ -5,13 +5,6 @@
  * @var $spots \app\models\Spot[]
  */
 ?>
-    <div class="row" style="position: relative; width: 100%">
-        <div class="bbb" style="left:0; display: flex; justify-content: center; height: 50px; position: absolute; z-index: 100123123123; top: 0; width: 100%; margin-left:18%">
-            <span class=""  style="display: block; font-size: 2.5vh; font-weight: bold">
-
-            </span>
-        </div>
-    </div>
 <?= $this->render('sidebar') ?>
 
 <?php $breadcrumps = []; ?>
