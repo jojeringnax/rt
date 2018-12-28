@@ -169,12 +169,50 @@ class SiteController extends Controller
                 $yMinSpots = 1000;
                 $yMaxSpots = 0;
                 $carsSumTotalAutocolumns = 0;
+                $carsWithStatusesAutocolumn = [
+                    'G' => 0,
+                    'R' => 0,
+                    'TO' => 0,
+                    'inline' => 0
+                ];
+                $carsWithStatusesOrganization = [
+                    'G' => 0,
+                    'R' => 0,
+                    'TO' => 0,
+                    'inline' => 0
+                ];
+                $carsWithGStatus = 0;
+                $carsWithRStatus = 0;
+                $carsWithTOStatus = 0;
+                $carsInline = 0;
                 foreach ($spots as $spot) {
                     if ($spot->autocolumn_id !== $autocolumn->id) {
                         continue;
                     }
-                    $carsSum = Car::find()->where(['spot_id' => $spot->id])->andWhere(['not', ['x_pos' => null]])->count();
+                    $carsQuery = Car::find()->where(['spot_id' => $spot->id])->andWhere(['not', ['x_pos' => null]]);
+                    $carsSum = $carsQuery->count();
+                    $cars = $carsQuery->all();
+                    foreach($cars as $car) {
+                        if ($car->inline) {
+                            $carsInline++;
+                        }
+                        if ($car->status === 'G') {
+                            $carsWithGStatus++;
+                        } elseif ($car->status === 'R') {
+                            $carsWithRStatus++;
+                        } elseif ($car->status === 'TO') {
+                            $carsWithTOStatus++;
+                        } else {
+                            continue;
+                        }
+                    }
                     $spot->carsNumber = $carsSum;
+                    $spot->carsStatuses = [
+                        'G' => $carsWithGStatus,
+                        'R' => $carsWithRStatus,
+                        'TO' => $carsWithTOStatus,
+                        'inline' => $carsInline
+                        ];
                     $spotsAutocolumn[$autocolumnGoodId][] = $spot;
                     if($spot->x_pos < $xMinSpots) {
                         $xMinSpots = $spot->x_pos;
@@ -189,13 +227,23 @@ class SiteController extends Controller
                         $yMaxSpots = $spot->y_pos;
                     }
                     if($xMaxSpots === 0) {continue;}
-                    $carsSumsTotalOrganization += $carsSum;
                     $carsSumTotalAutocolumns += $carsSum;
                 }
+                $carsWithStatusesAutocolumn['G'] = $carsWithGStatus;
+                $carsWithStatusesAutocolumn['R'] = $carsWithRStatus;
+                $carsWithStatusesAutocolumn['TO'] = $carsWithTOStatus;
+                $carsWithStatusesAutocolumn['inline'] = $carsInline;
+                $spotsAutocolumn[$autocolumnGoodId]['carsStatuses'] = $carsWithStatusesAutocolumn;
                 $spotsAutocolumn[$autocolumnGoodId]['cars'] = $carsSumTotalAutocolumns;
-                $spotsAutocolumn[$autocolumnGoodId]["bounds"] = "[[$xMinSpots,$yMinSpots], [$xMaxSpots,$yMaxSpots]]";
+                $spotsAutocolumn[$autocolumnGoodId]['bounds'] = "[[$xMinSpots,$yMinSpots], [$xMaxSpots,$yMaxSpots]]";
+                $carsWithStatusesOrganization['G'] += $carsWithStatusesAutocolumn['G'];
+                $carsWithStatusesOrganization['R'] += $carsWithStatusesAutocolumn['R'];
+                $carsWithStatusesOrganization['TO'] += $carsWithStatusesAutocolumn['TO'];
+                $carsWithStatusesOrganization['inline'] += $carsWithStatusesAutocolumn['inline'];
+                $carsSumsTotalOrganization += $carsSumTotalAutocolumns;
             }
             $orgAutocolumns[$organizationGoodId]['cars'] = $carsSumsTotalOrganization;
+            $orgAutocolumns[$organizationGoodId]['carsStatuses'] = $carsWithStatusesAutocolumn;
             $orgAutocolumns[$organizationGoodId]['bounds'] = $yMaxAutolumns ? "[[$xMinAutocolumns,$yMinAutocolumns], [$xMaxAutocolumns,$yMaxAutolumns]]" : false;
         }
         return $this->render('index1', [

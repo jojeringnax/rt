@@ -11,9 +11,10 @@ $client = new SoapClient("http://d.rg24.ru:5601/PUP_WS/ws/PUP.1cws?wsdl", [
 ]);
 
 $arr = ['parameters' => [json_encode(['CarsID' => 'faa'])]];
+
 var_dump(json_decode($client->GetCarsPosition([
         'CarsJson' => json_encode([
-                'CarsID' => '004bb750-168f-11e2-a699-00155da83faf'
+                'CarsID' => '84476c4c-49e3-11e5-b89f-00155d630038'
         ])
 ])->return));
 

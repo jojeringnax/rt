@@ -34,6 +34,11 @@ class Spot extends \yii\db\ActiveRecord
     public $carsNumber;
 
     /**
+     * @var integer
+     */
+    public $carsStatuses;
+
+    /**
      * {@inheritdoc}
      */
     public static function tableName()
