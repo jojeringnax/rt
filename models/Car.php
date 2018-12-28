@@ -6,6 +6,7 @@ ini_set('max_execution_time', '300');
 
 use Codeception\Util\Soap;
 use Yii;
+use yii\base\ErrorException;
 use yii\db\Exception;
 use yii\helpers\Console;
 
@@ -253,12 +254,16 @@ class Car extends \yii\db\ActiveRecord
             $array[] = ['CarsID' => $ID];
         }
         $res = json_decode($client->GetCarsPosition(['CarsJson' => json_encode($array)])->return);
-        foreach ($res as $position) {
-            $car = Car::getOrCreate($position->CarsID);
-            $car->spot_id = $spotID;
-            $car->x_pos = $position->YPos;
-            $car->y_pos = $position->XPos;
-            $car->save();
+        try {
+            foreach ($res as $position) {
+                $car = Car::getOrCreate($position->CarsID);
+                $car->spot_id = $spotID;
+                $car->x_pos = $position->YPos;
+                $car->y_pos = $position->XPos;
+                $car->save();
+            }
+        } catch (ErrorException $e) {
+            return true;
         }
         return $carIDs;
     }
