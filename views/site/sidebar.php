@@ -269,7 +269,7 @@
     </section>
 
     <section id="ts-info" class="section-info hide">
-        <div id="head-filial">
+        <div id="head-ts">
             <div class="logo">
                 <div class="burger-logo">
                     <img src="yan/img/burger-menu.svg" alt="">

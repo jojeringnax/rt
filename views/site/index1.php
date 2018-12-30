@@ -166,7 +166,7 @@
                                               $('#info-department').addClass('hide');
                                               $('#ts-info').removeClass('hide');
                                               myMap.setCenter(window.currentElement.car.geometry._coordinates, 12);
-                                              $('.bbb > span').html(window.currentElement.organization.breadcrumps + ' => ' + window.currentElement.autocolumn.breadcrumps + ' => ' + window.currentElement.spot.breadcrumps + ' => ' + window.currentElement.car.breadcrumps);
+                                              $('.bbb > span').html(window.currentElement.organization.breadcrumps + ' <span class="arrow-r" style="color: green"> > </span> ' + window.currentElement.autocolumn.breadcrumps + ' <span class="arrow-r" style="color: green"> > </span> ' + window.currentElement.spot.breadcrumps + ' <span class="arrow-r" style="color: green"> > </span> ' + window.currentElement.car.breadcrumps);
                                               console.log(window.currentElement);
                                           });
                                           c_array.push(c_pm);
@@ -183,7 +183,7 @@
                                     }
                                 });
                                 window.currentElement.spot = s.originalEvent.target;
-                                $('.bbb > span').html(window.currentElement.organization.breadcrumps + ' => ' + window.currentElement.autocolumn.breadcrumps + ' => ' + window.currentElement.spot.breadcrumps);
+                                $('.bbb > span').html(window.currentElement.organization.breadcrumps + ' <span class="arrow-r" style="color: green"> > </span> ' + window.currentElement.autocolumn.breadcrumps + ' <span class="arrow-r" style="color: green"> > </span> ' + window.currentElement.spot.breadcrumps);
                                 console.log(window.currentElement);
                             }); //spots cllick
                 <?php   }
@@ -201,7 +201,7 @@
                         delete window.currentElement.spot;
             <?php } // if (array_key_exists($autocolumnPrettyId, $spots)) ?>
                     window.currentElement.autocolumn = a.originalEvent.target;
-                    $('.bbb > span').html(window.currentElement.organization.breadcrumps + ' => ' + window.currentElement.autocolumn.breadcrumps);
+                    $('.bbb > span').html(window.currentElement.organization.breadcrumps + '<span class="arrow-r" style="color: green"> > </span> ' + window.currentElement.autocolumn.breadcrumps);
                     console.log(window.currentElement);
                 }); //Autocolumn click
 
@@ -237,7 +237,7 @@
                     removeArrayFromMap(c_array, myMap);
                     c_array = [];
                 }
-                $('.bbb > span').html(window.currentElement.organization.breadcrumps + ' => ' + window.currentElement.autocolumn.breadcrumps + ' => ' + window.currentElement.spot.breadcrumps);
+                $('.bbb > span').html(window.currentElement.organization.breadcrumps + '<span class="arrow-r" style="color: green"> > </span>' + window.currentElement.autocolumn.breadcrumps + ' <span class="arrow-r" style="color: green"> > </span> ' + window.currentElement.spot.breadcrumps);
                 $('#info-company').addClass('hide');
                 $('#ts-info').addClass('hide');
                 $('#info-department').removeClass('hide');
@@ -251,7 +251,7 @@
                    removeArrayFromMap(c_array, myMap);
                     c_array = [];
                 }
-                $('.bbb > span').html(window.currentElement.organization.breadcrumps + ' => ' + window.currentElement.autocolumn.breadcrumps);
+                $('.bbb > span').html(window.currentElement.organization.breadcrumps + ' <span class="arrow-r" style="color: green"> > </span> ' + window.currentElement.autocolumn.breadcrumps);
                 $('#info-company').addClass('hide');
                 $('#ts-info').addClass('hide');
                 $('#info-department').removeClass('hide');
