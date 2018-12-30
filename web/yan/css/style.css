@@ -231,4 +231,17 @@ p {
 .ymaps-2-1-63-gotoymaps {
   display: none; }
 
+.bbb {
+  display: flex;
+  align-items: center;
+  height: 12vh; }
+  .bbb .back {
+    height: 50%;
+    margin-right: 25px;
+    margin-left: 25px; }
+
+.arrow-r {
+  font-size: 2.5vh;
+  font-weight: bold; }
+
 /*# sourceMappingURL=style.css.map */
