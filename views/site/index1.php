@@ -230,8 +230,8 @@
         myMap.setBounds(<?= \app\models\Organization::getMaxAndMinCoordinatesForAPI() ?>, {checkZoomRange: true});
         myMap.controls.add('zoomControl');
 
-        var button = new ymaps.control.Button("Кнопка");
-        button.events.add('click', function () {
+        var button = $('.back');
+        button.click( function () {
             if(window.currentElement.hasOwnProperty('car')) {
                 if(c_array.length) {
                     removeArrayFromMap(c_array, myMap);
@@ -297,6 +297,5 @@
 
             $('.bbb > span').html('ООО РесурсТранс');
         });
-        myMap.controls.add(button, {float: 'right'});
     });
 </script>
