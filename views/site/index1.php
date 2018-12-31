@@ -9,6 +9,7 @@
 
 <?php $breadcrumps = []; ?>
 <script>
+    $('.loading-layout').css({'display':'none'});
     ymaps.ready( function() {
         $('.bbb > span').html('ООО РесурсТранс');
         window.currentElement = {};
@@ -137,6 +138,7 @@
                             s_array.push(s_pm);
                             s_pm.breadcrumps = '<?= $spot->description ?>';
                             s_pm.events.add('click', function(s) {
+                                $('.loading-layout').css({'display':'flex'});
                                 $('#info-company').addClass('hide');
                                 $('#info-department').removeClass('hide');
                                 $('#ts-info').addClass('hide');
@@ -180,6 +182,7 @@
 
                                         });
                                         addArrayOnMap(c_array, myMap);
+                                        $('.loading-layout').css({'display':'none'});
                                     }
                                 });
                                 window.currentElement.spot = s.originalEvent.target;
