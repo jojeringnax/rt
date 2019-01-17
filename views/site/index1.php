@@ -9,6 +9,16 @@
 
 <?php $breadcrumps = []; ?>
 <script>
+    let changeInfo = function(totTs, onLine, onRep, onTO, passCar, freightCar, busCar, specCar) {
+        $('#totTs').html(totTs);
+        $('#OnLine').html(onLine);
+        $('#OnRep').html(onRep);
+        $('#onTo').html(onTO);
+        $('#passCar').html(passCar);
+        $('#freightCar').html(freightCar);
+        $('#busCar').html(busCar);
+        $('#specCar').html(specCar);
+    };
     $('.loading-layout').css({'display':'none'});
     ymaps.ready( function() {
         $('.bbb > span').html('ООО РесурсТранс');
@@ -60,6 +70,7 @@
         <?php foreach ($organizations as $organization) {
             $organizationPrettyId = $organization->getIdWithoutNumbers();
             ?>
+
         var OrgLayout = ymaps.templateLayoutFactory.createClass(
             '<div class="organizations" style="color: black; font-weight: bold; display: flex; justify-content: space-between; flex-direction: column; align-items: center; height: 50px; width: 200px;"><span style="color:white"><?= $autocolumns[$organizationPrettyId]["cars"] ?></span> <span style="width: 200px"><?= $organization->getTown() ?></span></div>'
         );
@@ -79,18 +90,30 @@
             o_array.push(o_pm);
             o_pm.breadcrumps = '<?= 'Филиал '.$organization->getTown() ?>';
             o_pm.events.add('click', function(o) {
+                changeInfo(
+                    <?= $autocolumns[$organizationPrettyId]["cars"] ?>,
+                    <?= $autocolumns[$organizationPrettyId]["carsStatuses"]["inline"] ?>,
+                    <?= $autocolumns[$organizationPrettyId]["carsStatuses"]["R"] ?>,
+                    <?= $autocolumns[$organizationPrettyId]["carsStatuses"]["TO"] ?>,
+                    <?= $autocolumns[$organizationPrettyId]["carsTypes"][\app\models\Car::LIGHT] ?>,
+                    <?= $autocolumns[$organizationPrettyId]["carsTypes"][\app\models\Car::TRUCK] ?>,
+                    <?= $autocolumns[$organizationPrettyId]["carsTypes"][\app\models\Car::BUS] ?>,
+                    <?= $autocolumns[$organizationPrettyId]["carsTypes"][\app\models\Car::SPEC] ?>
+                );
+
                 $('#info-company').addClass('hide');
                 $('#ts-info').addClass('hide');
                 $('#info-department').removeClass('hide');
                 removeAllDontNeed();
             <?php
                 foreach ($autocolumns[$organizationPrettyId] as $key => $autocolumn) {
-                    if ($key !== 'bounds' && $key !== 'cars' && $key !== 'carsStatuses') {
+                    if ($key !== 'bounds' && $key !== 'cars' && $key !== 'carsStatuses' && $key !== 'carsTypes') {
                         $autocolumnPrettyId = $autocolumn->getIdWithoutNumbers(); ?>
+                console.log(<?= $spots[$autocolumnPrettyId]["carsTypes"][0] ?>);
                 var AutoColLayout = ymaps.templateLayoutFactory.createClass(
                     '<div class="autocolumn" style="color: black; font-weight: bold; display: flex; justify-content: space-between; flex-direction: column; align-items: center; height: 80px; width: 200px;"><span style="color:white"><?= $spots[$autocolumnPrettyId]["cars"] ?></span> <span style="width: 200px; display:none;"><?= $autocolumn->description ?></span></div>'
                 );
-                console.log(<?= $spots[$autocolumnPrettyId]["carsStatuses"]['G'] ?>);
+                //console.log(<?= $spots[$autocolumnPrettyId]["carsStatuses"]['G'] ?>);
                 a_pm = new ymaps.Placemark([<?= $autocolumn->x_pos ?>, <?= $autocolumn->y_pos ?>], {
                     hintContent: '<?= $autocolumn->description ?>'
                 }, {
@@ -105,6 +128,16 @@
                 a_pm.breadcrumps = '<?= $autocolumn->description ?>';
                 a_array.push(a_pm);
                 a_pm.events.add('click', function(a) {
+                    changeInfo(
+                        <?= $spots[$autocolumnPrettyId]["cars"] ?>,
+                        <?= $spots[$autocolumnPrettyId]["carsStatuses"]["inline"] ?>,
+                        <?= $spots[$autocolumnPrettyId]["carsStatuses"]["R"] ?>,
+                        <?= $spots[$autocolumnPrettyId]["carsStatuses"]["TO"] ?>,
+                        <?= $spots[$autocolumnPrettyId]["carsTypes"][\app\models\Car::LIGHT] ?>,
+                        <?= $spots[$autocolumnPrettyId]["carsTypes"][\app\models\Car::TRUCK] ?>,
+                        <?= $spots[$autocolumnPrettyId]["carsTypes"][\app\models\Car::BUS] ?>,
+                        <?= $spots[$autocolumnPrettyId]["carsTypes"][\app\models\Car::SPEC] ?>
+                    );
                     $('#info-company').addClass('hide');
                     $('#ts-info').addClass('hide');
                     $('#info-department').removeClass('hide');
@@ -119,7 +152,7 @@
             <?php
                 if (array_key_exists($autocolumnPrettyId, $spots)) {
                     foreach ($spots[$autocolumnPrettyId] as $key => $spot) {
-                        if ($key !== 'bounds' && $key !== 'cars' && $key !== 'carsStatuses') {
+                        if ($key !== 'bounds' && $key !== 'cars' && $key !== 'carsStatuses' && $key !== 'carsTypes') {
                             $spotPrettyId = $spot->getIdWithoutNumbers(); ?>
                             var SpotsLayout = ymaps.templateLayoutFactory.createClass(
                                 '<div class="spots" style="color: black; font-weight: bold; display: flex; justify-content: space-between; flex-direction: column; align-items: center; height: 100px; width: 200px;"><span style="color:white"><?= $spot->carsNumber ?></span> <span style="width: 200px; display: none;"><?= $spot->description ?></span></div>'
@@ -138,6 +171,17 @@
                             s_array.push(s_pm);
                             s_pm.breadcrumps = '<?= $spot->description ?>';
                             s_pm.events.add('click', function(s) {
+                                changeInfo(
+                                    <?= $spot->carsNumber ?>,
+                                    <?= $spot->carsStatuses["inline"] ?>,
+                                    <?= $spot->carsStatuses["R"] ?>,
+                                    <?= $spot->carsStatuses["TO"] ?>,
+                                    <?= $spot->carsTypes[\app\models\Car::LIGHT] ?>,
+                                    <?= $spot->carsTypes[\app\models\Car::TRUCK] ?>,
+                                    <?= $spot->carsTypes[\app\models\Car::BUS] ?>,
+                                    <?= $spot->carsTypes[\app\models\Car::SPEC] ?>
+                                );
+                                console.log('spo',<?= $spot->carsTypes[\app\models\Car::LIGHT] ?>);
                                 $('.loading-layout').css({'display':'flex'});
                                 $('#info-company').addClass('hide');
                                 $('#info-department').removeClass('hide');

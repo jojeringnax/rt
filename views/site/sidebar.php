@@ -59,7 +59,7 @@
                     <span id="h3-indicator" class="text">Показатели компании</span>
                 </div>
                 <div class="item-bar">
-                    <div class="" style="display:flex; justify-content:center; align-items:center; position:relative; margin-left: 15px;">
+                    <div class="cirk" style="display:flex; justify-content:center; align-items:center; position:relative; margin-left: 15px;">
                         <p id="cpb_per1" class="p-bar">60%</p>
                         <div id="circle1" class="circle"></div>
                     </div>
@@ -68,7 +68,7 @@
                     </div>
                 </div>
                 <div class="item-bar">
-                    <div class="" style="display:flex; justify-content:center; align-items:center; position:relative; margin-left: 15px;">
+                    <div class="cirk" style="display:flex; justify-content:center; align-items:center; position:relative; margin-left: 15px;">
                         <p id="cpb_per2" class="p-bar">30%</p>
                         <div id="circle2" class="circle"></div>
                     </div>
@@ -77,7 +77,7 @@
                     </div>
                 </div>
                 <div class="item-bar">
-                    <div class="" style="display:flex; justify-content:center; align-items:center; position:relative; margin-left: 15px;">
+                    <div class="cirk" style="display:flex; justify-content:center; align-items:center; position:relative; margin-left: 15px;">
                         <p id="cpb_per3" class="p-bar">90%</p>
                         <div id="circle3" class="circle"></div>
                     </div>
@@ -86,7 +86,7 @@
                     </div>
                 </div>
                 <div class="item-bar">
-                    <div class="" style="display:flex; justify-content:center; align-items:center; position:relative; margin-left: 15px;">
+                    <div class="cirk" style="display:flex; justify-content:center; align-items:center; position:relative; margin-left: 15px;">
                         <p id="cpb_per4" class="p-bar">100%</p>
                         <div id="circle4" class="circle"></div>
                     </div>
@@ -95,7 +95,7 @@
                     </div>
                 </div>
                 <div class="item-bar">
-                    <div class="" style="display:flex; justify-content:center; align-items:center; position:relative; margin-left: 15px;">
+                    <div class="cirk" style="display:flex; justify-content:center; align-items:center; position:relative; margin-left: 15px;">
                         <p id="cpb_per5" class="p-bar">100%</p>
                         <div id="circle5" class="circle"></div>
                     </div>
