@@ -244,7 +244,9 @@ class SiteController extends Controller
                 $spotsAutocolumn[$autocolumnGoodId]['bounds'] = "[[$xMinSpots,$yMinSpots], [$xMaxSpots,$yMaxSpots]]";
                 $spotsAutocolumn[$autocolumnGoodId]['carsTypes'] = $carsTypesSpot;
 
-                $carsTypesOrganization = $carsTypesOrganization + $carsTypesAutocolumn;
+                for ($i = 0; $i < count(Car::MODELS); $i++) {
+                    $carsTypesOrganization[$i] = $carsTypesOrganization[$i] + $carsTypesAutocolumn[$i];
+                }
 
                 $carsWithStatusesOrganization['G'] += $carsWithStatusesAutocolumn['G'];
                 $carsWithStatusesOrganization['R'] += $carsWithStatusesAutocolumn['R'];
