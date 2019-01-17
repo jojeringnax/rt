@@ -183,13 +183,13 @@ class SiteController extends Controller
                     'inline' => 0
                 ];
                 $carsTypesAutocolumn = [0,0,0,0];
-                $carsTypesSpot = [0,0,0,0];
 
                 $carsWithGStatus = 0;
                 $carsWithRStatus = 0;
                 $carsWithTOStatus = 0;
                 $carsInline = 0;
                 foreach ($spots as $spot) {
+                    $carsTypesSpot = [0,0,0,0];
                     if ($spot->autocolumn_id !== $autocolumn->id) {
                         continue;
                     }
@@ -197,7 +197,9 @@ class SiteController extends Controller
                     $carsSum = $carsQuery->count();
                     $cars = $carsQuery->all();
                     foreach($cars as $car) {
-                        if (isset($car->type)) $carsTypesSpot[$car->type]++;
+                        if ($car->type !== null) {
+                            $carsTypesSpot[$car->type]++;
+                        }
 
                         if ($car->inline) {
                             $carsInline++;
@@ -220,6 +222,7 @@ class SiteController extends Controller
                         'inline' => $carsInline
                         ];
                     $spotsAutocolumn[$autocolumnGoodId][] = $spot;
+                    $spot->carsTypes = $carsTypesSpot;
                     if($spot->x_pos < $xMinSpots) {
                         $xMinSpots = $spot->x_pos;
                     }
