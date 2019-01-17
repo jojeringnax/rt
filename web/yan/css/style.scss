@@ -88,7 +88,8 @@ p {
     display: flex;
     align-items: center;
     img {
-      height: 14px;
+      height: 2vh;
+
     }
 
   }
@@ -113,7 +114,7 @@ p {
     display: flex;
     align-items: center;
     img {
-      height: 12px;
+      height: 2vh;
     }
   }
 
@@ -132,7 +133,7 @@ p {
     display: flex;
     align-items: center;
     img {
-      height: 12px;
+      height: 2vh;
     }
   }
 
@@ -148,11 +149,17 @@ p {
   margin-top: 50px;
   display: flex;
   justify-content: flex-start;
-  width: 200px;
+  align-items: center;
+  //width: 200px;
 
   .ilia {
     width: 35px;
     height: 35px;
+  }
+  .cirk {
+    width: 6.5vh;
+    margin-left: 0 !important;
+    height: 6.5vh;
   }
 }
 
@@ -161,8 +168,8 @@ p {
 }
 
 .circle {
-  height: 50px;
-  width: 50px;
+  height: 100%;
+  width: 100%;
   position:absolute;
 }
 
@@ -249,8 +256,8 @@ p {
     margin-top: 23px;
     div {
       .circle {
-        height: 35px;
-        width: 35px;
+        height: 6vh;
+        width:  6vh;
       }
     }
   }
@@ -347,7 +354,7 @@ p {
 .bbb {
   display: flex;
   align-items: center;
-  height: 12vh;
+  height: 7.5vh;
   .back {
     height: 50%;
     margin-right: 25px;
