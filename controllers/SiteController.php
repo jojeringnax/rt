@@ -197,7 +197,7 @@ class SiteController extends Controller
                     $carsSum = $carsQuery->count();
                     $cars = $carsQuery->all();
                     foreach($cars as $car) {
-                        if ($car->type !== null) {
+                        if ($car->type !== null){
                             $carsTypesSpot[$car->type]++;
                         }
 
@@ -214,6 +214,7 @@ class SiteController extends Controller
                             continue;
                         }
                     }
+                    $spot->carsTypes = $carsTypesSpot;
                     $spot->carsNumber = $carsSum;
                     $spot->carsStatuses = [
                         'G' => $carsWithGStatus,
@@ -222,7 +223,6 @@ class SiteController extends Controller
                         'inline' => $carsInline
                         ];
                     $spotsAutocolumn[$autocolumnGoodId][] = $spot;
-                    $spot->carsTypes = $carsTypesSpot;
                     if($spot->x_pos < $xMinSpots) {
                         $xMinSpots = $spot->x_pos;
                     }
@@ -237,18 +237,20 @@ class SiteController extends Controller
                     }
                     if($xMaxSpots === 0) {continue;}
                     $carsSumTotalAutocolumns += $carsSum;
+
+
+                    for ($i = 0; $i < count(Car::MODELS); $i++) {
+                        $carsTypesAutocolumn[$i] += $carsTypesSpot[$i];
+                    }
                 }
                 $carsWithStatusesAutocolumn['G'] = $carsWithGStatus;
                 $carsWithStatusesAutocolumn['R'] = $carsWithRStatus;
                 $carsWithStatusesAutocolumn['TO'] = $carsWithTOStatus;
                 $carsWithStatusesAutocolumn['inline'] = $carsInline;
-                for ($i = 0; $i < count(Car::MODELS); $i++) {
-                    $carsTypesAutocolumn[$i] += $carsTypesSpot[$i];
-                }
                 $spotsAutocolumn[$autocolumnGoodId]['carsStatuses'] = $carsWithStatusesAutocolumn;
                 $spotsAutocolumn[$autocolumnGoodId]['cars'] = $carsSumTotalAutocolumns;
                 $spotsAutocolumn[$autocolumnGoodId]['bounds'] = "[[$xMinSpots,$yMinSpots], [$xMaxSpots,$yMaxSpots]]";
-                $spotsAutocolumn[$autocolumnGoodId]['carsTypes'] = $carsTypesSpot;
+                $spotsAutocolumn[$autocolumnGoodId]['carsTypes'] = $carsTypesAutocolumn;
 
 
 
