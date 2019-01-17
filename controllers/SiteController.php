@@ -145,6 +145,13 @@ class SiteController extends Controller
             $yMinAutocolumns = 1000;
             $yMaxAutolumns = 0;
             $carsSumsTotalOrganization = 0;
+            $carsWithStatusesOrganization = [
+                'G' => 0,
+                'R' => 0,
+                'TO' => 0,
+                'inline' => 0
+            ];
+            $carsTypesOrganization = [0,0,0,0];
             foreach ($autocolumns as $autocolumn) {
                 $autocolumnGoodId = $autocolumn->getIdWithoutNumbers();
                 if ($autocolumn->organization_id != $organization->id) {
@@ -175,12 +182,9 @@ class SiteController extends Controller
                     'TO' => 0,
                     'inline' => 0
                 ];
-                $carsWithStatusesOrganization = [
-                    'G' => 0,
-                    'R' => 0,
-                    'TO' => 0,
-                    'inline' => 0
-                ];
+                $carsTypesAutocolumn = [0,0,0,0];
+                $carsTypesSpot = [0,0,0,0];
+
                 $carsWithGStatus = 0;
                 $carsWithRStatus = 0;
                 $carsWithTOStatus = 0;
@@ -193,6 +197,8 @@ class SiteController extends Controller
                     $carsSum = $carsQuery->count();
                     $cars = $carsQuery->all();
                     foreach($cars as $car) {
+                        if (isset($car->type)) $carsTypesSpot[$car->type]++;
+
                         if ($car->inline) {
                             $carsInline++;
                         }
@@ -236,12 +242,17 @@ class SiteController extends Controller
                 $spotsAutocolumn[$autocolumnGoodId]['carsStatuses'] = $carsWithStatusesAutocolumn;
                 $spotsAutocolumn[$autocolumnGoodId]['cars'] = $carsSumTotalAutocolumns;
                 $spotsAutocolumn[$autocolumnGoodId]['bounds'] = "[[$xMinSpots,$yMinSpots], [$xMaxSpots,$yMaxSpots]]";
+                $spotsAutocolumn[$autocolumnGoodId]['carsTypes'] = $carsTypesSpot;
+
+                $carsTypesOrganization = $carsTypesOrganization + $carsTypesAutocolumn;
+
                 $carsWithStatusesOrganization['G'] += $carsWithStatusesAutocolumn['G'];
                 $carsWithStatusesOrganization['R'] += $carsWithStatusesAutocolumn['R'];
                 $carsWithStatusesOrganization['TO'] += $carsWithStatusesAutocolumn['TO'];
                 $carsWithStatusesOrganization['inline'] += $carsWithStatusesAutocolumn['inline'];
                 $carsSumsTotalOrganization += $carsSumTotalAutocolumns;
             }
+            $orgAutocolumns[$organizationGoodId]['carsTypes'] = $carsTypesOrganization;
             $orgAutocolumns[$organizationGoodId]['cars'] = $carsSumsTotalOrganization;
             $orgAutocolumns[$organizationGoodId]['carsStatuses'] = $carsWithStatusesAutocolumn;
             $orgAutocolumns[$organizationGoodId]['bounds'] = $yMaxAutolumns ? "[[$xMinAutocolumns,$yMinAutocolumns], [$xMaxAutocolumns,$yMaxAutolumns]]" : false;

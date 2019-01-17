@@ -35,6 +35,11 @@ class Car extends \yii\db\ActiveRecord
         'Спецтехника' => 3
     );
 
+    const LIGHT = 0;
+    const TRUCK = 1;
+    const BUS = 2;
+    const SPEC = 3;
+
 
     /**
      * {@inheritdoc}
