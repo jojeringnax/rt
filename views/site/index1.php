@@ -217,8 +217,8 @@
                                           });
                                           c_array.push(c_pm);
                                           if (data.cars.length === 1) {
-                                              s.originalEvent.target.center = data.cars[0].geometry._coordinates;
-                                              myMap.setCenter(data.cars[0].geometry._coordinates, 6);
+                                              s.originalEvent.target.center = c_pm.geometry._coordinates;
+                                              myMap.setCenter(s.originalEvent.target.center, 6);
                                           } else {
                                               s.originalEvent.target.bounds = data.bounds;
                                               myMap.setBounds(data.bounds, {checkZoomRange: true});
