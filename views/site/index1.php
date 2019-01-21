@@ -72,7 +72,7 @@
             ?>
 
         var OrgLayout = ymaps.templateLayoutFactory.createClass(
-            '<div class="organizations" style="color: black; font-weight: bold; display: flex; justify-content: space-between; flex-direction: column; align-items: center; height: 50px; width: 200px;"><span style="color:white"><?= $autocolumns[$organizationPrettyId]["cars"] ?></span> <span style="width: 200px"><?= $organization->getTown() ?></span></div>'
+            '<div class="organizations" style="color: black; font-weight: bold; display: flex; justify-content: space-between; flex-direction: column; align-items: center; height: 50px; width: 250px;"><span style="color:white; margin-top: -50px"><?= $autocolumns[$organizationPrettyId]["cars"] ?></span> <span style="width: 250px; margin-top: 50px"><?= $organization->getTown() ?></span></div>'
         );
             o_pm = new ymaps.Placemark([<?= $organization->x_pos ?>, <?= $organization->y_pos ?>], {
                 iconCaption : '<?= $organization->getTown() ?>',
@@ -80,8 +80,8 @@
             }, {
                 iconLayout: 'default#imageWithContent',
                 iconImageHref: 'yan/img/icon/filial.svg',
-                iconImageSize: [42, 47.5],
-                iconContentOffset: [-80, 15],
+                iconImageSize: [102, 107.5],
+                iconContentOffset: [-74, 75],
                 iconImageOffset: [-24, -24],
                 preset: 'islands#greenDotIconWithCaption',
                 iconContentLayout: OrgLayout
@@ -111,7 +111,7 @@
                         $autocolumnPrettyId = $autocolumn->getIdWithoutNumbers(); ?>
                 console.log(<?= $spots[$autocolumnPrettyId]["carsTypes"][0] ?>);
                 var AutoColLayout = ymaps.templateLayoutFactory.createClass(
-                    '<div class="autocolumn" style="color: black; font-weight: bold; display: flex; justify-content: space-between; flex-direction: column; align-items: center; height: 80px; width: 200px;"><span style="color:white"><?= $spots[$autocolumnPrettyId]["cars"] ?></span> <span style="width: 200px; display:none;"><?= $autocolumn->description ?></span></div>'
+                    '<div class="autocolumn" style="color: black; font-weight: bold; display: flex; justify-content: space-between; flex-direction: column; align-items: center;  height: 50px; width: 250px;"><span style="color:white; margin-top: -50px"><?= $spots[$autocolumnPrettyId]["cars"] ?></span> <span style="width: 200px; display:none; margin-top: 50px"><?= $autocolumn->description ?></span></div>'
                 );
                 //console.log(<?= $spots[$autocolumnPrettyId]["carsStatuses"]['G'] ?>);
                 a_pm = new ymaps.Placemark([<?= $autocolumn->x_pos ?>, <?= $autocolumn->y_pos ?>], {
@@ -119,8 +119,8 @@
                 }, {
                     iconLayout: 'default#imageWithContent',
                     iconImageHref: 'yan/img/icon/autocol.svg',
-                    iconImageSize: [50, 55.5],
-                    iconContentOffset: [-75, 18],
+                    iconImageSize: [110, 115.5],
+                    iconContentOffset: [-70, 75],
                     iconImageOffset: [-24, -24],
                     preset: 'islands#greenDotIconWithCaption',
                     iconContentLayout: AutoColLayout
@@ -155,16 +155,16 @@
                         if ($key !== 'bounds' && $key !== 'cars' && $key !== 'carsStatuses' && $key !== 'carsTypes') {
                             $spotPrettyId = $spot->getIdWithoutNumbers(); ?>
                             var SpotsLayout = ymaps.templateLayoutFactory.createClass(
-                                '<div class="spots" style="color: black; font-weight: bold; display: flex; justify-content: space-between; flex-direction: column; align-items: center; height: 100px; width: 200px;"><span style="color:white"><?= $spot->carsNumber ?></span> <span style="width: 200px; display: none;"><?= $spot->description ?></span></div>'
+                                '<div class="spots" style="color: black; font-weight: bold; display: flex; justify-content: space-between; flex-direction: column; align-items: center; height: 50px; width: 250px;"><span style="color:white;  margin-top: -42px"><?= $spot->carsNumber ?></span> <span style="width: 200px; display: none;"><?= $spot->description ?></span></div>'
                             );
                             s_pm = new ymaps.Placemark([<?= $spot->x_pos ?>, <?= $spot->y_pos ?>],{
                                 hintContent: '<?= $spot->description ?>'
                             }, {
                                 iconLayout: 'default#imageWithContent',
                                 iconImageHref: 'yan/img/icon/spots_main.svg',
-                                iconImageSize: [47, 52.5],
-                                iconContentOffset: [-77.5, 18],
-                                iconImageOffset: [-20, -22],
+                                iconImageSize: [115, 115],
+                                iconContentOffset: [-68, 75],
+                                iconImageOffset: [-24, -24],
                                 preset: 'islands#greenDotIconWithCaption',
                                 iconContentLayout: SpotsLayout
                             });
@@ -201,9 +201,9 @@
                                           },{
                                               iconLayout: 'default#imageWithContent',
                                                   iconImageHref: 'yan/img/icon/point_'+ el.type+'.svg',
-                                                  iconImageSize: [42, 47.5],
-                                                  iconContentOffset: [20, 13],
-                                                  iconImageOffset: [-24, -24]
+                                                  iconImageSize: [110, 115.5],
+                                                  iconContentOffset: [-70, 75],
+                                                  iconImageOffset: [-24, -24],
                                           });
                                           c_pm.breadcrumps = el.description;
                                           c_pm.events.add('click', function (c) {

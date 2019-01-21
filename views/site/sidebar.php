@@ -3,15 +3,11 @@
     <section id="info-company" class="section-info">
         <div class="main-item-result">
             <div class="logo">
-                <div class="burger-logo">
-                    <img src="yan/img/burger-menu.svg" alt="">
-                </div>
                 <div class="img-logo">
                     <img src="yan/img/logo.svg" alt="">
                 </div>
             </div>
             <div id="company-info">
-                <span id="nameCompany">Компания</span>
                 <div class="ts-title">
                     <span class="img"><img src="yan/img/delivery-truck.svg" alt="#" class="span-yan/img-h3"></span>
                     <span id="tranport-means" class="ts-text h3-main">Транспортные средства</span>

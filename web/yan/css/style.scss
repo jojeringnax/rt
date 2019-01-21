@@ -14,6 +14,10 @@ body {
   position: relative;
 }
 
+.result {
+  padding: 20px 0 20px 0;
+}
+
 .sidebarr {
   position: absolute;
 }
@@ -95,7 +99,7 @@ p {
   }
 
   span.ts-text {
-    font-size: 12px !important;
+    font-size: 2vh;
     font-weight: bold;
     color: #79849F;
     margin-left: 5px;
@@ -119,7 +123,7 @@ p {
   }
 
   span.text {
-    font-size: 12px !important;
+    font-size: 2vh;
     font-weight: bold;
     color: #79849F;
     margin-left: 5px;
@@ -138,11 +142,12 @@ p {
   }
 
   span.text {
-    font-size: 12px !important;
+    font-size: 2vh;
     font-weight: bold;
     color: #79849F;
     margin-left: 5px;
   }
+
 }
 
 .item-bar {
@@ -153,8 +158,8 @@ p {
   //width: 200px;
 
   .ilia {
-    width: 35px;
-    height: 35px;
+    width: 6.5vh;
+    height: 6.5vh;
   }
   .cirk {
     width: 6.5vh;
@@ -176,6 +181,14 @@ p {
 .p-bar {
   position: absolute;
 }
+.span-h3-filial {
+  img {
+    height: 2vh;
+  }
+  .p-type-transport {
+    font-size: 1.5vh;
+  }
+}
 
 /*===============department===============*/
 
@@ -184,14 +197,14 @@ p {
   flex-direction: row;
 
   .title-department-text {
-    font-size: 14px;
+    font-size: 1.5vh;
 
   }
 }
 
 .level-menu {
   .text-level-menu {
-    font-size: 8px;
+    font-size: 1vh;
     color: #808080;
   }
 
@@ -211,12 +224,12 @@ p {
   align-items: center;
   span {
     img {
-      width: 13px;
+      height: 2vh;
     }
   }
 
   p {
-    font-size: 12px;
+    font-size: 1.5vh;
     margin-left: 7px;
     color: #1884E4;
   }
@@ -227,7 +240,7 @@ p {
   cursor: pointer;
   padding: 3px;
   border-radius: 5px;
-  height: 15px;
+  height: 3vh;
   align-items: center;
 
   &:hover {
@@ -246,14 +259,13 @@ p {
 
 .indicators-title {
   .text {
-    font-size: 12px !important;
+    font-size: 1.5vh;
   }
 }
 
 #indicators-department {
-
   .item-bar {
-    margin-top: 23px;
+    margin-top: 4vh;
     div {
       .circle {
         height: 6vh;
@@ -269,7 +281,7 @@ p {
 }
 
 .indic-bot {
-  margin-top: 20px;
+  margin-top: 3.5vh;
   display: flex;
   justify-content: flex-start;
   &:first-child {
@@ -277,7 +289,7 @@ p {
   }
 
   .div-meanings {
-    margin-left: 25px;
+    margin-left: 3vh;
 
   }
 }
@@ -285,7 +297,7 @@ p {
 .title-ts {
   display: flex;
   flex-direction: row;
-  margin-top: 15px;
+  margin-top: 3.5vh;
   .title-ts-text {
     font-size: 14px;
 
@@ -300,7 +312,7 @@ p {
 }
 
 .route-title {
-  margin-top: 15px;
+  margin-top: 3.5vh;
   display: flex;
   align-items: center;
   span {
