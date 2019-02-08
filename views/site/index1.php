@@ -36,21 +36,27 @@
         };
 
 
-        var removeAllDontNeed = function() {
+        var removeAllDontNeed = function(level=0) {
             if (o_array.length) {
                 removeArrayFromMap(o_array, myMap);
             }
             if (a_array.length) {
                 removeArrayFromMap(a_array, myMap);
-                a_array = [];
+                if (level === 0) {
+                    a_array = [];
+                }
             }
             if (s_array.length) {
                 removeArrayFromMap(s_array, myMap);
-                s_array = [];
+                if (level > 0) {
+                    s_array = [];
+                }
             }
             if(c_array.length) {
                 removeArrayFromMap(c_array, myMap);
-                c_array = [];
+                if (level > 1) {
+                    c_array = [];
+                }
             }
         };
 
@@ -106,14 +112,13 @@
                 $('#info-department').removeClass('hide');
                 removeAllDontNeed();
             <?php
-                foreach ($autocolumns[$organizationPrettyId] as $key => $autocolumn) {
-                    if ($key !== 'bounds' && $key !== 'cars' && $key !== 'carsStatuses' && $key !== 'carsTypes') {
+                foreach ($autocolumns[$organizationPrettyId] as $key1 => $autocolumn) {
+                    if ($key1 !== 'bounds' && $key1 !== 'cars' && $key1 !== 'carsStatuses' && $key1 !== 'carsTypes') {
                         $autocolumnPrettyId = $autocolumn->getIdWithoutNumbers(); ?>
                 console.log(<?= $spots[$autocolumnPrettyId]["carsTypes"][0] ?>);
                 var AutoColLayout = ymaps.templateLayoutFactory.createClass(
                     '<div class="autocolumn" style="color: black; font-weight: bold; display: flex; justify-content: space-between; flex-direction: column; align-items: center;  height: 50px; width: 250px;"><span style="color:white; margin-top: -50px"><?= $spots[$autocolumnPrettyId]["cars"] ?></span> <span style="width: 200px; display:none; margin-top: 50px"><?= $autocolumn->description ?></span></div>'
                 );
-                //console.log(<?= $spots[$autocolumnPrettyId]["carsStatuses"]['G'] ?>);
                 a_pm = new ymaps.Placemark([<?= $autocolumn->x_pos ?>, <?= $autocolumn->y_pos ?>], {
                     hintContent: '<?= $autocolumn->description ?>'
                 }, {
@@ -141,18 +146,11 @@
                     $('#info-company').addClass('hide');
                     $('#ts-info').addClass('hide');
                     $('#info-department').removeClass('hide');
-                    if (s_array) {
-                        removeArrayFromMap(s_array, myMap);
-                        s_array = [];
-                    }
-                    if(c_array.length) {
-                        removeArrayFromMap(c_array, myMap);
-                        c_array = [];
-                    }
+                    removeAllDontNeed(1);
             <?php
                 if (array_key_exists($autocolumnPrettyId, $spots)) {
-                    foreach ($spots[$autocolumnPrettyId] as $key => $spot) {
-                        if ($key !== 'bounds' && $key !== 'cars' && $key !== 'carsStatuses' && $key !== 'carsTypes') {
+                    foreach ($spots[$autocolumnPrettyId] as $key2 => $spot) {
+                        if ($key2 !== 'bounds' && $key2 !== 'cars' && $key2 !== 'carsStatuses' && $key2 !== 'carsTypes') {
                             $spotPrettyId = $spot->getIdWithoutNumbers(); ?>
                             var SpotsLayout = ymaps.templateLayoutFactory.createClass(
                                 '<div class="spots" style="color: black; font-weight: bold; display: flex; justify-content: space-between; flex-direction: column; align-items: center; height: 50px; width: 250px;"><span style="color:white;  margin-top: -42px"><?= $spot->carsNumber ?></span> <span style="width: 200px; display: none;"><?= $spot->description ?></span></div>'
@@ -181,7 +179,6 @@
                                     <?= $spot->carsTypes[\app\models\Car::BUS] ?>,
                                     <?= $spot->carsTypes[\app\models\Car::SPEC] ?>
                                 );
-                                console.log('spo',<?= $spot->carsTypes[\app\models\Car::LIGHT] ?>);
                                 $('.loading-layout').css({'display':'flex'});
                                 $('#info-company').addClass('hide');
                                 $('#info-department').removeClass('hide');
@@ -329,6 +326,9 @@
                     myMap.setCenter(window.currentElement.organization.center, 12);
                 }
                 console.log(window.currentElement);
+                if(a_array) {
+                    addArrayOnMap(a_array, myMap);
+                }
                 return true;
             }
             if(a_array) {
