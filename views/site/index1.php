@@ -41,13 +41,13 @@
                 removeArrayFromMap(o_array, myMap);
             }
             if (a_array.length) {
-                removeArrayFromMap(a_array, myMap);
+                myMap.geoObjects.remove(clustererAutocolumns);
                 if (level === 0) {
                     a_array = [];
                 }
             }
             if (s_array.length) {
-                removeArrayFromMap(s_array, myMap);
+                myMap.geoObjects.remove(clustererSpots);
                 if (level > 0) {
                     s_array = [];
                 }
@@ -62,6 +62,7 @@
 
 
         var c_array = [], s_array = [], a_array = [], o_array = [];
+        var clustererAutocolumns = new ymaps.Clusterer(), clustererSpots = new ymaps.Clusterer();
         var myMap = new ymaps.Map('map', {
             center: [55.751574, 37.573856],
             zoom: 11,
@@ -192,6 +193,7 @@
                                           removeArrayFromMap(c_array, myMap);
                                           c_array = [];
                                         }
+                                        myMap.geoObjects.remove(clustererSpots);
                                         data.cars.forEach(function(el) {
                                           c_pm = new ymaps.Placemark([el.x_pos, el.y_pos], {
                                               hintContent: el.description
@@ -233,7 +235,9 @@
                 <?php   }
                     } ?>
                         if(s_array.length) {
-                            addArrayOnMap(s_array, myMap);
+                            clustererSpots.removeAll();
+                            clustererSpots.add(s_array);
+                            myMap.geoObjects.add(clustererSpots);
                             if(s_array.length === 1) {
                                 a.originalEvent.target.center = s_array[0].geometry._coordinates;
                                 myMap.setCenter(a.originalEvent.target.center, 12);
@@ -249,10 +253,20 @@
                     console.log(window.currentElement);
                 }); //Autocolumn click
 
+
+
+
+
+
+
           <?php } // if ($key !== bounds)
             } // foreach($autocolumns) ?>
                 if (a_array.length) {
-                    addArrayOnMap(a_array, myMap);
+
+                    clustererAutocolumns.removeAll();
+                    clustererAutocolumns.add(a_array);
+                    myMap.geoObjects.add(clustererAutocolumns);
+
                     <?php if(!empty($autocolumns[$organizationPrettyId]['bounds'])) { ?>
                         if(a_array.length === 1) {
                             o.originalEvent.target.center = a_array[0].geometry._coordinates;
@@ -287,14 +301,17 @@
                 $('#info-department').removeClass('hide');
                 delete window.currentElement.car;
                 myMap.setCenter(window.currentElement.spot.geometry._coordinates, 12);
+                myMap.geoObjects.add(window.currentElement.spot);
                 console.log(window.currentElement);
                 return true;
             }
             if(window.currentElement.hasOwnProperty('spot')) {
+                myMap.geoObjects.remove(window.currentElement.spot);
                 if(c_array.length) {
                    removeArrayFromMap(c_array, myMap);
                     c_array = [];
                 }
+                myMap.geoObjects.add(clustererSpots);
                 $('.bbb > span').html(window.currentElement.organization.breadcrumps + ' <span class="arrow-r" style="color: green"> > </span> ' + window.currentElement.autocolumn.breadcrumps);
                 $('#info-company').addClass('hide');
                 $('#ts-info').addClass('hide');
@@ -311,7 +328,7 @@
             }
             if(window.currentElement.hasOwnProperty('autocolumn')) {
                 if(s_array) {
-                    removeArrayFromMap(s_array, myMap);
+                    myMap.geoObjects.remove(clustererSpots);
                     s_array = [];
                 }
                 $('.bbb > span').html(window.currentElement.organization.breadcrumps);
@@ -327,12 +344,12 @@
                 }
                 console.log(window.currentElement);
                 if(a_array) {
-                    addArrayOnMap(a_array, myMap);
+                    myMap.geoObjects.add(clustererAutocolumns);
                 }
                 return true;
             }
             if(a_array) {
-                removeArrayFromMap(a_array, myMap);
+                myMap.geoObjects.remove(clustererAutocolumns);
                 a_array = [];
             }
             if(o_array) {
