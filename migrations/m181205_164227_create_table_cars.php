@@ -23,6 +23,12 @@ class m181205_164227_create_table_cars extends Migration
             'status' => $this->text()->null(),
             'inline' => $this->boolean()->null(),
             'year' => $this->integer(4)->null(),
+            'profitability' => $this->float(2)->null(),
+            'technical_inspection_days' => $this->integer(6)->null(),
+            'battery_change_days' => $this->integer(6)->null(),
+            'tire_change_days' => $this->integer(6)->null(),
+            'tire_season' => $this->string(64)->null(),
+            'terminal' => $this->boolean()->null(),
             'x_pos' => $this->float(8)->null(),
             'y_pos' => $this->float(8)->null()
         ]);

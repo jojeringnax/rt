@@ -93,6 +93,24 @@ class Autocolumn extends \yii\db\ActiveRecord
     }
 
     /**
+     * @return string
+     */
+    public function getIdWithoutNumbers()
+    {
+        $s = array('/0/','/1/','/2/','/3/','/4/','/5/','/6/','/7/','/8/','/9/', '/-/');
+        $a = array('a','b','c','d','e','f','g','h','i','j','');
+        return preg_replace($s, $a, $this->id);
+    }
+
+    /**
+     * @return Statistic|null
+     */
+    public function getStatistic()
+    {
+        return Statistic::findOne(['autocolumn_id' => $this->id]);
+    }
+
+    /**
      * @param $id
      * @return self|null|static
      */
@@ -110,15 +128,6 @@ class Autocolumn extends \yii\db\ActiveRecord
         return self::find()->where(['!=', 'x_pos', 0])->all();
     }
 
-    /**
-     * @return string
-     */
-    public function getIdWithoutNumbers()
-    {
-        $s = array('/0/','/1/','/2/','/3/','/4/','/5/','/6/','/7/','/8/','/9/', '/-/');
-        $a = array('a','b','c','d','e','f','g','h','i','j','');
-        return preg_replace($s, $a, $this->id);
-    }
 
     public static function getAutocolumnsFromSoapAndSaveInDB()
     {
@@ -142,5 +151,15 @@ class Autocolumn extends \yii\db\ActiveRecord
                 $log->save();
             }
         }
+    }
+
+
+    /**
+     * @param $id
+     * @return bool
+     */
+    public static function isExist($id)
+    {
+        return (boolean) self::find($id)->one();
     }
 }

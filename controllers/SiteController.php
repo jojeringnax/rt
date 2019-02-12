@@ -73,7 +73,7 @@ class SiteController extends Controller
 
     public function actionWork($cars=0)
     {
-        return $this->render('work', [
+        return $this->renderPartial('work', [
             'cars' => $cars
         ]);
     }

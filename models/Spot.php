@@ -127,6 +127,24 @@ class Spot extends \yii\db\ActiveRecord
     }
 
     /**
+     * @return Statistic|null
+     */
+    public function getStatistic()
+    {
+        return Statistic::findOne(['spot_id' => $this->id]);
+    }
+
+    /**
+     * @return string
+     */
+    public function getIdWithoutNumbers()
+    {
+        $s = array('/0/','/1/','/2/','/3/','/4/','/5/','/6/','/7/','/8/','/9/', '/-/');
+        $a = array('a','b','c','d','e','f','g','h','i','j','');
+        return preg_replace($s, $a, $this->id);
+    }
+
+    /**
      * @return array|self[]
      */
     public static function getActives()
@@ -143,16 +161,6 @@ class Spot extends \yii\db\ActiveRecord
             $resultArray[] = $spot->id;
         }
         return isset($resultArray) ? $resultArray : null;
-    }
-
-    /**
-     * @return string
-     */
-    public function getIdWithoutNumbers()
-    {
-        $s = array('/0/','/1/','/2/','/3/','/4/','/5/','/6/','/7/','/8/','/9/', '/-/');
-        $a = array('a','b','c','d','e','f','g','h','i','j','');
-        return preg_replace($s, $a, $this->id);
     }
 
     public static function getSpotsFromSoapAndSaveInDB()
@@ -180,4 +188,15 @@ class Spot extends \yii\db\ActiveRecord
         }
         return true;
     }
+
+    /**
+     * @param $id
+     * @return bool
+     */
+    public static function isExist($id)
+    {
+        return (boolean) self::find($id)->one();
+    }
+
+
 }

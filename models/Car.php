@@ -4,8 +4,6 @@ namespace app\models;
 ini_set('memory_limit', '1000M');
 ini_set('max_execution_time', '300');
 
-use Codeception\Util\Soap;
-use Yii;
 use yii\base\ErrorException;
 use yii\db\Exception;
 use yii\helpers\Console;
@@ -20,10 +18,16 @@ use yii\helpers\Console;
  * @property string $model
  * @property string $description
  * @property int $year
- * @property double $x_pos
- * @property double $y_pos
  * @property string $status
  * @property bool $inline
+ * @property integer $profitability
+ * @property integer $technical_inspection_days
+ * @property integer $battery_change_days
+ * @property integer $tire_change_days
+ * @property string $tire_season
+ * @property bool $terminal
+ * @property double $x_pos
+ * @property double $y_pos
  */
 class Car extends \yii\db\ActiveRecord
 {
@@ -118,6 +122,12 @@ class Car extends \yii\db\ActiveRecord
                 'model' => null,
                 'description' => null,
                 'year' => null,
+                'profitability' => null,
+                'technical_inspection_days' => null,
+                'battery_change_days' => null,
+                'tire_change_days' => null,
+                'tire_season' => null,
+                'terminal' => null,
                 'x_pos' => null,
                 'y_pos' => null
             ];
@@ -131,6 +141,12 @@ class Car extends \yii\db\ActiveRecord
                     $resultArray[$car->ID]['model'] = isset($car->Model) ? $car->Model  : null;
                     $resultArray[$car->ID]['description'] = isset($car->Description) ? $car->Description  : null;
                     $resultArray[$car->ID]['year'] = isset($car->Year) ? $car->Year  : null;
+                    $resultArray[$car->ID]['profitability'] = isset($carsStatus->Profitability) ? $carsStatus->Profitability  : null;
+                    $resultArray[$car->ID]['technical_inspection_days'] = isset($carsStatus->TechnicalInspection) ? $carsStatus->TechnicalInspection  : null;
+                    $resultArray[$car->ID]['battery_change_days'] = isset($carsStatus->BatteryChange) ? $carsStatus->BatteryChange  : null;
+                    $resultArray[$car->ID]['tire_change_days'] = isset($carsStatus->TyreChange) ? $carsStatus->TyreChange  : null;
+                    $resultArray[$car->ID]['tire_season'] = isset($carsStatus->TyreSeason) ? $carsStatus->TyreSeason  : null;
+                    $resultArray[$car->ID]['terminal'] = isset($carsStatus->Terminal) && $carsStatus->Terminal !== 0;
                 } else {
                     continue;
                 }
@@ -171,6 +187,12 @@ class Car extends \yii\db\ActiveRecord
             $carModel->status = $car['status'];
             $carModel->inline = $car['inline'];
             $carModel->year = $car['year'];
+            $carModel->year = $car['profitability'];
+            $carModel->year = $car['technical_inspection_days'];
+            $carModel->year = $car['battery_change_days'];
+            $carModel->year = $car['tire_change_days'];
+            $carModel->year = $car['tire_season'];
+            $carModel->year = $car['terminal'];
             $carModel->x_pos = $car['x_pos'];
             $carModel->y_pos = $car['y_pos'];
             $carModel->save();
