@@ -43,100 +43,9 @@ class Statistic extends ActiveRecord
 
     public static function getAllStats()
     {
-        $client = new \SoapClient('http://d.rg24.ru:5601/PUP_WS/ws/PUP.1cws?wsdl');
-        $applications = json_decode($client->GetRequests()->return);
-        $waybills = json_decode($client->GetWayBillProcessing()->return);
-        $accidents = json_decode($client->GetDTP()->return);
-        try {
-            $count = count($applications);
-        } catch (\Exception $e) {
-            $count = 0;
-        };
-        echo 'Applications processing';
-        Console::startProgress(0,$count);
-        $i = 0;
-        foreach($applications as $application) {
-            $i++;
-            if (Spot::isExist($application->DivisionID)) {
-                $statistic = self::findOne(['spot_id' => $application->DivisionID]);
-                if ($statistic == null) {
-                    $statistic = new self();
-                    $statistic->spot_id = $application->DivisionID;
-                }
-            } else if (Autocolumn::isExist($application->DivisionID)) {
-                $statistic = self::findOne(['autocolumn_id' => $application->DivisionID]);
-                if ($statistic == null) {
-                    $statistic = new self();
-                    $statistic->autocolumn_id = $application->DivisionID;
-                }
-            }
-            $statistic->applications_total = isset($application->CountAll) ? $application->CountAll : 0;
-            $statistic->applications_executed = isset($application->CountPlan) ? $application->CountPlan : 0;
-            $statistic->applications_canceled = isset($application->CountCancel) ? $application->CountCancel : 0;
-            $statistic->applications_sub = isset($application->CountSub) ? $application->CountSub : 0;
-            $statistic->applications_ac = isset($application->countAC) ? $application->countAC : 0;
-            $statistic->applications_mp = isset($application->countMP) ? $application->countMP : 0;
-            $statistic->save();
-            Console::updateProgress($i, $count);
-        }
-        Console::endProgress();
-        try {
-            $count = count($waybills);
-        } catch (\Exception $e) {
-            $count = 0;
-        };
-        echo 'Waybills processing';
-        Console::startProgress(0,$count);
-        $i = 0;
-        foreach($waybills as $waybill) {
-            $i++;
-            if (Spot::isExist($waybill->DivisionID)) {
-                $statistic = self::findOne(['spot_id' => $waybill->DivisionID]);
-                if ($statistic == null) {
-                    $statistic = new self();
-                    $statistic->spot_id = $waybill->DivisionID;
-                }
-            } else if (Autocolumn::isExist($waybill->DivisionID)) {
-                $statistic = self::findOne(['autocolumn_id' => $waybill->DivisionID]);
-                if ($statistic == null) {
-                    $statistic = new self();
-                    $statistic->autocolumn_id = $waybill->DivisionID;
-                }
-            }
-            $statistic->waybills_total = isset($waybill->CountAll) ? $waybill->CountAll : 0;
-            $statistic->waybills_processed = isset($waybill->CountProcessed) ? $waybill->CountProcessed : 0;
-            $statistic->save();
-            Console::updateProgress($i, $count);
-        }
-        Console::endProgress();
-        try {
-            $count = count($accidents);
-        } catch (\Exception $e) {
-            $count = 0;
-        };
-        Console::startProgress(0,$count);
-        $i = 0;
-        foreach($accidents as $accident) {
-            $i++;
-            if (Spot::isExist($accident->DivisionID)) {
-                $statistic = self::findOne(['spot_id' => $accident->DivisionID]);
-                if ($statistic == null) {
-                    $statistic = new self();
-                    $statistic->spot_id = $accident->DivisionID;
-                }
-            } else if (Autocolumn::isExist($accident->DivisionID)) {
-                $statistic = self::findOne(['autocolumn_id' => $accident->DivisionID]);
-                if ($statistic == null) {
-                    $statistic = new self();
-                    $statistic->autocolumn_id = $accident->DivisionID;
-                }
-            }
-            $statistic->accidents_total = isset($accident->CountAll) ? $accident->CountAll : 0;
-            $statistic->accidents_guilty = isset($accident->CountRT) ? $accident->CountRT : 0;
-            $statistic->save();
-            Console::updateProgress($i, $count);
-        }
-        Console::endProgress();
+        self::getApplications();
+        self::getWaybills();
+        self::getAccidents();
     }
 
     public static function getApplications()
@@ -155,9 +64,17 @@ class Statistic extends ActiveRecord
             $i++;
             $statistic = self::getOrCreate($application->DivisionID);
             if (Spot::isExist($application->DivisionID)) {
-                $statistic->spot_id = $application->DivisionID;
+                $statistic = self::findOne(['spot_id' => $application->DivisionID]);
+                if ($statistic == null) {
+                    $statistic = new self();
+                    $statistic->spot_id = $application->DivisionID;
+                }
             } else if (Autocolumn::isExist($application->DivisionID)) {
-                $statistic->autocolumn_id = $application->DivisionID;
+                $statistic = self::findOne(['autocolumn_id' => $application->DivisionID]);
+                if ($statistic == null) {
+                    $statistic = new self();
+                    $statistic->autocolumn_id = $application->DivisionID;
+                }
             }
             $statistic->applications_total = isset($application->CountAll) ? $application->CountAll : 0;
             $statistic->applications_executed = isset($application->CountPlan) ? $application->CountPlan : 0;
@@ -187,9 +104,17 @@ class Statistic extends ActiveRecord
             $i++;
             $statistic = self::getOrCreate($accident->DivisionID);
             if (Spot::isExist($accident->DivisionID)) {
-                $statistic->spot_id = $accident->DivisionID;
+                $statistic = self::findOne(['spot_id' => $accident->DivisionID]);
+                if ($statistic == null) {
+                    $statistic = new self();
+                    $statistic->spot_id = $accident->DivisionID;
+                }
             } else if (Autocolumn::isExist($accident->DivisionID)) {
-                $statistic->autocolumn_id = $accident->DivisionID;
+                $statistic = self::findOne(['autocolumn_id' => $accident->DivisionID]);
+                if ($statistic == null) {
+                    $statistic = new self();
+                    $statistic->autocolumn_id = $accident->DivisionID;
+                }
             }
             $statistic->accidents_total = isset($accident->CountAll) ? $accident->CountAll : 0;
             $statistic->accidents_guilty = isset($accident->CountRT) ? $accident->CountRT : 0;
@@ -215,9 +140,17 @@ class Statistic extends ActiveRecord
             $i++;
             $statistic = self::getOrCreate($waybill->DivisionID);
             if (Spot::isExist($waybill->DivisionID)) {
-                $statistic->spot_id = $waybill->DivisionID;
+                $statistic = self::findOne(['spot_id' => $waybill->DivisionID]);
+                if ($statistic == null) {
+                    $statistic = new self();
+                    $statistic->spot_id = $waybill->DivisionID;
+                }
             } else if (Autocolumn::isExist($waybill->DivisionID)) {
-                $statistic->autocolumn_id = $waybill->DivisionID;
+                $statistic = self::findOne(['autocolumn_id' => $waybill->DivisionID]);
+                if ($statistic == null) {
+                    $statistic = new self();
+                    $statistic->autocolumn_id = $waybill->DivisionID;
+                }
             }
             $statistic->waybills_total = isset($waybill->CountAll) ? $waybill->CountAll : 0;
             $statistic->waybills_processed = isset($waybill->CountProcessed) ? $waybill->CountProcessed : 0;

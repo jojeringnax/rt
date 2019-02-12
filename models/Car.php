@@ -187,12 +187,12 @@ class Car extends \yii\db\ActiveRecord
             $carModel->status = $car['status'];
             $carModel->inline = $car['inline'];
             $carModel->year = $car['year'];
-            $carModel->year = $car['profitability'];
-            $carModel->year = $car['technical_inspection_days'];
-            $carModel->year = $car['battery_change_days'];
-            $carModel->year = $car['tire_change_days'];
-            $carModel->year = $car['tire_season'];
-            $carModel->year = $car['terminal'];
+            $carModel->profitability = $car['profitability'];
+            $carModel->technical_inspection_days = $car['technical_inspection_days'];
+            $carModel->battery_change_days = $car['battery_change_days'];
+            $carModel->tire_change_days = $car['tire_change_days'];
+            $carModel->tire_season = $car['tire_season'];
+            $carModel->terminal = $car['terminal'];
             $carModel->x_pos = $car['x_pos'];
             $carModel->y_pos = $car['y_pos'];
             $carModel->save();
@@ -257,6 +257,12 @@ class Car extends \yii\db\ActiveRecord
             } catch (Exception $e) {
                 $car->spot_id = null;
             };
+            $car->profitability = isset($carsStatus->Profitability) ? $carsStatus->Profitability  : null;
+            $car->technical_inspection_days = isset($carsStatus->TechnicalInspection) ? $carsStatus->TechnicalInspection  : null;
+            $car->battery_change_days = isset($carsStatus->BatteryChange) ? $carsStatus->BatteryChange  : null;
+            $car->tire_change_days = isset($carsStatus->TyreChange) ? $carsStatus->TyreChange  : null;
+            $car->tire_season = isset($carsStatus->TyreSeason) ? $carsStatus->TyreSeason  : null;
+            $car->terminal = isset($carsStatus->Terminal) && $carsStatus->Terminal !== 0;
             $car->status = isset($carsStatus->Status) ? $carsStatus->Status : null;
             $car->inline = isset($carsStatus->InLine) ? $carsStatus->InLine : null;
             $car->save();
