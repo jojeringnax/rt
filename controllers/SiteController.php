@@ -133,6 +133,25 @@ class SiteController extends Controller
         return json_encode(['cars' => $resultArray, 'bounds' => [[$xMinCars, $yMinCars],[$xMaxCars, $yMaxCars]]], JSON_UNESCAPED_UNICODE);
     }
 
+    /**
+     * @param $autocolumn_id
+     * @return false|string
+     */
+    public function actionGetAutocolumnStatistic($autocolumn_id)
+    {
+        $autocolumn = Autocolumn::findOne(['id' => $autocolumn_id]);
+        if ($autocolumn == null) return null;
+        return json_encode($autocolumn->getStatistic()->getAttributes());
+    }
+
+
+    public function actionGetSpotStatistic($spot_id)
+    {
+        $spot = Spot::findOne(['id' => $spot_id]);
+        if ($spot == null) return null;
+        return json_encode($spot->getStatistic()->getAttributes());
+    }
+
     public function actionIndex1()
     {
         $organizations = Organization::getActives();

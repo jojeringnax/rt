@@ -53,6 +53,11 @@ class Statistic extends ActiveRecord
         self::getWaybills($client);
         self::getAccidents($client);
         self::getTMCH($client);
+        self::setAutocolumnsIds();
+    }
+
+    public static function setAutocolumnsIds()
+    {
         $statistics = self::find()->all();
         $count = count($statistics);
         Console::startProgress(0, $count);
