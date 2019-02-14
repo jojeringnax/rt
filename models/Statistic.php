@@ -9,6 +9,7 @@
 namespace app\models;
 
 
+use Codeception\Util\Soap;
 use yii\db\ActiveRecord;
 use yii\helpers\Console;
 
@@ -29,6 +30,8 @@ use yii\helpers\Console;
  * @property integer $waybills_processed
  * @property integer $accidents_total
  * @property integer $accidents_guilty
+ * @property float $time
+ * @property float $fuel
  */
 class Statistic extends ActiveRecord
 {
@@ -40,17 +43,34 @@ class Statistic extends ActiveRecord
         return 'statistics';
     }
 
+    public $attributes = [];
+
 
     public static function getAllStats()
     {
-        self::getApplications();
-        self::getWaybills();
-        self::getAccidents();
+        $client = new \SoapClient('http://d.rg24.ru:5601/PUP_WS/ws/PUP.1cws?wsdl');
+        self::getApplications($client);
+        self::getWaybills($client);
+        self::getAccidents($client);
+        self::getTMCH($client);
+        $statistics = self::find()->all();
+        $count = count($statistics);
+        Console::startProgress(0, $count);
+        $i = 0;
+        foreach ($statistics as $statistic) {
+            $i++;
+            $spot = Spot::findOne(['id' => $statistic->spot_id]);
+            if ($spot != null) {
+                $statistic->autocolumn_id = $spot->autocolumn_id;
+                $statistic->save();
+            }
+            Console::updateProgress($i, $count);
+        }
+        Console::endProgress();
     }
 
-    public static function getApplications()
+    public static function getApplications(\SoapClient $client)
     {
-        $client = new \SoapClient('http://d.rg24.ru:5601/PUP_WS/ws/PUP.1cws?wsdl');
         $applications = json_decode($client->GetRequests()->return);
         try {
             $count = count($applications);
@@ -88,9 +108,8 @@ class Statistic extends ActiveRecord
         Console::endProgress();
     }
 
-    public static function getAccidents()
+    public static function getAccidents(\SoapClient $client)
     {
-        $client = new \SoapClient('http://d.rg24.ru:5601/PUP_WS/ws/PUP.1cws?wsdl');
         $accidents = json_decode($client->GetDTP()->return);
         try {
             $count = count($accidents);
@@ -124,9 +143,8 @@ class Statistic extends ActiveRecord
         Console::endProgress();
     }
 
-    public static function getWaybills()
+    public static function getWaybills(\SoapClient $client)
     {
-        $client = new \SoapClient('http://d.rg24.ru:5601/PUP_WS/ws/PUP.1cws?wsdl');
         $waybills = json_decode($client->GetWayBillProcessing()->return);
         try {
             $count = count($waybills);
@@ -154,6 +172,40 @@ class Statistic extends ActiveRecord
             }
             $statistic->waybills_total = isset($waybill->CountAll) ? $waybill->CountAll : 0;
             $statistic->waybills_processed = isset($waybill->CountProcessed) ? $waybill->CountProcessed : 0;
+            $statistic->save();
+            Console::updateProgress($i, $count);
+        }
+        Console::endProgress();
+    }
+
+    public static function getTMCH(\SoapClient $client)
+    {
+        $tmchs = json_decode($client->getTMCH()->return);
+        try {
+            $count = count($tmchs);
+        } catch (\Exception $e) {
+            $count = 0;
+        };
+        Console::startProgress(0,$count);
+        $i = 0;
+        foreach($tmchs as $tmch) {
+            $i++;
+            $statistic = self::getOrCreate($tmch->DivisionID);
+            if (Spot::isExist($tmch->DivisionID)) {
+                $statistic = self::findOne(['spot_id' => $tmch->DivisionID]);
+                if ($statistic == null) {
+                    $statistic = new self();
+                    $statistic->spot_id = $tmch->DivisionID;
+                }
+            } else if (Autocolumn::isExist($tmch->DivisionID)) {
+                $statistic = self::findOne(['autocolumn_id' => $tmch->DivisionID]);
+                if ($statistic == null) {
+                    $statistic = new self();
+                    $statistic->autocolumn_id = $tmch->DivisionID;
+                }
+            }
+            $statistic->time = isset($tmch->Time) ? preg_replace('/,/','.', $tmch->Time) : 0;
+            $statistic->fuel = isset($tmch->Fuel) ? preg_replace('/,/','.', $tmch->Fuel) : 0;
             $statistic->save();
             Console::updateProgress($i, $count);
         }

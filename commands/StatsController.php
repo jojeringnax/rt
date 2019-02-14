@@ -19,15 +19,16 @@ class StatsController extends Controller
     public $applications = 0;
     public $waybills = 0;
     public $accidents = 0;
+    public $tmch = 0;
 
     public function options($actionID)
     {
-        return ['all', 'applications', 'waybills', 'accidents'];
+        return ['all', 'applications', 'waybills', 'accidents', 'tmch'];
     }
 
     public function optionAliases()
     {
-        return ['a' => 'all', 'p' => 'applications', 'w' => 'waybills', 'd' => 'accidents'];
+        return ['a' => 'all', 'p' => 'applications', 'w' => 'waybills', 'd' => 'accidents', 't' => 'tmch'];
     }
 
     /**
@@ -41,15 +42,19 @@ class StatsController extends Controller
             echo 'Finished';
             return true;
         }
+        $client = new \SoapClient('http://d.rg24.ru:5601/PUP_WS/ws/PUP.1cws?wsdl');
         if ($this->applications) {
-            Statistic::getApplications();
+            Statistic::getApplications($client);
             echo 'Finished';
             return true;
         }
         if ($this->waybills) {
-            Statistic::getWaybills();
+            Statistic::getWaybills($client);
             echo 'Finished';
             return true;
+        }
+        if ($this->tmch) {
+            Statistic::getTMCH($client);
         }
         throw new Exception('Nothing to do here');
     }

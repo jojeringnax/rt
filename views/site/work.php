@@ -9,6 +9,6 @@ $client = new SoapClient("http://d.rg24.ru:5601/PUP_WS/ws/PUP.1cws?wsdl", [
     'debug'=>true,
     'trace'=> true,
 ]);
-$status = json_decode($client->getRequests()->return);
-var_dump($status);
+$ac = \app\models\Autocolumn::find()->one();
+var_dump(json_decode($client->GetWBMonitoring()->return));
 

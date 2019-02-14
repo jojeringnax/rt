@@ -19,7 +19,7 @@ class m190212_112256_create_table_statistics extends Migration
         $this->createTable($this->tableName, [
             'id' => $this->primaryKey(),
             'spot_id' => $this->string(36)->null()->unique(),
-            'autocolumn_id' => $this->string(36)->null()->unique(),
+            'autocolumn_id' => $this->string(36)->null(),
             'applications_total' => $this->integer(11)->defaultValue(0),
             'applications_executed' => $this->integer(11)->defaultValue(0),
             'applications_canceled' => $this->integer(11)->defaultValue(0),
@@ -29,7 +29,9 @@ class m190212_112256_create_table_statistics extends Migration
             'waybills_total' => $this->integer(11)->defaultValue(0),
             'waybills_processed' => $this->integer(11)->defaultValue(0),
             'accidents_total' => $this->integer(11)->defaultValue(0),
-            'accidents_guilty' => $this->integer(11)->defaultValue(0)
+            'accidents_guilty' => $this->integer(11)->defaultValue(0),
+            'time' => $this->float(2)->null()->defaultValue(0),
+            'fuel' => $this->float(2)->null()->defaultValue(0),
         ]);
     }
 

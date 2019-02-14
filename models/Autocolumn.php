@@ -97,8 +97,8 @@ class Autocolumn extends \yii\db\ActiveRecord
      */
     public function getIdWithoutNumbers()
     {
-        $s = array('/0/','/1/','/2/','/3/','/4/','/5/','/6/','/7/','/8/','/9/', '/-/');
-        $a = array('a','b','c','d','e','f','g','h','i','j','');
+        $s = array('/0/', '/1/', '/2/', '/3/', '/4/', '/5/', '/6/', '/7/', '/8/', '/9/', '/-/');
+        $a = array('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', '');
         return preg_replace($s, $a, $this->id);
     }
 
@@ -107,8 +107,28 @@ class Autocolumn extends \yii\db\ActiveRecord
      */
     public function getStatistic()
     {
-        return Statistic::findOne(['autocolumn_id' => $this->id]);
+        $statistics = Statistic::find()->where(['autocolumn_id' => $this->id])->all();
+        $resultStatistic = new Statistic();
+        foreach ($statistics as $statistic) {
+            foreach ($statistic->attributes() as $attribute) {
+                if ($attribute == 'id' || $attribute == 'spot_id') {
+                    continue;
+                }
+                if ($attribute == 'autocolumn_id') {
+                    $resultStatistic->autocolumn_id = $statistic->autocolumn_id;
+                    continue;
+                }
+                try {
+                    $resultStatistic->$attribute += $statistic->$attribute;
+                } catch (\Exception $e) {
+                    echo $attribute;
+                    echo $e->getMessage();
+                }
+            }
+        }
+        return $resultStatistic;
     }
+
 
     /**
      * @param $id
@@ -160,6 +180,7 @@ class Autocolumn extends \yii\db\ActiveRecord
      */
     public static function isExist($id)
     {
-        return (boolean) self::find($id)->one();
+        return (boolean)self::find($id)->one();
     }
+
 }
