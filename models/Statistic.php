@@ -32,6 +32,8 @@ use yii\helpers\Console;
  * @property integer $accidents_guilty
  * @property float $time
  * @property float $fuel
+ * @property float $WB_M
+ * @property float $WB_ALL
  */
 class Statistic extends ActiveRecord
 {
@@ -53,6 +55,7 @@ class Statistic extends ActiveRecord
         self::getWaybills($client);
         self::getAccidents($client);
         self::getTMCH($client);
+        self::getWBs($client);
         self::setAutocolumnsIds();
     }
 
@@ -183,9 +186,12 @@ class Statistic extends ActiveRecord
         Console::endProgress();
     }
 
+    /**
+     * @param \SoapClient $client
+     */
     public static function getTMCH(\SoapClient $client)
     {
-        $tmchs = json_decode($client->getTMCH()->return);
+        $tmchs = json_decode($client->GetTMCH()->return);
         try {
             $count = count($tmchs);
         } catch (\Exception $e) {
@@ -211,6 +217,43 @@ class Statistic extends ActiveRecord
             }
             $statistic->time = isset($tmch->Time) ? preg_replace('/,/','.', $tmch->Time) : 0;
             $statistic->fuel = isset($tmch->Fuel) ? preg_replace('/,/','.', $tmch->Fuel) : 0;
+            $statistic->save();
+            Console::updateProgress($i, $count);
+        }
+        Console::endProgress();
+    }
+
+    /**
+     * @param \SoapClient $client
+     */
+    public static function getWBs(\SoapClient $client)
+    {
+        $wbs = json_decode($client->GetWBMonitoring()->return);
+        try {
+            $count = count($wbs);
+        } catch (\Exception $e) {
+            $count = 0;
+        };
+        Console::startProgress(0,$count);
+        $i = 0;
+        foreach($wbs as $wb) {
+            $i++;
+            $statistic = self::getOrCreate($wb->DivisionID);
+            if (Spot::isExist($wb->DivisionID)) {
+                $statistic = self::findOne(['spot_id' => $wb->DivisionID]);
+                if ($statistic == null) {
+                    $statistic = new self();
+                    $statistic->spot_id = $wb->DivisionID;
+                }
+            } else if (Autocolumn::isExist($wb->DivisionID)) {
+                $statistic = self::findOne(['autocolumn_id' => $wb->DivisionID]);
+                if ($statistic == null) {
+                    $statistic = new self();
+                    $statistic->autocolumn_id = $wb->DivisionID;
+                }
+            }
+            $statistic->WB_M = isset($wb->CountM) ? preg_replace('/,/','.', $wb->CountM) : 0;
+            $statistic->WB_ALL = isset($wb->CountAll) ? preg_replace('/,/','.', $wb->CountAll) : 0;
             $statistic->save();
             Console::updateProgress($i, $count);
         }

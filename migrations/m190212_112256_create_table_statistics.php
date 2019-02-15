@@ -32,6 +32,8 @@ class m190212_112256_create_table_statistics extends Migration
             'accidents_guilty' => $this->integer(11)->defaultValue(0),
             'time' => $this->float(2)->null()->defaultValue(0),
             'fuel' => $this->float(2)->null()->defaultValue(0),
+            'WB_M' => $this->integer(11)->defaultValue(0),
+            'WB_ALL' => $this->integer(11)->defaultValue(0)
         ]);
     }
 

@@ -20,6 +20,7 @@ class StatsController extends Controller
     public $waybills = 0;
     public $accidents = 0;
     public $tmch = 0;
+    public $monitoring = 0;
 
     public function options($actionID)
     {
@@ -28,7 +29,7 @@ class StatsController extends Controller
 
     public function optionAliases()
     {
-        return ['a' => 'all', 'p' => 'applications', 'w' => 'waybills', 'd' => 'accidents', 't' => 'tmch'];
+        return ['a' => 'all', 'p' => 'applications', 'w' => 'waybills', 'd' => 'accidents', 't' => 'tmch', 'm' => 'monitoring'];
     }
 
     /**
@@ -55,6 +56,9 @@ class StatsController extends Controller
         }
         if ($this->tmch) {
             Statistic::getTMCH($client);
+        }
+        if ($this->monitoring) {
+            Statistic::getWBs($client);
         }
         throw new Exception('Nothing to do here');
     }

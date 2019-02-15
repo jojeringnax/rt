@@ -141,7 +141,7 @@ class SiteController extends Controller
     {
         $autocolumn = Autocolumn::findOne(['id' => $autocolumn_id]);
         if ($autocolumn == null) return null;
-        return json_encode($autocolumn->getStatistic()->getAttributes());
+        return json_encode(['statistic' => $autocolumn->getStatistic()->getAttributes(), 'terminals' => $autocolumn->getNumberOfTerminals()]);
     }
 
 
@@ -149,7 +149,7 @@ class SiteController extends Controller
     {
         $spot = Spot::findOne(['id' => $spot_id]);
         if ($spot == null) return null;
-        return json_encode($spot->getStatistic()->getAttributes());
+        return json_encode(['statistic' => $spot->getStatistic()->getAttributes(), 'terminals' => $spot->getNumberOfTerminals()]);
     }
 
     public function actionIndex1()

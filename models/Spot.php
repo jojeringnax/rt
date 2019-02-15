@@ -120,10 +120,20 @@ class Spot extends \yii\db\ActiveRecord
         return $model === null ? new self() : $model;
     }
 
-
+    /**
+     * @return \yii\db\ActiveQuery
+     */
     public function getCars()
     {
         return Car::find()->where(['spot_id' => $this->id])->andWhere(['!=','x_pos',0]);
+    }
+
+    /**
+     * @return int|string
+     */
+    public function getNumberOfTerminals()
+    {
+        return Car::find()->where(['spot_id' => $this->id, 'terminal' => 1])->count();
     }
 
     /**
