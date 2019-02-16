@@ -167,7 +167,7 @@ class Organization extends \yii\db\ActiveRecord
     public function getNumberOfTerminals()
     {
         $spots = $this->getSpotIds();
-        return Car::find()->where(['spot_id' => $spots, 'terminal' => 1])->count();
+        return Car::find()->where(['spot_id' => $spots, 'terminal' => 1])->andWhere(['not', ['x_pos' => null]])->count();
     }
 
     /**

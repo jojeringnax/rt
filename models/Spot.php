@@ -133,7 +133,7 @@ class Spot extends \yii\db\ActiveRecord
      */
     public function getNumberOfTerminals()
     {
-        return Car::find()->where(['spot_id' => $this->id, 'terminal' => 1])->count();
+        return Car::find()->where(['spot_id' => $this->id, 'terminal' => 1])->andWhere(['not', ['x_pos' => null]])->count();
     }
 
     /**

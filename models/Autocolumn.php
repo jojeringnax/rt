@@ -108,7 +108,7 @@ class Autocolumn extends \yii\db\ActiveRecord
     public function getNumberOfTerminals()
     {
         $spots = Spot::find()->where(['autocolumn_id' => $this->id])->select('id')->column();
-        return Car::find()->where(['spot_id' => $spots, 'terminal' => 1])->count();
+        return Car::find()->where(['spot_id' => $spots, 'terminal' => 1])->andWhere(['not', ['x_pos' => null]])->count();
     }
 
     /**
