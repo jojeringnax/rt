@@ -1,5 +1,5 @@
 function circleBar(name, value) {
-    console.log(name, value, 'sss');
+    //console.log(name, value, 'sss');
     let per = name + "_per";
     if(value === "NaN") {
         value = 0;

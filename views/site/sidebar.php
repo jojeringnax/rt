@@ -37,15 +37,15 @@
                 </div>
                 <div class="item-info">
                     <p id="done" class="trans-auto">Выполнено, шт.</p>
-                    <p id="compReqDone" class="figures">311</p>
+                    <p id="comp_applications_executed" class="figures">311</p>
                 </div>
                 <div class="item-info">
                     <p id="canseled" class="trans-auto">Отменено, шт.</p>
-                    <p id="compReqCans" class="figures">124</p>
+                    <p id="comp_applications_canceled" class="figures">124</p>
                 </div>
                 <div class="item-info">
                     <p id="transfered" class="trans-auto">Переданы на СП, шт.</p>
-                    <p id="compReqTransf" class="figures">3</p>
+                    <p id="comp_applications_sub" class="figures">3</p>
                 </div>
             </div>
 
@@ -56,8 +56,8 @@
                 </div>
                 <div class="item-bar">
                     <div class="cirk" style="display:flex; justify-content:center; align-items:center; position:relative; margin-left: 15px;">
-                        <p id="cpb_per1" class="p-bar">60%</p>
-                        <div id="circle1" class="circle"></div>
+                        <p id="comp_applications_ac_per" class="p-bar">60%</p>
+                        <div id="comp_applications_ac" class="circle"></div>
                     </div>
                     <div class="div-bar-text">
                         <p id="filed" class="p-bar-text">Поданы через АС<br/>"Авто-Контроль", %</p>
@@ -65,8 +65,8 @@
                 </div>
                 <div class="item-bar">
                     <div class="cirk" style="display:flex; justify-content:center; align-items:center; position:relative; margin-left: 15px;">
-                        <p id="cpb_per2" class="p-bar">30%</p>
-                        <div id="circle2" class="circle"></div>
+                        <p id="comp_waybills_total_per" class="p-bar">30%</p>
+                        <div id="comp_waybills_total" class="circle"></div>
                     </div>
                     <div class="div-bar-text">
                         <p id="processed" class="p-bar-text-str">Обработано ПЛ, %</p>
@@ -74,8 +74,8 @@
                 </div>
                 <div class="item-bar">
                     <div class="cirk" style="display:flex; justify-content:center; align-items:center; position:relative; margin-left: 15px;">
-                        <p id="cpb_per3" class="p-bar">90%</p>
-                        <div id="circle3" class="circle"></div>
+                        <p id="comp_accidents_total_per" class="p-bar">90%</p>
+                        <div id="comp_accidents_total" class="circle"></div>
                     </div>
                     <div class="div-bar-text">
                         <p id="dtp" class="p-bar-text">ДТП по вине<br/>компании, %</p>
@@ -83,20 +83,20 @@
                 </div>
                 <div class="item-bar">
                     <div class="cirk" style="display:flex; justify-content:center; align-items:center; position:relative; margin-left: 15px;">
-                        <p id="cpb_per4" class="p-bar">100%</p>
-                        <div id="circle4" class="circle"></div>
+                        <p id="comp_WB_M_per" class="p-bar">100%</p>
+                        <div id="comp_WB_M" class="circle"></div>
                     </div>
                     <div class="div-bar-text">
                         <p id="mileage" class="p-bar-text">Принятый пробег<br/>по БСМТ, %</p>
                     </div>
                 </div>
-                <div class="item-bar">
-                    <div  class="cirk" style="display:flex; justify-content:center; align-items:center; position:relative; margin-left: 15px;">
-                        <p id="cpb_per5" class="p-bar">100%</p>
-                        <div id="circle5" class="circle"></div>
-                    </div >
-                    <div class="div-bar-text">
-                        <p id="sla" class="p-bar-text">Принятый пробег<br/>SLA Филиала, %</p>
+
+                <div class="indic-bot">
+                    <div class="div-meanings div-pr25">
+                        <p id="lmch-2" class="p-meanings-2nd"></p><span id="comp_fuel" class="span-figures-2nd">5,1</span> л\мч<br/>ТМЧ</p>
+                    </div>
+                    <div class="div-meanings">
+                        <p id="" class="p-meanings-2nd"><span id="comp_terminals" class="span-figures-2nd">110</span><br/>Терминалов</p>
                     </div>
                 </div>
             </div>
@@ -171,7 +171,7 @@
                         </div>
                         <p id="specCar" class="p-quantity">12</p>
                     </div>
-                    <hr/ class="hr-trans">
+                    <hr class="hr-trans">
                 </div>
             </div>
 

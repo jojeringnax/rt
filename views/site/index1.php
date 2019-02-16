@@ -10,10 +10,12 @@
 <?php $breadcrumps = []; ?>
 <script src="../../web/js_new/bar.js"></script>
 <script>
-    console.log(<?= json_encode($totalStats->getAttributes()) ?>);
+    let firmsData = <?= json_encode($totalStats->getAttributes()) ?>;
+    let totalTerminals =<?= json_encode($totalTerminals) ?>;
+    console.log(firmsData, totalTerminals);
     let changeInfo = function(totTs, onLine, onRep, onTO, passCar, freightCar, busCar, specCar) {
         $('#totTs').html(totTs);
-        $('#OnLine').html(onLine);
+        $('#compOnLine').html(onLine);
         $('#OnRep').html(onRep);
         $('#onTo').html(onTO);
         $('#passCar').html(passCar);
@@ -21,6 +23,38 @@
         $('#busCar').html(busCar);
         $('#specCar').html(specCar);
     };
+
+    //add data -> COMPANY
+
+        applicationAdd('comp_applications_executed',firmsData['applications_executed']);
+
+        //canceled_app
+        applicationAdd('comp_applications_canceled',firmsData['applications_canceled']);
+
+        //sub_app
+        applicationAdd('comp_applications_sub',firmsData['applications_sub']);
+
+        //ac_app
+        circleBar('comp_applications_ac', (firmsData['applications_ac']/firmsData['applications_total']).toFixed(2));
+
+        //waybills = waybills_processed / waybills_total
+        circleBar('comp_waybills_total', (firmsData['waybills_processed']/firmsData['waybills_total']).toFixed(2));
+
+        //accidents = accidents_guilty / accidents_total
+        circleBar('comp_accidents_total', (firmsData['accidents_guilty']/firmsData['accidents_total']).toFixed(2));
+
+        //GetWBMonitoring =  CountM/CountAll
+        circleBar('comp_WB_M', (Math.round(firmsData['WB_M'])/firmsData['WB_ALL']).toFixed(2));
+
+        // TMCH = fuel/time
+        applicationAdd('comp_fuel', (Math.round(firmsData['fuel'])/firmsData['time']).toFixed(2));
+
+        //terminals =
+        applicationAdd('comp_terminals', totalTerminals);
+
+    //end add data -> COMPANY
+
+
     $('.loading-layout').css({'display':'none'});
     ymaps.ready( function() {
         $('.bbb > span').html('ООО РесурсТранс');
@@ -120,7 +154,7 @@
                     url: "http://rt.xxx/web/?r=site/get-organization-statistic&organization_id=" + "<?= $organization->id ?>",
                     type: 'get',
                     success: function(res) {
-                        console.log('---spot', res);
+                        console.log('---org', res);
                         let terminals = JSON.parse(res)['terminals'];
                         let data = JSON.parse(res)['statistic'];
 
