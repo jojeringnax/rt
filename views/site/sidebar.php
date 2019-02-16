@@ -229,11 +229,11 @@
                 </div>
                 <div class="item-bar">
                     <div class="ilia" style="display:flex; justify-content:center; align-items:center; position:relative;">
-                        <p id="bps_per4" class="p-bar">100%</p>
-                        <div id="spb4" class="circle"></div>
+                        <p id="WB_M_per" class="p-bar">100%</p>
+                        <div id="WB_M" class="circle"></div>
                     </div>
                     <div class="div-bar-text">
-                        <p id="mileage" class="p-bar-text">Принятый пробег<br/>по БСМТ, %</p>
+                        <p id="" class="p-bar-text">Принятый пробег<br/>по БСМТ, %</p>
                     </div>
                 </div>
             </div>
@@ -242,7 +242,7 @@
                     <p id="lmch-2" class="p-meanings-2nd"></p><span id="fuel" class="span-figures-2nd">5,1</span> л\мч<br/>ТМЧ</p>
                 </div>
                 <div class="div-meanings">
-                    <p id="terminals-2" class="p-meanings-2nd"><span class="span-figures-2nd">110</span><br/>Терминалов</p>
+                    <p id="" class="p-meanings-2nd"><span id="terminals" class="span-figures-2nd">110</span><br/>Терминалов</p>
                 </div>
             </div>
         </div>
