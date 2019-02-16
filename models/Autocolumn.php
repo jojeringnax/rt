@@ -117,6 +117,7 @@ class Autocolumn extends \yii\db\ActiveRecord
     public function getStatistic()
     {
         $statistics = Statistic::find()->where(['autocolumn_id' => $this->id])->all();
+        if ($statistics == null) return null;
         $resultStatistic = new Statistic();
         foreach ($statistics as $statistic) {
             foreach ($statistic->attributes() as $attribute) {

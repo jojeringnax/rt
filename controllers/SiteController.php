@@ -6,6 +6,7 @@ use app\models\Autocolumn;
 use app\models\Car;
 use app\models\Organization;
 use app\models\Spot;
+use app\models\Statistic;
 use Yii;
 use yii\filters\AccessControl;
 use yii\helpers\ArrayHelper;
@@ -144,12 +145,27 @@ class SiteController extends Controller
         return json_encode(['statistic' => $autocolumn->getStatistic()->getAttributes(), 'terminals' => $autocolumn->getNumberOfTerminals()]);
     }
 
-
+    /**
+     * @param $spot_id
+     * @return false|string|null
+     */
     public function actionGetSpotStatistic($spot_id)
     {
         $spot = Spot::findOne(['id' => $spot_id]);
         if ($spot == null) return null;
         return json_encode(['statistic' => $spot->getStatistic()->getAttributes(), 'terminals' => $spot->getNumberOfTerminals()]);
+    }
+
+
+    /**
+     * @param $organization_id
+     * @return false|string|null
+     */
+    public function actionGetOrganizationStatistic($organization_id)
+    {
+        $organization = Organization::findOne(['id' => $organization_id]);
+        if ($organization == null) return null;
+        return json_encode(['statistic' => $organization->getStatistic()->getAttributes(), 'terminals' => $organization->getNumberOfTerminals()]);
     }
 
     public function actionIndex1()
@@ -288,6 +304,7 @@ class SiteController extends Controller
             $orgAutocolumns[$organizationGoodId]['bounds'] = $yMaxAutolumns ? "[[$xMinAutocolumns,$yMinAutocolumns], [$xMaxAutocolumns,$yMaxAutolumns]]" : false;
         }
         return $this->render('index1', [
+            'totalStats' => Statistic::getTotalStatistic(),
             'spots' => $spotsAutocolumn,
             'autocolumns' => $orgAutocolumns,
             'organizations' => $organizations

@@ -288,5 +288,29 @@ class Statistic extends ActiveRecord
         return self::isExist($divisionId) ? self::getByDivisionId($divisionId) : new self;
     }
 
+    /**
+     * @return Statistic|null
+     */
+    public static function getTotalStatistic()
+    {
+        $statistics = self::find()->all();
+        if ($statistics == null) return null;
+        $resultStatistic = new self();
+        foreach ($statistics as $statistic) {
+            foreach ($statistic->attributes() as $attribute) {
+                if ($attribute == 'id' || $attribute == 'spot_id' || $attribute == 'autocolumn_id') {
+                    continue;
+                }
+                try {
+                    $resultStatistic->$attribute += $statistic->$attribute;
+                } catch (\Exception $e) {
+                    echo $attribute;
+                    echo $e->getMessage();
+                }
+            }
+        }
+        return $resultStatistic;
+    }
+
 
 }

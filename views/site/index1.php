@@ -10,7 +10,7 @@
 <?php $breadcrumps = []; ?>
 <script src="../../web/js_new/bar.js"></script>
 <script>
-
+    <?php $totalStats ?>
     let changeInfo = function(totTs, onLine, onRep, onTO, passCar, freightCar, busCar, specCar) {
         $('#totTs').html(totTs);
         $('#OnLine').html(onLine);

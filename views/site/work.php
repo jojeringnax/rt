@@ -9,6 +9,7 @@ $client = new SoapClient("http://d.rg24.ru:5601/PUP_WS/ws/PUP.1cws?wsdl", [
     'debug'=>true,
     'trace'=> true,
 ]);
-$ac = \app\models\Spot::find()->one();
-var_dump(json_decode($client->GetWBMonitoring()->return));
+$ac = \app\models\Organization::find()->one();
+var_dump($ac->getStatistic());
+//var_dump(json_decode($client->GetWBMonitoring()->return));
 

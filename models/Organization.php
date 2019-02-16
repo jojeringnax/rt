@@ -159,4 +159,53 @@ class Organization extends \yii\db\ActiveRecord
         }
         return true;
     }
+
+
+    /**
+     * @return int|string
+     */
+    public function getNumberOfTerminals()
+    {
+        $spots = $this->getSpotIds();
+        return Car::find()->where(['spot_id' => $spots, 'terminal' => 1])->count();
+    }
+
+    /**
+     * @return Statistic|null
+     */
+    public function getStatistic()
+    {
+        $spots = $this->getSpotIds();
+        if ($spots == null) {
+            return null;
+        }
+        $statistics = Statistic::find()->where(['spot_id' => $spots])->all();
+        if ($statistics == null) {
+            return null;
+        }
+        $resultStatistic = new Statistic();
+        foreach ($statistics as $statistic) {
+            foreach ($statistic->attributes() as $attribute) {
+                if ($attribute == 'id' || $attribute == 'spot_id' || $attribute == 'autocolumn_id') {
+                    continue;
+                }
+                try {
+                    $resultStatistic->$attribute += $statistic->$attribute;
+                } catch (\Exception $e) {
+                    echo $attribute;
+                    echo $e->getMessage();
+                }
+            }
+        }
+        return json_encode($resultStatistic->getAttributes());
+    }
+
+
+    /**
+     * @return array
+     */
+    public function getSpotIds()
+    {
+        return Spot::find()->where(['organization_id' => $this->id])->select('id')->column();
+    }
 }
