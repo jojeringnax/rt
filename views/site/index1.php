@@ -10,7 +10,7 @@
 <?php $breadcrumps = []; ?>
 <script src="../../web/js_new/bar.js"></script>
 <script>
-    <?php $totalStats ?>
+    console.log(<?= json_encode($totalStats->getAttributes()) ?>);
     let changeInfo = function(totTs, onLine, onRep, onTO, passCar, freightCar, busCar, specCar) {
         $('#totTs').html(totTs);
         $('#OnLine').html(onLine);
@@ -114,6 +114,63 @@
                 $('#ts-info').addClass('hide');
                 $('#info-department').removeClass('hide');
                 removeAllDontNeed();
+
+                //ajax request -> ORGANIZATION
+                $.ajax({
+                    url: "http://rt.xxx/web/?r=site/get-organization-statistic&organization_id=" + "<?= $organization->id ?>",
+                    type: 'get',
+                    success: function(res) {
+                        console.log('---spot', res);
+                        let terminals = JSON.parse(res)['terminals'];
+                        let data = JSON.parse(res)['statistic'];
+
+                        //example of data = {
+                        //{"id":null,
+                        // "spot_id":null,
+                        // "autocolumn_id":null,
+                        // "applications_total":289,
+                        // "applications_executed":260,
+                        // "applications_canceled":11,
+                        // "applications_sub":3,
+                        // "applications_ac":0,
+                        // "applications_mp":0,
+                        // "waybills_total":3769,
+                        // "waybills_processed":3438,
+                        // "accidents_total":0,
+                        // "accidents_guilty":0,
+                        // "time":91025.12,
+                        // "fuel":25134.369999999995,
+                        // "WB_M":1988,"WB_ALL":2013}
+
+                        //executed_app
+                        applicationAdd('applications_executed',data['applications_executed']);
+
+                        //canceled_app
+                        applicationAdd('applications_canceled',data['applications_canceled']);
+
+                        //sub_app
+                        applicationAdd('applications_sub',data['applications_sub']);
+
+                        //ac_app
+                        circleBar('applications_ac', (data['applications_ac']/data['applications_total']).toFixed(2));
+
+                        //waybills = waybills_processed / waybills_total
+                        circleBar('waybills_total', (data['waybills_processed']/data['waybills_total']).toFixed(2));
+
+                        //accidents = accidents_guilty / accidents_total
+                        circleBar('accidents_total', (data['accidents_guilty']/data['accidents_total']).toFixed(2));
+
+                        //GetWBMonitoring =  CountM/CountAll
+                        circleBar('WB_M', (Math.round(data['WB_M'])/data['WB_ALL']).toFixed(2));
+
+                        // TMCH = fuel/time
+                        applicationAdd('fuel', (Math.round(data['fuel'])/data['time']).toFixed(2));
+
+                        //terminals =
+                        applicationAdd('terminals', terminals);
+                    }
+                }); //end ajax request
+
             <?php
                 foreach ($autocolumns[$organizationPrettyId] as $key1 => $autocolumn) {
                     if ($key1 !== 'bounds' && $key1 !== 'cars' && $key1 !== 'carsStatuses' && $key1 !== 'carsTypes') {
@@ -150,13 +207,14 @@
                     $('#info-department').removeClass('hide');
                     removeAllDontNeed(1);
 
-                    //ajax request ->
+                    //ajax request -> AUTOCOLUMN
                     $.ajax({
                         url: "http://rt.xxx/web/?r=site/get-autocolumn-statistic&autocolumn_id=" + "<?= $autocolumn->id ?>",
                         type: 'get',
                         success: function(res) {
-                            let data = JSON.parse(res);
-                            console.log('---', data);
+                            console.log('---spot', res);
+                            let terminals = JSON.parse(res)['terminals'];
+                            let data = JSON.parse(res)['statistic'];
 
                             //example of data = {
                                 // "id":null,
@@ -195,11 +253,13 @@
                             circleBar('accidents_total', (data['accidents_guilty']/data['accidents_total']).toFixed(2));
 
                             //GetWBMonitoring =  CountM/CountAll
+                            circleBar('WB_M', (Math.round(data['WB_M'])/data['WB_ALL']).toFixed(2));
 
                             // TMCH = fuel/time
                             applicationAdd('fuel', (Math.round(data['fuel'])/data['time']).toFixed(2));
 
                             //terminals =
+                            applicationAdd('terminals', terminals);
                         }
                     }); //end ajax request
 
@@ -240,13 +300,14 @@
                                 $('#info-department').removeClass('hide');
                                 $('#ts-info').addClass('hide');
 
-                                //ajax request ->
+                                //ajax request -> SPOT
                                 $.ajax({
                                     url: "http://rt.xxx/web/?r=site/get-spot-statistic&spot_id=" + "<?= $spot->id ?>",
                                     type: 'get',
                                     success: function(res) {
-                                        let data = JSON.parse(res);
-                                        console.log('---spot', data);
+                                        console.log('---spot', res);
+                                        let terminals = JSON.parse(res)['terminals'];
+                                        let data = JSON.parse(res)['statistic'];
 
                                         //executed_app
                                         applicationAdd('applications_executed',data['applications_executed']);
@@ -267,11 +328,14 @@
                                         circleBar('accidents_total', (data['accidents_guilty']/data['accidents_total']).toFixed(2));
 
                                         //GetWBMonitoring =  CountM/CountAll
+                                        circleBar('WB_M', (Math.round(data['WB_M'])/data['WB_ALL']).toFixed(2));
 
                                         // TMCH = fuel/time
                                         applicationAdd('fuel', (Math.round(data['fuel'])/data['time']).toFixed(2));
 
                                         //terminals =
+                                        applicationAdd('terminals', terminals);
+
                                     }
                                 }); //end ajax request
 
