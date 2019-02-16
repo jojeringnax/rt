@@ -310,4 +310,12 @@ class Car extends \yii\db\ActiveRecord
         $a = array('a','b','c','d','e','f','g','h','i','j','');
         return preg_replace($s, $a, $this->id);
     }
+
+    /**
+     * @return int|string
+     */
+    public static function getNUmberOfTerminals()
+    {
+        return self::find()->where(['terminal' => 1])->andWhere(['not', ['x_pos' => null]])->count();
+    }
 }
