@@ -91,10 +91,10 @@
                     </div>
                 </div>
                 <div class="item-bar">
-                    <div class="cirk" style="display:flex; justify-content:center; align-items:center; position:relative; margin-left: 15px;">
+                    <div  class="cirk" style="display:flex; justify-content:center; align-items:center; position:relative; margin-left: 15px;">
                         <p id="cpb_per5" class="p-bar">100%</p>
                         <div id="circle5" class="circle"></div>
-                    </div>
+                    </div >
                     <div class="div-bar-text">
                         <p id="sla" class="p-bar-text">Принятый пробег<br/>SLA Филиала, %</p>
                     </div>
@@ -103,24 +103,17 @@
         </div>
     </section>
 
+
+    <!--SECOND SECTION -->
+
+
     <section id="info-department" class="hide section-info">
         <div class="sidebar">
             <div id="head-filial">
                 <div class="logo">
-                    <div class="burger-logo">
-                        <img src="yan/img/burger-menu.svg" alt="">
-                    </div>
                     <div class="img-logo">
                         <img src="yan/img/logo.svg" alt="">
                     </div>
-                </div>
-                <div id="department" class="level-menu">
-                    <span id="level-menu-company" class="text-level-menu">Компания</span>
-                    <img src="yan/img/arrow.svg" alt="">
-                    <span id="level-menu-department" class="text-level-menu">Филиал</span>
-                </div>
-                <div class="title-department">
-                    <span id="nameofDST" class="title-department-text">Московский филиал</span>
                 </div>
                 <div class="">
                     <div class="ts-title">
@@ -190,15 +183,15 @@
                     </div>
                     <div class="item-info">
                         <p id="" class="trans-auto">Выполнено, шт.</p>
-                        <p id="ReqDone" class="figures">311</p>
+                        <p id="applications_executed" class="figures">311</p>
                     </div>
                     <div class="item-info">
                         <p id="" class="trans-auto">Отменено, шт.</p>
-                        <p id="ReqCans" class="figures">124</p>
+                        <p id="applications_canceled" class="figures">124</p>
                     </div>
                     <div class="item-info">
                         <p id="" class="trans-auto">Переданы на СП, шт.</p>
-                        <p id="ReqTransf" class="figures">3</p>
+                        <p id="applications_sub" class="figures">3</p>
                     </div>
                 </div>
             </div>
@@ -209,8 +202,8 @@
                 </div>
                 <div class="item-bar">
                     <div class="ilia" style="display:flex; justify-content:center; align-items:center; position:relative;">
-                        <p id="bps_per1" class="p-bar">60%</p>
-                        <div id="spb1" class="circle"></div>
+                        <p id="applications_ac_per" class="p-bar">60%</p>
+                        <div id="applications_ac" class="circle"></div>
                     </div>
                     <div class="div-bar-text">
                         <p id="filed" class="p-bar-text">Поданы через АС<br/>"Авто-Контроль", %</p>
@@ -218,8 +211,8 @@
                 </div>
                 <div class="item-bar">
                     <div class="ilia" style="display:flex; justify-content:center; align-items:center; position:relative;">
-                        <p id="bps_per2" class="p-bar">30%</p>
-                        <div id="spb2" class="circle"></div>
+                        <p id="waybills_total_per" class="p-bar">30%</p>
+                        <div id="waybills_total" class="circle"></div>
                     </div>
                     <div class="div-bar-text">
                         <p id="processed" class="p-bar-text-str">Обработано ПЛ, %</p>
@@ -227,8 +220,8 @@
                 </div>
                 <div class="item-bar">
                     <div class="ilia" style="display:flex; justify-content:center; align-items:center; position:relative;">
-                        <p id="bps_per2" class="p-bar">90%</p>
-                        <div id="spb3" class="circle"></div>
+                        <p id="accidents_total_per" class="p-bar">90%</p>
+                        <div id="accidents_total" class="circle"></div>
                     </div>
                     <div class="div-bar-text">
                         <p id="dtp" class="p-bar-text">ДТП по вине<br/>компании, %</p>
@@ -243,19 +236,10 @@
                         <p id="mileage" class="p-bar-text">Принятый пробег<br/>по БСМТ, %</p>
                     </div>
                 </div>
-                <div class="item-bar">
-                    <div class="ilia" style="display:flex; justify-content:center; align-items:center; position:relative;">
-                        <p id="bps_per5" lass="p-bar">100%</p>
-                        <div id="spb5" class="circle"></div>
-                    </div>
-                    <div class="div-bar-text">
-                        <p id="sla" class="p-bar-text">Принятый пробег<br/>SLA Филиала, %</p>
-                    </div>
-                </div>
             </div>
             <div class="indic-bot">
                 <div class="div-meanings div-pr25">
-                    <p id="lmch-2" class="p-meanings-2nd"><span class="span-figures-2nd">5,1</span> л\мч<br/>ТМЧ</p>
+                    <p id="lmch-2" class="p-meanings-2nd"></p><span id="fuel" class="span-figures-2nd">5,1</span> л\мч<br/>ТМЧ</p>
                 </div>
                 <div class="div-meanings">
                     <p id="terminals-2" class="p-meanings-2nd"><span class="span-figures-2nd">110</span><br/>Терминалов</p>
@@ -267,23 +251,9 @@
     <section id="ts-info" class="section-info hide">
         <div id="head-ts">
             <div class="logo">
-                <div class="burger-logo">
-                    <img src="yan/img/burger-menu.svg" alt="">
-                </div>
                 <div class="img-logo">
                     <img src="yan/img/logo.svg" alt="">
                 </div>
-            </div>
-            <div id="ts" class="level-menu">
-                <span id="level-menu-company" class="text-level-menu">Компания</span>
-                <img src="yan/img/arrow.svg" alt="">
-                <span id="level-menu-department" class="text-level-menu">Филиал</span>
-                <img src="yan/img/arrow.svg" alt="">
-                <span id="level-menu-autocolumn" class="text-level-menu">Автоколонна</span>
-                <img src="yan/img/arrow.svg" alt="">
-                <span id="level-menu-spot" class="text-level-menu">Участок</span>
-                <img src="yan/img/arrow.svg" alt="">
-                <span id="level-menu-ts" class="text-level-menu">Транспортное средство</span>
             </div>
             <div class="title-ts">
                 <span id="nameTS" class="title-ts-text">ТС №93 BMW</span>

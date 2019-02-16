@@ -8,7 +8,9 @@
 <?= $this->render('sidebar') ?>
 
 <?php $breadcrumps = []; ?>
+<script src="../../web/js_new/bar.js"></script>
 <script>
+
     let changeInfo = function(totTs, onLine, onRep, onTO, passCar, freightCar, busCar, specCar) {
         $('#totTs').html(totTs);
         $('#OnLine').html(onLine);
@@ -62,7 +64,7 @@
 
 
         var c_array = [], s_array = [], a_array = [], o_array = [];
-        var clustererAutocolumns = new ymaps.Clusterer(), clustererSpots = new ymaps.Clusterer();
+        var clustererAutocolumns = new ymaps.Clusterer(), clustererSpots = new ymaps.Clusterer(), clustererCars = new ymaps.Clusterer();
         var myMap = new ymaps.Map('map', {
             center: [55.751574, 37.573856],
             zoom: 11,
@@ -116,7 +118,6 @@
                 foreach ($autocolumns[$organizationPrettyId] as $key1 => $autocolumn) {
                     if ($key1 !== 'bounds' && $key1 !== 'cars' && $key1 !== 'carsStatuses' && $key1 !== 'carsTypes') {
                         $autocolumnPrettyId = $autocolumn->getIdWithoutNumbers(); ?>
-                console.log(<?= $spots[$autocolumnPrettyId]["carsTypes"][0] ?>);
                 var AutoColLayout = ymaps.templateLayoutFactory.createClass(
                     '<div class="autocolumn" style="color: black; font-weight: bold; display: flex; justify-content: space-between; flex-direction: column; align-items: center;  height: 50px; width: 250px;"><span style="color:white; margin-top: -50px"><?= $spots[$autocolumnPrettyId]["cars"] ?></span> <span style="width: 200px; display:none; margin-top: 50px"><?= $autocolumn->description ?></span></div>'
                 );
@@ -148,6 +149,60 @@
                     $('#ts-info').addClass('hide');
                     $('#info-department').removeClass('hide');
                     removeAllDontNeed(1);
+
+                    //ajax request ->
+                    $.ajax({
+                        url: "http://rt.xxx/web/?r=site/get-autocolumn-statistic&autocolumn_id=" + "<?= $autocolumn->id ?>",
+                        type: 'get',
+                        success: function(res) {
+                            let data = JSON.parse(res);
+                            console.log('---', data);
+
+                            //example of data = {
+                                // "id":null,
+                                // "spot_id":null,
+                                // "autocolumn_id":"68280a1c-2acf-11e5-b13d-00155dc6002b",
+                                // "applications_total":76,
+                                // "applications_executed":67,
+                                // "applications_canceled":3,
+                                // "applications_sub":0,
+                                // "applications_ac":0,
+                                // "applications_mp":0,
+                                // "waybills_total":433,
+                                // "waybills_processed":427,
+                                // "accidents_total":0,
+                                // "accidents_guilty":0,
+                                // "time":9681,
+                                // "fuel":2340.9700000000003
+                            // }
+
+                            //executed_app
+                            applicationAdd('applications_executed',data['applications_executed']);
+
+                            //canceled_app
+                            applicationAdd('applications_canceled',data['applications_canceled']);
+
+                            //sub_app
+                            applicationAdd('applications_sub',data['applications_sub']);
+
+                            //ac_app
+                            circleBar('applications_ac', (data['applications_ac']/data['applications_total']).toFixed(2));
+
+                            //waybills = waybills_processed / waybills_total
+                            circleBar('waybills_total', (data['waybills_processed']/data['waybills_total']).toFixed(2));
+
+                            //accidents = accidents_guilty / accidents_total
+                            circleBar('accidents_total', (data['accidents_guilty']/data['accidents_total']).toFixed(2));
+
+                            //GetWBMonitoring =  CountM/CountAll
+
+                            // TMCH = fuel/time
+                            applicationAdd('fuel', (Math.round(data['fuel'])/data['time']).toFixed(2));
+
+                            //terminals =
+                        }
+                    }); //end ajax request
+
             <?php
                 if (array_key_exists($autocolumnPrettyId, $spots)) {
                     foreach ($spots[$autocolumnPrettyId] as $key2 => $spot) {
@@ -184,16 +239,55 @@
                                 $('#info-company').addClass('hide');
                                 $('#info-department').removeClass('hide');
                                 $('#ts-info').addClass('hide');
+
+                                //ajax request ->
+                                $.ajax({
+                                    url: "http://rt.xxx/web/?r=site/get-spot-statistic&spot_id=" + "<?= $spot->id ?>",
+                                    type: 'get',
+                                    success: function(res) {
+                                        let data = JSON.parse(res);
+                                        console.log('---spot', data);
+
+                                        //executed_app
+                                        applicationAdd('applications_executed',data['applications_executed']);
+
+                                        //canceled_app
+                                        applicationAdd('applications_canceled',data['applications_canceled']);
+
+                                        //sub_app
+                                        applicationAdd('applications_sub',data['applications_sub']);
+
+                                        //ac_app
+                                        circleBar('applications_ac', (data['applications_ac']/data['applications_total']).toFixed(2));
+
+                                        //waybills = waybills_processed / waybills_total
+                                        circleBar('waybills_total', (data['waybills_processed']/data['waybills_total']).toFixed(2));
+
+                                        //accidents = accidents_guilty / accidents_total
+                                        circleBar('accidents_total', (data['accidents_guilty']/data['accidents_total']).toFixed(2));
+
+                                        //GetWBMonitoring =  CountM/CountAll
+
+                                        // TMCH = fuel/time
+                                        applicationAdd('fuel', (Math.round(data['fuel'])/data['time']).toFixed(2));
+
+                                        //terminals =
+                                    }
+                                }); //end ajax request
+
                                 $.ajax({
                                     url: 'index.php?r=site/carsforspot&id=<?= $spot->id ?>',
                                     method: 'GET',
                                     dataType: 'json',
                                     success: function(data) {
                                         if(c_array.length) {
-                                          removeArrayFromMap(c_array, myMap);
-                                          c_array = [];
+                                            c_array = [];
+                                            myMap.geoObjects.remove(clustererCars);
+                                            clustererCars.removeAll();
                                         }
+
                                         myMap.geoObjects.remove(clustererSpots);
+
                                         data.cars.forEach(function(el) {
                                           c_pm = new ymaps.Placemark([el.x_pos, el.y_pos], {
                                               hintContent: el.description
@@ -215,6 +309,9 @@
                                               console.log(window.currentElement);
                                           });
                                           c_array.push(c_pm);
+                                          clustererCars.add(c_array);
+                                          myMap.geoObjects.add(clustererCars);
+
                                           if (data.cars.length === 1) {
                                               s.originalEvent.target.center = c_pm.geometry._coordinates;
                                               myMap.setCenter(s.originalEvent.target.center, 6);
@@ -254,11 +351,6 @@
                 }); //Autocolumn click
 
 
-
-
-
-
-
           <?php } // if ($key !== bounds)
             } // foreach($autocolumns) ?>
                 if (a_array.length) {
@@ -292,8 +384,9 @@
         button.click( function () {
             if(window.currentElement.hasOwnProperty('car')) {
                 if(c_array.length) {
-                    removeArrayFromMap(c_array, myMap);
                     c_array = [];
+                    myMap.geoObjects.remove(clustererCars);
+                    clustererCars.removeAll();
                 }
                 $('.bbb > span').html(window.currentElement.organization.breadcrumps + '<span class="arrow-r" style="color: green"> > </span>' + window.currentElement.autocolumn.breadcrumps + ' <span class="arrow-r" style="color: green"> > </span> ' + window.currentElement.spot.breadcrumps);
                 $('#info-company').addClass('hide');
