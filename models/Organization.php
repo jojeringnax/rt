@@ -197,7 +197,7 @@ class Organization extends \yii\db\ActiveRecord
                 }
             }
         }
-        return json_encode($resultStatistic->getAttributes());
+        return $resultStatistic;
     }
 
 
