@@ -1,5 +1,5 @@
 * {
-  font-size: 1.5vh;
+  font-size: 1.2vh;
   margin: 0;
   padding: 0;
   font-family: 'Open Sans'; }
@@ -64,7 +64,7 @@ p {
     .ts-title span.img img {
       height: 2vh; }
   .ts-title span.ts-text {
-    font-size: 2vh;
+    font-size: 1.5vh;
     font-weight: bold;
     color: #79849F;
     margin-left: 5px; }
@@ -80,9 +80,9 @@ p {
     display: flex;
     align-items: center; }
     .request-title span.img img {
-      height: 2vh; }
+      height: 1.5vh; }
   .request-title span.text {
-    font-size: 2vh;
+    font-size: 1.5vh;
     font-weight: bold;
     color: #79849F;
     margin-left: 5px; }
@@ -94,15 +94,15 @@ p {
     display: flex;
     align-items: center; }
     .indicators-title span.img img {
-      height: 2vh; }
+      height: 1.5vh; }
   .indicators-title span.text {
-    font-size: 2vh;
+    font-size: 1.5vh;
     font-weight: bold;
     color: #79849F;
     margin-left: 5px; }
 
 .item-bar {
-  margin-top: 50px;
+  margin-top: 20px;
   display: flex;
   justify-content: flex-start;
   align-items: center; }
@@ -152,9 +152,9 @@ p {
   display: flex;
   align-items: center; }
   .transport-title span img {
-    height: 2vh; }
+    height: 1.5vh; }
   .transport-title p {
-    font-size: 1.5vh;
+    font-size: 1.2vh;
     margin-left: 7px;
     color: #1884E4; }
 
@@ -176,10 +176,10 @@ p {
   font-size: 1.5vh; }
 
 #indicators-department .item-bar {
-  margin-top: 4vh; }
+  margin-top: 1.5vh; }
   #indicators-department .item-bar div .circle {
-    height: 6vh;
-    width: 6vh; }
+    height: 5vh;
+    width: 5vh; }
 
 .span-figures-2nd {
   font-size: 14px;
