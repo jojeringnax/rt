@@ -12,7 +12,8 @@
 <script>
     let firmsData = <?= json_encode($totalStats->getAttributes()) ?>;
     let totalTerminals =<?= json_encode($totalTerminals) ?>;
-    console.log(firmsData, totalTerminals);
+    let totalCarsData =<?= json_encode($totalCarsData) ?>;
+    console.log(firmsData, totalTerminals,totalCarsData);
     let changeInfo = function(totTs, onLine, onRep, onTO, passCar, freightCar, busCar, specCar) {
         $('#totTs').html(totTs);
         $('#compOnLine').html(onLine);
@@ -26,6 +27,19 @@
 
     //add data -> COMPANY
 
+        //compAmOfTs
+        applicationAdd('compAmOfTs', totalCarsData['G']);
+
+        //compOnLine
+        applicationAdd('compOnLine', totalCarsData['totalInline']);
+
+        //compOnRep
+        applicationAdd('compOnRep', totalCarsData['R']);
+
+        //compOnTo
+        applicationAdd('compOnTo', totalCarsData['TO']);
+
+        //comp_applications_executed
         applicationAdd('comp_applications_executed',firmsData['applications_executed']);
 
         //canceled_app
