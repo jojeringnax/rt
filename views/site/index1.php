@@ -397,9 +397,7 @@
                                             myMap.geoObjects.remove(clustererCars);
                                             clustererCars.removeAll();
                                         }
-
                                         myMap.geoObjects.remove(clustererSpots);
-
                                         data.cars.forEach(function(el) {
                                           c_pm = new ymaps.Placemark([el.x_pos, el.y_pos], {
                                               hintContent: el.description
@@ -433,7 +431,6 @@
                                           }
 
                                         });
-                                        addArrayOnMap(c_array, myMap);
                                         $('.loading-layout').css({'display':'none'});
                                     }
                                 });
