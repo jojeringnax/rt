@@ -318,4 +318,23 @@ class Car extends \yii\db\ActiveRecord
     {
         return self::find()->where(['terminal' => 1])->andWhere(['not', ['x_pos' => null]])->count();
     }
+
+    /**
+     * @return array
+     */
+    public static function getTotalData()
+    {
+        $cars = self::find()->all();
+        $G = 0;
+        $R = 0;
+        $TO = 0;
+        $totalInline = 0;
+        foreach ($cars as $car) {
+            if ($car->status == null) continue;
+            $flag = $car->status;
+            $$flag += 1;
+            if ($car->inline) $totalInline += 1;
+        }
+        return ['G' => $G, 'R' => $R, 'TO' => $TO, 'totalInline' => $totalInline];
+    }
 }

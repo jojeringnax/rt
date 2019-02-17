@@ -304,6 +304,7 @@ class SiteController extends Controller
             $orgAutocolumns[$organizationGoodId]['bounds'] = $yMaxAutolumns ? "[[$xMinAutocolumns,$yMinAutocolumns], [$xMaxAutocolumns,$yMaxAutolumns]]" : false;
         }
         return $this->render('index1', [
+            'totalCarsData' => Car::getTotalData(),
             'totalTerminals' => Car::getNUmberOfTerminals(),
             'totalStats' => Statistic::getTotalStatistic(),
             'spots' => $spotsAutocolumn,
