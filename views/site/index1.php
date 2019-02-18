@@ -400,7 +400,11 @@
                                         myMap.geoObjects.remove(clustererSpots);
                                         data.cars.forEach(function(el) {
                                           c_pm = new ymaps.Placemark([el.x_pos, el.y_pos], {
-                                              hintContent: el.description
+                                              hintContent: el.description,
+                                              balloonContent: el.description,
+                                              balloonContentHeader: el.model,
+                                              balloonContentBody: el.number,
+                                              balloonContentFooter: el.status
                                           },{
                                               iconLayout: 'default#imageWithContent',
                                                   iconImageHref: 'yan/img/icon/point_'+ el.type+'.svg',
