@@ -273,7 +273,7 @@
                         <p id="" class="figures">10</p>
                     </div>
                     <div class="item-info">
-                        <p id="" class="trans-auto">Объем потреченного топлива, л.</p>
+                        <p id="" class="trans-auto">Объем потраченного топлива, л.</p>
                         <p id="AmOfFuel" class="figures">12</p>
                     </div>
                 </div>

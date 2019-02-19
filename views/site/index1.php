@@ -1,3 +1,5 @@
+
+
 <?php
 /**
  * @var $organizations \app\models\Organization[]
@@ -8,6 +10,13 @@
 <?= $this->render('sidebar') ?>
 
 <?php $breadcrumps = []; ?>
+
+<style>
+    [class*="ymaps-2"][class*="-ground-pane"] {
+        filter: url("data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\'><filter id=\'grayscale\'><feColorMatrix type=\'matrix\' values=\'0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0 0 0 1 0\'/></filter></svg>#grayscale");
+        -webkit-filter: grayscale(100%) brightness(30%);
+    }
+</style>
 <script src="../../web/js_new/bar.js"></script>
 <script>
     let firmsData = <?= json_encode($totalStats->getAttributes()) ?>;
@@ -129,7 +138,7 @@
             ?>
 
         var OrgLayout = ymaps.templateLayoutFactory.createClass(
-            '<div class="organizations" style="color: black; font-weight: bold; display: flex; justify-content: space-between; flex-direction: column; align-items: center; height: 50px; width: 250px;"><span style="color:white; margin-top: -50px"><?= $autocolumns[$organizationPrettyId]["cars"] ?></span> <span style="width: 250px; margin-top: 50px"><?= $organization->getTown() ?></span></div>'
+            '<div class="organizations" style="color: black; font-weight: bold; display: flex; justify-content: space-between; flex-direction: column; align-items: center; height: 50px; width: 250px;"><span style="color:white; margin-top: -50px"><?= $autocolumns[$organizationPrettyId]["cars"] ?></span> <span style="width: 250px; margin-top: 50px"></span></div>'
         );
             o_pm = new ymaps.Placemark([<?= $organization->x_pos ?>, <?= $organization->y_pos ?>], {
                 iconCaption : '<?= $organization->getTown() ?>',
@@ -406,6 +415,7 @@
                                               balloonContentBody: el.number,
                                               balloonContentFooter: el.status
                                           },{
+                                              hasBalloon: false,
                                               iconLayout: 'default#imageWithContent',
                                                   iconImageHref: 'yan/img/icon/point_'+ el.type+'.svg',
                                                   iconImageSize: [110, 115.5],
@@ -414,13 +424,40 @@
                                           });
                                           c_pm.breadcrumps = el.description;
                                           c_pm.events.add('click', function (c) {
+                                              console.log('---',el);
                                               window.currentElement.car = c.originalEvent.target;
                                               $('#info-company').addClass('hide');
                                               $('#info-department').addClass('hide');
                                               $('#ts-info').removeClass('hide');
-                                              myMap.setCenter(window.currentElement.car.geometry._coordinates, 12);
+                                              myMap.setCenter(window.currentElement.car.geometry._coordinates, 19);
                                               $('.bbb > span').html(window.currentElement.organization.breadcrumps + ' <span class="arrow-r" style="color: green"> > </span> ' + window.currentElement.autocolumn.breadcrumps + ' <span class="arrow-r" style="color: green"> > </span> ' + window.currentElement.spot.breadcrumps + ' <span class="arrow-r" style="color: green"> > </span> ' + window.currentElement.car.breadcrumps);
                                               console.log(window.currentElement);
+
+
+                                              //battery_change_days: 248
+                                              //description: "Х009СС197 - (УАЗ 390995)"
+                                              //id: "f6310338-481b-11e5-b89f-00155d630038"
+                                              //inline: 1
+                                              //model: "УАЗ 390995"
+                                              //number: "Х009СС197"
+                                              //profitability: 81
+                                              //spot_id: "137b4a11-4e39-11e6-80be-1cc1def361b0"
+                                              //status: "G"
+                                              //technical_inspection_days: 1612
+                                              //terminal: 1
+                                              //tire_change_days: 10772
+                                              //tire_season: "Всесезонные"
+                                              //type: 1
+                                              //x_pos: 55.3855
+                                              //y_pos: 36.7841
+                                              //year: 2011
+                                              //add cars information
+
+                                              applicationAdd('#nameTS', el.model);
+
+
+
+
                                           });
                                           c_array.push(c_pm);
                                           clustererCars.add(c_array);
