@@ -1,8 +1,7 @@
 <?php
 
 namespace app\models;
-ini_set('memory_limit', '1000M');
-ini_set('max_execution_time', '300');
+
 
 use yii\base\ErrorException;
 use yii\db\Exception;

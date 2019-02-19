@@ -4,6 +4,7 @@ namespace app\controllers;
 
 use app\models\Autocolumn;
 use app\models\Car;
+use app\models\CarsData;
 use app\models\Organization;
 use app\models\Spot;
 use app\models\Statistic;
@@ -132,6 +133,32 @@ class SiteController extends Controller
         }
         $resultArray = ArrayHelper::toArray($cars);
         return json_encode(['cars' => $resultArray, 'bounds' => [[$xMinCars, $yMinCars],[$xMaxCars, $yMaxCars]]], JSON_UNESCAPED_UNICODE);
+    }
+
+    /**
+     * @param $car_id
+     * @return false|string
+     */
+    public function getCarData($car_id) {
+        $client = new \SoapClient("http://d.rg24.ru:5601/PUP_WS/ws/PUP.1cws?wsdl");
+        $carsData = json_decode($client->GetCarsData(['CarsID' => '013f6af2-473c-11e5-b89f-00155d630038'])->return);
+        $carsDataModel = CarsData::getOrCreate($car_id);
+        $carsDataModel->car_id = $car_id;
+        $carsDataModel->driver = isset($carsData->Driver) ? $carsData->Driver : null;
+        $carsDataModel->phone = isset($carsData->Phone) ? $carsData->Phone : null;
+        $carsDataModel->start_time_plan = isset($carsData->StartTimePlan) ? $carsData->StartTimePlan : null;
+        $carsDataModel->end_time_plan = isset($carsData->EndTimePlan) ? $carsData->EndTimePlan : null;
+        $carsDataModel->work_time_plan = isset($carsData->EndTimePlan) ? $carsData->EndTimePlan : null;
+        $carsDataModel->start_time_fact = isset($carsData->StartTimeFact) ? $carsData->StartTimeFact : null;
+        $carsDataModel->work_time_fact = isset($carsData->WorkTimeFact) ? $carsData->WorkTimeFact : null;
+        $carsDataModel->mileage = isset($carsData->Mileage) ? $carsData->Mileage : null;
+        $carsDataModel->speed = isset($carsData->Speed) ? $carsData->Speed : null;
+        $carsDataModel->fuel_norm = isset($carsData->FuelNorm) ? $carsData->FuelNorm : null;
+        $carsDataModel->fuel_DUT = isset($carsData->FuelDUT) ? $carsData->FuelDUT : null;
+        $carsDataModel->driver_mark = isset($carsData->DriverMark) ? $carsData->DriverMark : null;
+        $carsDataModel->violations_count = isset($carsData->ViolationsCount) ? $carsData->ViolationsCount : null;
+        $carsDataModel->save();
+        return json_encode($carsDataModel);
     }
 
     /**
