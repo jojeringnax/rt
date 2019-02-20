@@ -139,7 +139,7 @@ class SiteController extends Controller
      * @param $car_id
      * @return false|string
      */
-    public function getCarData($car_id) {
+    public function actionGetCarData($car_id) {
         $client = new \SoapClient("http://d.rg24.ru:5601/PUP_WS/ws/PUP.1cws?wsdl");
         $carsData = json_decode($client->GetCarsData(['CarsID' => '013f6af2-473c-11e5-b89f-00155d630038'])->return);
         $carsDataModel = CarsData::getOrCreate($car_id);
