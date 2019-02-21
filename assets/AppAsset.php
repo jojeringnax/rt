@@ -28,7 +28,8 @@ class AppAsset extends AssetBundle
         'js_new/accounting.min.js',
         'js_new/progressbar.min.js',
         'js_new/main.js',
-        'js_new/jquery.soap.js'
+        'js_new/jquery.soap.js',
+        'js_new/bar.js'
     ];
     public $depends = [
         'yii\web\YiiAsset',
