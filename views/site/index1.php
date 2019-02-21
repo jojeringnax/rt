@@ -453,7 +453,17 @@
                                               //year: 2011
                                               //add cars information
 
-                                              applicationAdd('#nameTS', el.model);
+                                              applicationAdd('nameTS', el['model']);
+
+                                              applicationAdd('oilChangeDist', el['tire_change_days']);
+
+                                              applicationAdd('tireChangeDist', el['tire_change_days']);
+
+                                              applicationAdd('accChangeDist', el['battery_change_days']);
+
+                                              applicationAdd('toChangeDist', el['technical_inspection_days']);
+
+                                              console.log('---', el);
 
 
 
