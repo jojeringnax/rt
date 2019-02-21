@@ -17,7 +17,7 @@
         -webkit-filter: grayscale(100%) brightness(30%);
     }
 </style>
-<script src="../../web/js_new/bar.js"></script>
+<?php $this->registerJsFile('js_new/bar.js') ?>
 <script>
     let firmsData = <?= json_encode($totalStats->getAttributes()) ?>;
     let totalTerminals =<?= json_encode($totalTerminals) ?>;
@@ -453,7 +453,17 @@
                                               //year: 2011
                                               //add cars information
 
-                                              applicationAdd('#nameTS', el.model);
+                                              applicationAdd('nameTS', el['model']);
+
+                                              applicationAdd('oilChangeDist', el['tire_change_days']);
+
+                                              applicationAdd('tireChangeDist', el['tire_change_days']);
+
+                                              applicationAdd('accChangeDist', el['battery_change_days']);
+
+                                              applicationAdd('toChangeDist', el['technical_inspection_days']);
+
+                                              console.log('---', el);
 
 
 

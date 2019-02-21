@@ -1,3 +1,10 @@
+LongBarColors = {
+    oil: "yellow",
+    tiers: 'blue',
+    akb: 'red',
+    to: 'green'
+};
+
 function circleBar(name, value) {
     //console.log(name, value, 'sss');
     let per = name + "_per";
@@ -18,6 +25,19 @@ function circleBar(name, value) {
     });
 
     bar.animate(value);  // Number from 0.0 to 1.0
+}
+
+function longBar(name, value, color) {
+    var longbar = new ProgressBar.Line('#'+name, {
+      strokeWidth: 5,
+      easing: 'easeInOut',
+      duration: 1400,
+      color: LongBarColors[color],
+      trailColor: '#eee',
+      trailWidth: 5,
+      svgStyle: {'border-radius': '7px'}
+    });
+    longbar.animate(value);  // Number from 0.0 to 1.0
 }
 
 function applicationAdd(id, value) {
