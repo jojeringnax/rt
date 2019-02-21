@@ -17,7 +17,7 @@
         -webkit-filter: grayscale(100%) brightness(30%);
     }
 </style>
-<script src="../../web/js_new/bar.js"></script>
+<?php $this->registerJsFile('js_new/bar.js') ?>
 <script>
     let firmsData = <?= json_encode($totalStats->getAttributes()) ?>;
     let totalTerminals =<?= json_encode($totalTerminals) ?>;
