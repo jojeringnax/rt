@@ -36,7 +36,6 @@ class CarsController extends Controller
         if($this->positions) Car::resetCoordinates();
         if($this->main) {
             Car::getCarsFromSoapAndSaveInDB();
-            CarsData::getAllCarsData();
         }
         if($this->statuses) Car::resetStatuses();
         if($this->data) CarsData::getAllCarsData();

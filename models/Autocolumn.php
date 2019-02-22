@@ -13,6 +13,8 @@ use yii\db\Exception;
  * @property string $organization_id
  * @property string $description
  * @property string $address
+ * @property string $town
+ * @property string $name
  * @property double $x_pos
  * @property double $y_pos
  *
@@ -167,6 +169,9 @@ class Autocolumn extends \yii\db\ActiveRecord
             try {
                 $autocolumnMod = self::getOrCreate($autocolumn->ID);
                 $autocolumnMod->id = $autocolumn->ID;
+                $haveParams = isset(Yii::$app->params['autocolumns'][$autocolumn->ID]);
+                $autocolumnMod->town = $haveParams ? Yii::$app->params['autocolumns'][$autocolumn->ID][1] : null;
+                $autocolumnMod->name = $haveParams ? Yii::$app->params['autocolumns'][$autocolumn->ID][0] : null;
                 $autocolumnMod->company_id = '762b8f6f-1a46-11e5-be74-00155dc6002b';
                 $autocolumnMod->organization_id = $autocolumn->FirmsID;
                 $autocolumnMod->description = $autocolumn->Description;
@@ -175,10 +180,7 @@ class Autocolumn extends \yii\db\ActiveRecord
                 $autocolumnMod->y_pos = $autocolumn->YPos;
                 $autocolumnMod->save();
             } catch (Exception $e) {
-                $log = new Log();
-                $log->message = $e->getTraceAsString();
-                $log->created_at = date('Y-m-d H:i:s');
-                $log->save();
+                continue;
             }
         }
     }

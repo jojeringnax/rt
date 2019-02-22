@@ -14,6 +14,8 @@ use yii\db\Exception;
  * @property string $autocolumn_id
  * @property string $description
  * @property string $address
+ * @property string $town
+ * @property string $name
  * @property double $x_pos
  * @property double $y_pos
  *
@@ -178,23 +180,19 @@ class Spot extends \yii\db\ActiveRecord
         $divis = new Division();
         $spots = $divis->getSpots();
         foreach ($spots as $spot) {
-            try {
-                $spotMod = self::getOrCreate($spot->ID);
-                $spotMod->id = $spot->ID;
-                $spotMod->company_id = '762b8f6f-1a46-11e5-be74-00155dc6002b';
-                $spotMod->organization_id = $spot->FirmsID;
-                $spotMod->autocolumn_id = $spot->ParentID;
-                $spotMod->description = $spot->Description;
-                $spotMod->address = $spot->Address;
-                $spotMod->x_pos = $spot->XPos;
-                $spotMod->y_pos = $spot->YPos;
-                $spotMod->save();
-            } catch (Exception $e) {
-                $log = new Logs();
-                $log->message = $e->getTraceAsString();
-                $log->created_at = date('Y-m-d H:i:s');
-                $log->save();
-            }
+            $spotMod = self::getOrCreate($spot->ID);
+            $spotMod->id = $spot->ID;
+            $spotMod->company_id = '762b8f6f-1a46-11e5-be74-00155dc6002b';
+            $spotMod->organization_id = $spot->FirmsID;
+            $spotMod->autocolumn_id = $spot->ParentID;
+            $spotMod->description = $spot->Description;
+            $haveParams = isset(Yii::$app->params['spots'][$spot->ID]);
+            $spotMod->town = $haveParams ? Yii::$app->params['spots'][$spot->ID][1] : null;
+            $spotMod->name = $haveParams ? Yii::$app->params['spots'][$spot->ID][0] : null;
+            $spotMod->address = $spot->Address;
+            $spotMod->x_pos = $spot->XPos;
+            $spotMod->y_pos = $spot->YPos;
+            $spotMod->save();
         }
         return true;
     }

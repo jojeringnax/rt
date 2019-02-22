@@ -5,6 +5,7 @@ namespace app\controllers;
 use app\models\Autocolumn;
 use app\models\Car;
 use app\models\CarsData;
+use app\models\Company;
 use app\models\Organization;
 use app\models\Spot;
 use app\models\Statistic;
@@ -88,6 +89,10 @@ class SiteController extends Controller
 
     public function actionOrganizations()
     {
+        $company = new Company();
+        $company->id = '762b8f6f-1a46-11e5-be74-00155dc6002b';
+        $company->name = 'ООО Ресурс Транс';
+        $company->save();
         return Organization::getOrganizationsFromSoapAndSaveInDB();
     }
 

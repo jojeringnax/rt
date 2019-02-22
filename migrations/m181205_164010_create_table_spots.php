@@ -22,6 +22,8 @@ class m181205_164010_create_table_spots extends Migration
             'organization_id' => $this->string(36),
             'autocolumn_id' => $this->string(36),
             'description' => $this->string(512),
+            'name' => $this->string(128)->null(),
+            'town' => $this->string(32)->null(),
             'address' => $this->text(),
             'x_pos' => $this->float(6),
             'y_pos' => $this->float(6)
