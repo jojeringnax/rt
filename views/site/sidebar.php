@@ -284,7 +284,7 @@
                 </div>
                 <div class="plr-col-distance">
                     <p id="oilChangeDist" class="distance-figure">50 000 км</p>
-                    <p id="total" class="distance-text">До замены масла</p>
+                    <p id="total" class="distance-text">Тип шин</p>
                 </div>
                 <div id="lb1" class="longlar"></div>
             </div>
