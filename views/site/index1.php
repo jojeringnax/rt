@@ -240,7 +240,6 @@
         <?php foreach ($organizations as $organization) {
             $organizationPrettyId = $organization->getIdWithoutNumbers();
             ?>
-
         var OrgLayout = ymaps.templateLayoutFactory.createClass(
             '<div class="organizations" style="color: black; font-weight: bold; display: flex; justify-content: space-between; flex-direction: column; align-items: center; height: 50px; width: 250px;"><span style="color:white; margin-top: -50px"><?= $autocolumns[$organizationPrettyId]["cars"] ?></span> <span style="width: 250px; margin-top: 50px"></span></div>'
         );
@@ -257,7 +256,9 @@
                 iconContentLayout: OrgLayout
             });
 
-            o_array.push(o_pm);
+            <?php if ($autocolumns[$organizationPrettyId]["cars"] !== 0) { ?>
+                o_array.push(o_pm);
+            <?php } ?>
             o_pm.breadcrumps = '<?= 'Филиал '.$organization->getTown() ?>';
             o_pm.events.add('click', function(o) {
                 changeInfo(
@@ -377,8 +378,10 @@
                     preset: 'islands#greenDotIconWithCaption',
                     iconContentLayout: AutoColLayout
                 });
-                a_pm.breadcrumps = '<?= $autocolumn->description ?>';
-                a_array.push(a_pm);
+                a_pm.breadcrumps = '<?= $autocolumn->name ?>';
+                <?php if ($spots[$autocolumnPrettyId]["cars"] !== 0) { ?>
+                    a_array.push(a_pm);
+                <?php } ?>
                 a_pm.events.add('click', function(a) {
                     changeInfo(
                         <?= $spots[$autocolumnPrettyId]["cars"] ?>,
@@ -498,8 +501,10 @@
                                 preset: 'islands#greenDotIconWithCaption',
                                 iconContentLayout: SpotsLayout
                             });
-                            s_array.push(s_pm);
-                            s_pm.breadcrumps = '<?= $spot->description ?>';
+                            <?php if ($spot->carsNumber) { ?>
+                                s_array.push(s_pm);
+                            <?php } ?>
+                            s_pm.breadcrumps = '<?= $spot->name ?>';
                             s_pm.events.add('click', function(s) {
                                 changeInfo(
                                     <?= $spot->carsNumber ?>,
