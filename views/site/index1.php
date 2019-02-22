@@ -18,6 +18,87 @@
     }
 </style>
 <script>
+    let idOfCurrentElement = {
+        organizations: '',
+        autocolumn: '',
+        spot: ''
+    };
+
+    let dataLevel = {
+        firms :{
+            totalCars: '',
+            oinLine:'',
+            onRep:'',
+            onTO: '',
+            applications_executed: '',
+            applications_canceled: '',
+            applications_sub: '',
+            applications_ac:'' ,
+            waybills_total: '',
+            accidents_total: '',
+            WB_M: '',
+            fuel: '' ,
+            terminals: ''
+        },
+        organization: {
+            light:'',
+            truck: '',
+            bus: '',
+            spec: '',
+            totalCars: '',
+            oinLine:'',
+            onRep:'',
+            onTO: '',
+            applications_executed: '',
+            applications_canceled: '',
+            applications_sub: '',
+            applications_ac:'' ,
+            waybills_total: '',
+            accidents_total: '',
+            WB_M: '',
+            fuel: '' ,
+            terminals: ''
+        },
+        autocolumn: {
+            light:'',
+            truck: '',
+            bus: '',
+            spec: '',
+            totalCars: '',
+            oinLine:'',
+            onRep:'',
+            onTO: '',
+            applications_executed: '',
+            applications_canceled: '',
+            applications_sub: '',
+            applications_ac:'' ,
+            waybills_total: '',
+            accidents_total: '',
+            WB_M: '',
+            fuel: '' ,
+            terminals: ''
+        },
+        spot: {
+            light:'',
+            truck: '',
+            bus: '',
+            spec: '',
+            totalCars: '',
+            oinLine:'',
+            onRep:'',
+            onTO: '',
+            applications_executed: '',
+            applications_canceled: '',
+            applications_sub: '',
+            applications_ac:'' ,
+            waybills_total: '',
+            accidents_total: '',
+            WB_M: '',
+            fuel: '' ,
+            terminals: ''
+        }
+    };
+
     let firmsData = <?= json_encode($totalStats->getAttributes()) ?>;
     let totalTerminals =<?= json_encode($totalTerminals) ?>;
     let totalCarsData =<?= json_encode($totalCarsData) ?>;
@@ -33,6 +114,30 @@
         $('#specCar').html(specCar);
     };
 
+    let waybills_total = (firmsData['waybills_processed']/firmsData['waybills_total']).toFixed(2);
+    let accidents_total = (firmsData['accidents_guilty']/firmsData['accidents_total']).toFixed(2);
+    let applications_ac = (firmsData['applications_ac']/firmsData['applications_total']).toFixed(2);
+    let fuel = (Math.round(firmsData['fuel'])/firmsData['time']).toFixed(2);
+    let WB_M = (Math.round(firmsData['WB_M'])/firmsData['WB_ALL']).toFixed(2);
+
+
+    dataLevel['firms'] = {
+        totalCars: totalCarsData['G'],
+        oinLine: totalCarsData['totalInline'],
+        onRep: totalCarsData['R'],
+        onTO: totalCarsData['TO'],
+        applications_executed: firmsData['applications_executed'],
+        applications_canceled: firmsData['applications_canceled'],
+        applications_sub: firmsData['applications_sub'],
+        applications_ac:applications_ac ,
+        waybills_total: waybills_total,
+        accidents_total: accidents_total,
+        WB_M: WB_M,
+        fuel: fuel ,
+        terminals: totalTerminals
+    };
+
+    console.log(dataLevel['firms']);
     //add data -> COMPANY
 
         //compAmOfTs
@@ -172,13 +277,40 @@
                 removeAllDontNeed();
 
                 //ajax request -> ORGANIZATION
+
+                idOfCurrentElement['organizations'] = "<?= $organization->id ?>";
                 $.ajax({
                     url: "http://rt.xxx/web/?r=site/get-organization-statistic&organization_id=" + "<?= $organization->id ?>",
                     type: 'get',
                     success: function(res) {
-                        console.log('---org', res);
                         let terminals = JSON.parse(res)['terminals'];
                         let data = JSON.parse(res)['statistic'];
+
+                        let waybills_total = (data['waybills_processed']/data['waybills_total']).toFixed(2);
+                        let accidents_total = (data['accidents_guilty']/data['accidents_total']).toFixed(2);
+                        let applications_ac = (data['waybills_processed']/data['waybills_total']).toFixed(2);
+                        let fuel = (Math.round(data['fuel'])/data['time']).toFixed(2);
+                        let WB_M = (Math.round(data['WB_M'])/data['WB_ALL']).toFixed(2);
+
+                        dataLevel['organization'] = {
+                            totalCars: <?= $autocolumns[$organizationPrettyId]["cars"] ?>,
+                            oinLine:  <?= $autocolumns[$organizationPrettyId]["carsStatuses"]["inline"] ?>,
+                            onRep: <?= $autocolumns[$organizationPrettyId]["carsStatuses"]["R"] ?>,
+                            onTO: <?= $autocolumns[$organizationPrettyId]["carsStatuses"]["TO"] ?>,
+                            light: <?= $autocolumns[$organizationPrettyId]["carsTypes"][\app\models\Car::LIGHT] ?>,
+                            truck: <?= $autocolumns[$organizationPrettyId]["carsTypes"][\app\models\Car::TRUCK] ?>,
+                            bus: <?= $autocolumns[$organizationPrettyId]["carsTypes"][\app\models\Car::BUS] ?>,
+                            spec: <?= $autocolumns[$organizationPrettyId]["carsTypes"][\app\models\Car::SPEC] ?>,
+                            applications_executed: data['applications_executed'],
+                            applications_canceled: data['applications_canceled'],
+                            applications_sub: data['applications_sub'],
+                            applications_ac: applications_ac,
+                            waybills_total: waybills_total,
+                            accidents_total: accidents_total,
+                            WB_M: WB_M,
+                            fuel: fuel ,
+                            terminals: terminals
+                        };
 
                         //example of data = {
                         //{"id":null,
@@ -258,12 +390,14 @@
                         <?= $spots[$autocolumnPrettyId]["carsTypes"][\app\models\Car::BUS] ?>,
                         <?= $spots[$autocolumnPrettyId]["carsTypes"][\app\models\Car::SPEC] ?>
                     );
+
                     $('#info-company').addClass('hide');
                     $('#ts-info').addClass('hide');
                     $('#info-department').removeClass('hide');
                     removeAllDontNeed(1);
 
                     //ajax request -> AUTOCOLUMN
+                    idOfCurrentElement['autocolumn'] = "<?= $autocolumn->id ?>";
                     $.ajax({
                         url: "http://rt.xxx/web/?r=site/get-autocolumn-statistic&autocolumn_id=" + "<?= $autocolumn->id ?>",
                         type: 'get',
@@ -271,6 +405,32 @@
                             console.log('---spot', res);
                             let terminals = JSON.parse(res)['terminals'];
                             let data = JSON.parse(res)['statistic'];
+
+                            let waybills_total = (data['waybills_processed']/data['waybills_total']).toFixed(2);
+                            let accidents_total = (data['accidents_guilty']/data['accidents_total']).toFixed(2);
+                            let applications_ac = (data['waybills_processed']/data['waybills_total']).toFixed(2);
+                            let fuel = (Math.round(data['fuel'])/data['time']).toFixed(2);
+                            let WB_M = (Math.round(data['WB_M'])/data['WB_ALL']).toFixed(2);
+
+                            dataLevel['autocolumn'] = {
+                                totalCars: <?= $spots[$autocolumnPrettyId]["cars"] ?>,
+                                oinLine:  <?= $spots[$autocolumnPrettyId]["carsStatuses"]["inline"] ?>,
+                                onRep: <?= $spots[$autocolumnPrettyId]["carsStatuses"]["R"] ?>,
+                                onTO: <?= $spots[$autocolumnPrettyId]["carsStatuses"]["TO"] ?>,
+                                light: <?= $spots[$autocolumnPrettyId]["carsTypes"][\app\models\Car::LIGHT] ?>,
+                                truck: <?= $spots[$autocolumnPrettyId]["carsTypes"][\app\models\Car::TRUCK] ?>,
+                                bus: <?= $spots[$autocolumnPrettyId]["carsTypes"][\app\models\Car::BUS] ?>,
+                                spec: <?= $spots[$autocolumnPrettyId]["carsTypes"][\app\models\Car::SPEC] ?>,
+                                applications_executed: data['applications_executed'],
+                                applications_canceled: data['applications_canceled'],
+                                applications_sub: data['applications_sub'],
+                                applications_ac: applications_ac,
+                                waybills_total: waybills_total,
+                                accidents_total: accidents_total,
+                                WB_M: WB_M,
+                                fuel: fuel ,
+                                terminals: terminals
+                            };
 
                             //example of data = {
                                 // "id":null,
@@ -357,11 +517,11 @@
                                 $('#ts-info').addClass('hide');
 
                                 //ajax request -> SPOT
+                                idOfCurrentElement['spot'] = "<?= $spot->id ?>";
                                 $.ajax({
                                     url: "http://rt.xxx/web/?r=site/get-spot-statistic&spot_id=" + "<?= $spot->id ?>",
                                     type: 'get',
                                     success: function(res) {
-                                        console.log('---spot', res);
                                         let terminals = JSON.parse(res)['terminals'];
                                         let data = JSON.parse(res)['statistic'];
 
@@ -392,6 +552,32 @@
                                         //terminals =
                                         applicationAdd('terminals', terminals);
 
+
+                                        let waybills_total = (data['waybills_processed']/data['waybills_total']).toFixed(2);
+                                        let accidents_total = (data['accidents_guilty']/data['accidents_total']).toFixed(2);
+                                        let applications_ac = (data['waybills_processed']/data['waybills_total']).toFixed(2);
+                                        let fuel = (Math.round(data['fuel'])/data['time']).toFixed(2);
+                                        let WB_M = (Math.round(data['WB_M'])/data['WB_ALL']).toFixed(2);
+
+                                        dataLevel['spot'] = {
+                                            totalCars: <?= $spot->carsNumber ?>,
+                                            oinLine:  <?= $spot->carsStatuses["inline"] ?>,
+                                            onRep: <?= $spot->carsStatuses["R"] ?>,
+                                            onTO: <?= $spot->carsStatuses["TO"] ?>,
+                                            light: <?= $spot->carsTypes[\app\models\Car::LIGHT] ?>,
+                                            truck: <?= $spot->carsTypes[\app\models\Car::TRUCK] ?>,
+                                            bus: <?= $spot->carsTypes[\app\models\Car::BUS] ?>,
+                                            spec: <?= $spot->carsTypes[\app\models\Car::SPEC] ?>,
+                                            applications_executed: data['applications_executed'],
+                                            applications_canceled: data['applications_canceled'],
+                                            applications_sub: data['applications_sub'],
+                                            applications_ac: applications_ac,
+                                            waybills_total: waybills_total,
+                                            accidents_total: accidents_total,
+                                            WB_M: WB_M,
+                                            fuel: fuel,
+                                            terminals: terminals
+                                        };
                                     }
                                 }); //end ajax request
 
@@ -454,7 +640,7 @@
 
                                               applicationAdd('nameTS', el['model']);
 
-                                              applicationAdd('oilChangeDist', el['tire_change_days']);
+                                              applicationAdd('oilChangeDist', el['tire_season']);
 
                                               applicationAdd('tireChangeDist', el['tire_change_days']);
 
@@ -462,12 +648,17 @@
 
                                               applicationAdd('toChangeDist', el['technical_inspection_days']);
 
-                                              console.log('---', el);
 
+                                              $.ajax({
+                                                  url: "http://rt.xxx/web/?r=site/get-car-data&car_id=" + el.id,
+                                                  type: 'get',
+                                                  success: function(res) {
+                                                      console.log('--- get-cars-data', res);
+                                                  }
 
-
-
+                                              })
                                           });
+
                                           c_array.push(c_pm);
                                           clustererCars.add(c_array);
                                           myMap.geoObjects.add(clustererCars);
@@ -487,7 +678,7 @@
                                 window.currentElement.spot = s.originalEvent.target;
                                 $('.bbb > span').html(window.currentElement.organization.breadcrumps + ' <span class="arrow-r" style="color: green"> > </span> ' + window.currentElement.autocolumn.breadcrumps + ' <span class="arrow-r" style="color: green"> > </span> ' + window.currentElement.spot.breadcrumps);
                                 console.log(window.currentElement);
-                            }); //spots cllick
+                            }); //spots click
                 <?php   }
                     } ?>
                         if(s_array.length) {
@@ -539,9 +730,10 @@
         myMap.setBounds(<?= \app\models\Organization::getMaxAndMinCoordinatesForAPI() ?>, {checkZoomRange: true});
         myMap.controls.add('zoomControl');
 
-        var button = $('.back');
+        let button = $('.back');
         button.click( function () {
             if(window.currentElement.hasOwnProperty('car')) {
+                console.log('---car');
                 if(c_array.length) {
                     c_array = [];
                     myMap.geoObjects.remove(clustererCars);
@@ -554,14 +746,87 @@
                 delete window.currentElement.car;
                 myMap.setCenter(window.currentElement.spot.geometry._coordinates, 12);
                 myMap.geoObjects.add(window.currentElement.spot);
-                console.log(window.currentElement);
+                console.log(window.currentElement.spot);
+                console.log("---",idOfCurrentElement);
+
+                //AJAX -> SPOT
+                $.ajax({
+                    url: "http://rt.xxx/web/?r=site/get-spot-statistic&spot_id=" + idOfCurrentElement['spot'],
+                    type: 'get',
+                    success: function(res) {
+                        //console.log('---spot', res);
+                        let terminals = JSON.parse(res)['terminals'];
+                        let data = JSON.parse(res)['statistic'];
+
+                        //executed_app
+                        applicationAdd('applications_executed',data['applications_executed']);
+
+                        //canceled_app
+                        applicationAdd('applications_canceled',data['applications_canceled']);
+
+                        //sub_app
+                        applicationAdd('applications_sub',data['applications_sub']);
+
+                        //ac_app
+                        circleBar('applications_ac', (data['applications_ac']/data['applications_total']).toFixed(2));
+
+                        //waybills = waybills_processed / waybills_total
+                        circleBar('waybills_total', (data['waybills_processed']/data['waybills_total']).toFixed(2));
+
+                        //accidents = accidents_guilty / accidents_total
+                        circleBar('accidents_total', (data['accidents_guilty']/data['accidents_total']).toFixed(2));
+
+                        //GetWBMonitoring =  CountM/CountAll
+                        circleBar('WB_M', (Math.round(data['WB_M'])/data['WB_ALL']).toFixed(2));
+
+                        // TMCH = fuel/time
+                        applicationAdd('fuel', (Math.round(data['fuel'])/data['time']).toFixed(2));
+
+                        //terminals =
+                        applicationAdd('terminals', terminals);
+
+
+
+                        //totalCars: <?//= $spot->carsNumber ?>//,
+                        //oinLine:  <?//= $spot->carsStatuses["inline"] ?>//,
+                        //onRep: <?//= $spot->carsStatuses["R"] ?>//,
+                        //onTO: <?//= $spot->carsStatuses["TO"] ?>//,
+                        //light: <?//= $spot->carsTypes[\app\models\Car::LIGHT] ?>//,
+                        //truck: <?//= $spot->carsTypes[\app\models\Car::TRUCK] ?>//,
+                        //bus: <?//= $spot->carsTypes[\app\models\Car::BUS] ?>//,
+                        //spec: <?//= $spot->carsTypes[\app\models\Car::SPEC] ?>//,
+                        //applications_executed: data['applications_executed'],
+                        //applications_canceled: data['applications_canceled'],
+                        //applications_sub: data['applications_sub'],
+                        //applications_ac: applications_ac,
+                        //waybills_total: waybills_total,
+                        //accidents_total: accidents_total,
+                        //WB_M: WB_M
+
+                        changeInfo(
+                            dataLevel['spot']['totalCars'],
+                            dataLevel['spot']['oinLine'],
+                            dataLevel['spot']['onRep'],
+                            dataLevel['spot']['onTO'],
+                            dataLevel['spot']['light'],
+                            dataLevel['spot']['truck'],
+                            dataLevel['spot']['bus'],
+                            dataLevel['spot']['spec'],
+                        );
+
+                    }
+                }); //end ajax request
                 return true;
+
             }
             if(window.currentElement.hasOwnProperty('spot')) {
+                console.log('---spot');
                 myMap.geoObjects.remove(window.currentElement.spot);
                 if(c_array.length) {
                    removeArrayFromMap(c_array, myMap);
                     c_array = [];
+                    myMap.geoObjects.remove(clustererCars);
+                    clustererCars.removeAll();
                 }
                 myMap.geoObjects.add(clustererSpots);
                 $('.bbb > span').html(window.currentElement.organization.breadcrumps + ' <span class="arrow-r" style="color: green"> > </span> ' + window.currentElement.autocolumn.breadcrumps);
@@ -576,13 +841,98 @@
                    myMap.setCenter(window.currentElement.autocolumn.center, 12);
                 }
                 console.log(window.currentElement);
+
+                $.ajax({
+                    url: "http://rt.xxx/web/?r=site/get-autocolumn-statistic&autocolumn_id=" + idOfCurrentElement['autocolumn'],
+                    type: 'get',
+                    success: function(res) {
+                        //console.log('---spot', res);
+                        let terminals = JSON.parse(res)['terminals'];
+                        let data = JSON.parse(res)['statistic'];
+
+                        //example of data = {
+                        // "id":null,
+                        // "spot_id":null,
+                        // "autocolumn_id":"68280a1c-2acf-11e5-b13d-00155dc6002b",
+                        // "applications_total":76,
+                        // "applications_executed":67,
+                        // "applications_canceled":3,
+                        // "applications_sub":0,
+                        // "applications_ac":0,
+                        // "applications_mp":0,
+                        // "waybills_total":433,
+                        // "waybills_processed":427,
+                        // "accidents_total":0,
+                        // "accidents_guilty":0,
+                        // "time":9681,
+                        // "fuel":2340.9700000000003
+                        // }
+
+                        //executed_app
+                        applicationAdd('applications_executed',data['applications_executed']);
+
+                        //canceled_app
+                        applicationAdd('applications_canceled',data['applications_canceled']);
+
+                        //sub_app
+                        applicationAdd('applications_sub',data['applications_sub']);
+
+                        //ac_app
+                        circleBar('applications_ac', (data['applications_ac']/data['applications_total']).toFixed(2));
+
+                        //waybills = waybills_processed / waybills_total
+                        circleBar('waybills_total', (data['waybills_processed']/data['waybills_total']).toFixed(2));
+
+                        //accidents = accidents_guilty / accidents_total
+                        circleBar('accidents_total', (data['accidents_guilty']/data['accidents_total']).toFixed(2));
+
+                        //GetWBMonitoring =  CountM/CountAll
+                        circleBar('WB_M', (Math.round(data['WB_M'])/data['WB_ALL']).toFixed(2));
+
+                        // TMCH = fuel/time
+                        applicationAdd('fuel', (Math.round(data['fuel'])/data['time']).toFixed(2));
+
+                        //terminals =
+                        applicationAdd('terminals', terminals);
+                    }
+                }); //end ajax request
+
+                //totalCars: <?//= $spot->carsNumber ?>//,
+                //oinLine:  <?//= $spot->carsStatuses["inline"] ?>//,
+                //onRep: <?//= $spot->carsStatuses["R"] ?>//,
+                //onTO: <?//= $spot->carsStatuses["TO"] ?>//,
+                //light: <?//= $spot->carsTypes[\app\models\Car::LIGHT] ?>//,
+                //truck: <?//= $spot->carsTypes[\app\models\Car::TRUCK] ?>//,
+                //bus: <?//= $spot->carsTypes[\app\models\Car::BUS] ?>//,
+                //spec: <?//= $spot->carsTypes[\app\models\Car::SPEC] ?>//,
+                //applications_executed: data['applications_executed'],
+                //applications_canceled: data['applications_canceled'],
+                //applications_sub: data['applications_sub'],
+                //applications_ac: applications_ac,
+                //waybills_total: waybills_total,
+                //accidents_total: accidents_total,
+                //WB_M: WB_M
+
+                changeInfo(
+                    dataLevel['autocolumn']['totalCars'],
+                    dataLevel['autocolumn']['oinLine'],
+                    dataLevel['autocolumn']['onRep'],
+                    dataLevel['autocolumn']['onTO'],
+                    dataLevel['autocolumn']['light'],
+                    dataLevel['autocolumn']['truck'],
+                    dataLevel['autocolumn']['bus'],
+                    dataLevel['autocolumn']['spec'],
+                );
+
                 return true;
             }
             if(window.currentElement.hasOwnProperty('autocolumn')) {
+                console.log('---autocol');
                 if(s_array) {
                     myMap.geoObjects.remove(clustererSpots);
                     s_array = [];
                 }
+
                 $('.bbb > span').html(window.currentElement.organization.breadcrumps);
                 $('#info-company').addClass('hide');
                 $('#ts-info').addClass('hide');
@@ -598,7 +948,92 @@
                 if(a_array) {
                     myMap.geoObjects.add(clustererAutocolumns);
                 }
+
+                $.ajax({
+                    url: "http://rt.xxx/web/?r=site/get-organization-statistic&organization_id=" + idOfCurrentElement['organizations'],
+                    type: 'get',
+                    success: function(res) {
+                        //console.log('---org', res);
+                        let terminals = JSON.parse(res)['terminals'];
+                        let data = JSON.parse(res)['statistic'];
+
+                        //example of data = {
+                        //{"id":null,
+                        // "spot_id":null,
+                        // "autocolumn_id":null,
+                        // "applications_total":289,
+                        // "applications_executed":260,
+                        // "applications_canceled":11,
+                        // "applications_sub":3,
+                        // "applications_ac":0,
+                        // "applications_mp":0,
+                        // "waybills_total":3769,
+                        // "waybills_processed":3438,
+                        // "accidents_total":0,
+                        // "accidents_guilty":0,
+                        // "time":91025.12,
+                        // "fuel":25134.369999999995,
+                        // "WB_M":1988,"WB_ALL":2013}
+
+                        //executed_app
+                        applicationAdd('applications_executed',data['applications_executed']);
+
+                        //canceled_app
+                        applicationAdd('applications_canceled',data['applications_canceled']);
+
+                        //sub_app
+                        applicationAdd('applications_sub',data['applications_sub']);
+
+                        //ac_app
+                        circleBar('applications_ac', (data['applications_ac']/data['applications_total']).toFixed(2));
+
+                        //waybills = waybills_processed / waybills_total
+                        circleBar('waybills_total', (data['waybills_processed']/data['waybills_total']).toFixed(2));
+
+                        //accidents = accidents_guilty / accidents_total
+                        circleBar('accidents_total', (data['accidents_guilty']/data['accidents_total']).toFixed(2));
+
+                        //GetWBMonitoring =  CountM/CountAll
+                        circleBar('WB_M', (Math.round(data['WB_M'])/data['WB_ALL']).toFixed(2));
+
+                        // TMCH = fuel/time
+                        applicationAdd('fuel', (Math.round(data['fuel'])/data['time']).toFixed(2));
+
+                        //terminals =
+                        applicationAdd('terminals', terminals);
+                    }
+                }); //end ajax request
+
+                //totalCars: <?//= $spot->carsNumber ?>//,
+                //oinLine:  <?//= $spot->carsStatuses["inline"] ?>//,
+                //onRep: <?//= $spot->carsStatuses["R"] ?>//,
+                //onTO: <?//= $spot->carsStatuses["TO"] ?>//,
+                //light: <?//= $spot->carsTypes[\app\models\Car::LIGHT] ?>//,
+                //truck: <?//= $spot->carsTypes[\app\models\Car::TRUCK] ?>//,
+                //bus: <?//= $spot->carsTypes[\app\models\Car::BUS] ?>//,
+                //spec: <?//= $spot->carsTypes[\app\models\Car::SPEC] ?>//,
+                //applications_executed: data['applications_executed'],
+                //applications_canceled: data['applications_canceled'],
+                //applications_sub: data['applications_sub'],
+                //applications_ac: applications_ac,
+                //waybills_total: waybills_total,
+                //accidents_total: accidents_total,
+                //WB_M: WB_M
+
+                changeInfo(
+                    dataLevel['organization']['totalCars'],
+                    dataLevel['organization']['oinLine'],
+                    dataLevel['organization']['onRep'],
+                    dataLevel['organization']['onTO'],
+                    dataLevel['organization']['light'],
+                    dataLevel['organization']['truck'],
+                    dataLevel['organization']['bus'],
+                    dataLevel['organization']['spec'],
+                );
+
                 return true;
+
+
             }
             if(a_array) {
                 myMap.geoObjects.remove(clustererAutocolumns);
@@ -611,6 +1046,9 @@
             myMap.setBounds(<?= \app\models\Organization::getMaxAndMinCoordinatesForAPI() ?>, {checkZoomRange: true});
             console.log(window.currentElement);
 
+            $('#info-company').removeClass('hide');
+            $('#ts-info').addClass('hide');
+            $('#info-department').addClass('hide');
             $('.bbb > span').html('ООО РесурсТранс');
         });
     });
