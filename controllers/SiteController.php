@@ -207,6 +207,7 @@ class SiteController extends Controller
         $spots = Spot::getActives();
         $autocolumns = Autocolumn::getActives();
         foreach ($organizations as $organization) {
+            $carsInlineOrganization = 0;
             $organizationGoodId = $organization->getIdWithoutNumbers();
             $xMinAutocolumns = 1000;
             $xMaxAutocolumns = 0;
@@ -255,7 +256,7 @@ class SiteController extends Controller
                 $carsWithGStatus = 0;
                 $carsWithRStatus = 0;
                 $carsWithTOStatus = 0;
-                $carsInline = 0;
+                $carsInlineAutocolumn = 0;
                 foreach ($spots as $spot) {
                     $carsInlineSpot = 0;
                     $carsTypesSpot = [0,0,0,0];
@@ -271,8 +272,9 @@ class SiteController extends Controller
                         }
 
                         if ($car->inline) {
-                            $carsInline++;
+                            $carsInlineAutocolumn++;
                             $carsInlineSpot++;
+                            $carsInlineOrganization++;
                         }
                         if ($car->status === 'G') {
                             $carsWithGStatus++;
@@ -316,7 +318,7 @@ class SiteController extends Controller
                 $carsWithStatusesAutocolumn['G'] = $carsWithGStatus;
                 $carsWithStatusesAutocolumn['R'] = $carsWithRStatus;
                 $carsWithStatusesAutocolumn['TO'] = $carsWithTOStatus;
-                $carsWithStatusesAutocolumn['inline'] = $carsInline;
+                $carsWithStatusesAutocolumn['inline'] = $carsInlineAutocolumn;
                 $spotsAutocolumn[$autocolumnGoodId]['carsStatuses'] = $carsWithStatusesAutocolumn;
                 $spotsAutocolumn[$autocolumnGoodId]['cars'] = $carsSumTotalAutocolumns;
                 $spotsAutocolumn[$autocolumnGoodId]['bounds'] = "[[$xMinSpots,$yMinSpots], [$xMaxSpots,$yMaxSpots]]";
@@ -327,7 +329,6 @@ class SiteController extends Controller
                 $carsWithStatusesOrganization['G'] += $carsWithStatusesAutocolumn['G'];
                 $carsWithStatusesOrganization['R'] += $carsWithStatusesAutocolumn['R'];
                 $carsWithStatusesOrganization['TO'] += $carsWithStatusesAutocolumn['TO'];
-                $carsWithStatusesOrganization['inline'] += $carsWithStatusesAutocolumn['inline'];
                 for ($i = 0; $i < count(Car::MODELS); $i++) {
                     $carsTypesOrganization[$i] += $carsTypesAutocolumn[$i];
                 }
@@ -337,6 +338,7 @@ class SiteController extends Controller
             $orgAutocolumns[$organizationGoodId]['cars'] = $carsSumsTotalOrganization;
             $orgAutocolumns[$organizationGoodId]['carsStatuses'] = $carsWithStatusesAutocolumn;
             $orgAutocolumns[$organizationGoodId]['bounds'] = $yMaxAutolumns ? "[[$xMinAutocolumns,$yMinAutocolumns], [$xMaxAutocolumns,$yMaxAutolumns]]" : false;
+            $carsWithStatusesOrganization['inline'] = $carsInlineOrganization;
         }
         return $this->render('index1', [
             'totalCarsData' => Car::getTotalData(),
