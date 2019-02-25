@@ -140,7 +140,7 @@
 
                 <div class="div-transport">
                     <hr/ class="hr-trans">
-                    <div class="item-info transort-department">
+                    <div id="light" class="item-info transort-department">
                         <div class="transport-title">
                             <span class="span-h3-filial"><img src="yan/img/car-1.svg" alt="#" class="span-yan/img-h3-filial"></span>
                             <p id="passenger-car" class="p-type-transport">Легковые</p>
@@ -148,7 +148,7 @@
                         <p id="passCar" class="p-quantity">40</p>
                     </div>
                     <hr/ class="hr-trans">
-                    <div class="item-info transort-department">
+                    <div id="truck" class="item-info transort-department">
                         <div class="transport-title">
                             <span class="span-h3-filial"><img src="yan/img/car-2.svg" alt="#" class="span-yan/img-h3-filial"></span>
                             <p id="freight" class="p-type-transport">Грузовые</p>
@@ -156,7 +156,7 @@
                         <p id="freightCar" class="p-quantity">221</p>
                     </div>
                     <hr/ class="hr-trans">
-                    <div class="item-info transort-department">
+                    <div id="bus" class="item-info transort-department">
                         <div class="transport-title">
                             <span class="span-h3-filial"><img src="yan/img/car-3.svg" alt="#" class="span-yan/img-h3-filial"></span>
                             <p id="bus" class="p-type-transport">Автобусы</p>
@@ -164,7 +164,7 @@
                         <p id="busCar" class="p-quantity">20</p>
                     </div>
                     <hr/ class="hr-trans">
-                    <div class="item-info transort-department">
+                    <div id="spec" class="item-info transort-department">
                         <div class="transport-title">
                             <span class="span-h3-filial"><img src="yan/img/car-4.svg" alt="#" class="span-yan/img-h3-filial"></span>
                             <p id="spec" class="p-type-transport">Спецтехника</p>
