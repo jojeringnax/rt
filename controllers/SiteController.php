@@ -257,6 +257,7 @@ class SiteController extends Controller
                 $carsWithTOStatus = 0;
                 $carsInline = 0;
                 foreach ($spots as $spot) {
+                    $carsInlineSpot = 0;
                     $carsTypesSpot = [0,0,0,0];
                     if ($spot->autocolumn_id !== $autocolumn->id) {
                         continue;
@@ -271,6 +272,7 @@ class SiteController extends Controller
 
                         if ($car->inline) {
                             $carsInline++;
+                            $carsInlineSpot++;
                         }
                         if ($car->status === 'G') {
                             $carsWithGStatus++;
@@ -288,7 +290,7 @@ class SiteController extends Controller
                         'G' => $carsWithGStatus,
                         'R' => $carsWithRStatus,
                         'TO' => $carsWithTOStatus,
-                        'inline' => $carsInline
+                        'inline' => $carsInlineSpot
                         ];
                     $spotsAutocolumn[$autocolumnGoodId][] = $spot;
                     if($spot->x_pos < $xMinSpots) {
