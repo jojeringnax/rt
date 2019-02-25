@@ -261,8 +261,6 @@
             <?php } ?>
             o_pm.breadcrumps = '<?= 'Филиал '.$organization->getTown() ?>';
             o_pm.events.add('click', function(o) {
-
-                console.log('---- org', <?= $autocolumns[$organizationPrettyId]["carsStatuses"]["inline"] ?>);
                 changeInfo(
                     <?= $autocolumns[$organizationPrettyId]["cars"] ?>,
                     <?= $autocolumns[$organizationPrettyId]["carsStatuses"]["inline"] ?>,
@@ -408,7 +406,6 @@
                         url: "http://rt.xxx/web/?r=site/get-autocolumn-statistic&autocolumn_id=" + "<?= $autocolumn->id ?>",
                         type: 'get',
                         success: function(res) {
-                            console.log('---spot', res);
                             let terminals = JSON.parse(res)['terminals'];
                             let data = JSON.parse(res)['statistic'];
 
@@ -813,7 +810,7 @@
 
                         changeInfo(
                             dataLevel['spot']['totalCars'],
-                            dataLevel['spot']['oinLine'],
+                            dataLevel['spot']['onLine'],
                             dataLevel['spot']['onRep'],
                             dataLevel['spot']['onTO'],
                             dataLevel['spot']['light'],
@@ -923,7 +920,7 @@
 
                 changeInfo(
                     dataLevel['autocolumn']['totalCars'],
-                    dataLevel['autocolumn']['oinLine'],
+                    dataLevel['autocolumn']['onLine'],
                     dataLevel['autocolumn']['onRep'],
                     dataLevel['autocolumn']['onTO'],
                     dataLevel['autocolumn']['light'],
@@ -961,7 +958,6 @@
                     url: "http://rt.xxx/web/?r=site/get-organization-statistic&organization_id=" + idOfCurrentElement['organizations'],
                     type: 'get',
                     success: function(res) {
-                        //console.log('---org', res);
                         let terminals = JSON.parse(res)['terminals'];
                         let data = JSON.parse(res)['statistic'];
 
@@ -1030,7 +1026,7 @@
 
                 changeInfo(
                     dataLevel['organization']['totalCars'],
-                    dataLevel['organization']['oinLine'],
+                    dataLevel['organization']['onLine'],
                     dataLevel['organization']['onRep'],
                     dataLevel['organization']['onTO'],
                     dataLevel['organization']['light'],
