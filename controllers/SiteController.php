@@ -207,7 +207,6 @@ class SiteController extends Controller
         $spots = Spot::getActives();
         $autocolumns = Autocolumn::getActives();
         foreach ($organizations as $organization) {
-            $carsInlineOrganization = 0;
             $organizationGoodId = $organization->getIdWithoutNumbers();
             $xMinAutocolumns = 1000;
             $xMaxAutocolumns = 0;
@@ -323,12 +322,12 @@ class SiteController extends Controller
                 $spotsAutocolumn[$autocolumnGoodId]['bounds'] = "[[$xMinSpots,$yMinSpots], [$xMaxSpots,$yMaxSpots]]";
                 $spotsAutocolumn[$autocolumnGoodId]['carsTypes'] = $carsTypesAutocolumn;
 
-                $carsInlineOrganization += $carsInlineAutocolumn;
 
 
                 $carsWithStatusesOrganization['G'] += $carsWithStatusesAutocolumn['G'];
                 $carsWithStatusesOrganization['R'] += $carsWithStatusesAutocolumn['R'];
                 $carsWithStatusesOrganization['TO'] += $carsWithStatusesAutocolumn['TO'];
+                $carsWithStatusesOrganization['inline'] += $carsWithStatusesAutocolumn['inline'];
                 for ($i = 0; $i < count(Car::MODELS); $i++) {
                     $carsTypesOrganization[$i] += $carsTypesAutocolumn[$i];
                 }
@@ -336,9 +335,8 @@ class SiteController extends Controller
             }
             $orgAutocolumns[$organizationGoodId]['carsTypes'] = $carsTypesOrganization;
             $orgAutocolumns[$organizationGoodId]['cars'] = $carsSumsTotalOrganization;
-            $orgAutocolumns[$organizationGoodId]['carsStatuses'] = $carsWithStatusesAutocolumn;
+            $orgAutocolumns[$organizationGoodId]['carsStatuses'] = $carsWithStatusesOrganization;
             $orgAutocolumns[$organizationGoodId]['bounds'] = $yMaxAutolumns ? "[[$xMinAutocolumns,$yMinAutocolumns], [$xMaxAutocolumns,$yMaxAutolumns]]" : false;
-            $carsWithStatusesOrganization['inline'] = $carsInlineOrganization;
         }
         return $this->render('index1', [
             'totalCarsData' => Car::getTotalData(),
