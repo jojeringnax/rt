@@ -274,7 +274,6 @@ class SiteController extends Controller
                         if ($car->inline) {
                             $carsInlineAutocolumn++;
                             $carsInlineSpot++;
-                            $carsInlineOrganization++;
                         }
                         if ($car->status === 'G') {
                             $carsWithGStatus++;
@@ -324,6 +323,7 @@ class SiteController extends Controller
                 $spotsAutocolumn[$autocolumnGoodId]['bounds'] = "[[$xMinSpots,$yMinSpots], [$xMaxSpots,$yMaxSpots]]";
                 $spotsAutocolumn[$autocolumnGoodId]['carsTypes'] = $carsTypesAutocolumn;
 
+                $carsInlineOrganization += $carsInlineAutocolumn;
 
 
                 $carsWithStatusesOrganization['G'] += $carsWithStatusesAutocolumn['G'];
