@@ -105,7 +105,7 @@
     console.log(firmsData, totalTerminals,totalCarsData);
     let changeInfo = function(totTs, onLine, onRep, onTO, passCar, freightCar, busCar, specCar) {
         $('#totTs').html(totTs);
-        $('#compOnLine').html(onLine);
+        $('#OnLine').html(onLine);
         $('#OnRep').html(onRep);
         $('#onTo').html(onTO);
         $('#passCar').html(passCar);
@@ -123,7 +123,7 @@
 
     dataLevel['firms'] = {
         totalCars: totalCarsData['G'],
-        oinLine: totalCarsData['totalInline'],
+        onLine: totalCarsData['totalInline'],
         onRep: totalCarsData['R'],
         onTO: totalCarsData['TO'],
         applications_executed: firmsData['applications_executed'],
@@ -261,6 +261,8 @@
             <?php } ?>
             o_pm.breadcrumps = '<?= 'Филиал '.$organization->getTown() ?>';
             o_pm.events.add('click', function(o) {
+
+                console.log('---- org', <?= $autocolumns[$organizationPrettyId]["carsStatuses"]["inline"] ?>);
                 changeInfo(
                     <?= $autocolumns[$organizationPrettyId]["cars"] ?>,
                     <?= $autocolumns[$organizationPrettyId]["carsStatuses"]["inline"] ?>,
@@ -278,8 +280,8 @@
                 removeAllDontNeed();
 
                 //ajax request -> ORGANIZATION
-
                 idOfCurrentElement['organizations'] = "<?= $organization->id ?>";
+
                 $.ajax({
                     url: "http://rt.xxx/web/?r=site/get-organization-statistic&organization_id=" + "<?= $organization->id ?>",
                     type: 'get',
@@ -295,7 +297,7 @@
 
                         dataLevel['organization'] = {
                             totalCars: <?= $autocolumns[$organizationPrettyId]["cars"] ?>,
-                            oinLine:  <?= $autocolumns[$organizationPrettyId]["carsStatuses"]["inline"] ?>,
+                            onLine:  <?= $autocolumns[$organizationPrettyId]["carsStatuses"]["inline"] ?>,
                             onRep: <?= $autocolumns[$organizationPrettyId]["carsStatuses"]["R"] ?>,
                             onTO: <?= $autocolumns[$organizationPrettyId]["carsStatuses"]["TO"] ?>,
                             light: <?= $autocolumns[$organizationPrettyId]["carsTypes"][\app\models\Car::LIGHT] ?>,
@@ -383,6 +385,7 @@
                     a_array.push(a_pm);
                 <?php } ?>
                 a_pm.events.add('click', function(a) {
+                    console.log('--- aut', <?= $spots[$autocolumnPrettyId]["cars"] ?>);
                     changeInfo(
                         <?= $spots[$autocolumnPrettyId]["cars"] ?>,
                         <?= $spots[$autocolumnPrettyId]["carsStatuses"]["inline"] ?>,
@@ -417,7 +420,7 @@
 
                             dataLevel['autocolumn'] = {
                                 totalCars: <?= $spots[$autocolumnPrettyId]["cars"] ?>,
-                                oinLine:  <?= $spots[$autocolumnPrettyId]["carsStatuses"]["inline"] ?>,
+                                onLine:  <?= $spots[$autocolumnPrettyId]["carsStatuses"]["inline"] ?>,
                                 onRep: <?= $spots[$autocolumnPrettyId]["carsStatuses"]["R"] ?>,
                                 onTO: <?= $spots[$autocolumnPrettyId]["carsStatuses"]["TO"] ?>,
                                 light: <?= $spots[$autocolumnPrettyId]["carsTypes"][\app\models\Car::LIGHT] ?>,
@@ -566,7 +569,7 @@
 
                                         dataLevel['spot'] = {
                                             totalCars: <?= $spot->carsNumber ?>,
-                                            oinLine:  <?= $spot->carsStatuses["inline"] ?>,
+                                            onLine:  <?= $spot->carsStatuses["inline"] ?>,
                                             onRep: <?= $spot->carsStatuses["R"] ?>,
                                             onTO: <?= $spot->carsStatuses["TO"] ?>,
                                             light: <?= $spot->carsTypes[\app\models\Car::LIGHT] ?>,

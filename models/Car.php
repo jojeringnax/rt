@@ -162,7 +162,6 @@ class Car extends \yii\db\ActiveRecord
         return $resultArray;
     }
 
-
     /**
      * @return bool
      */
