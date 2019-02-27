@@ -10,13 +10,13 @@
 <?= $this->render('sidebar') ?>
 
 <?php $breadcrumps = []; ?>
-
-<style>
-    [class*="ymaps-2"][class*="-ground-pane"] {
-        filter: url("data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\'><filter id=\'grayscale\'><feColorMatrix type=\'matrix\' values=\'0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0 0 0 1 0\'/></filter></svg>#grayscale");
-        -webkit-filter: grayscale(100%) brightness(30%);
-    }
-</style>
+<!---->
+<!--<style>-->
+<!--    [class*="ymaps-2"][class*="-ground-pane"] {-->
+<!--        filter: url("data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\'><filter id=\'grayscale\'><feColorMatrix type=\'matrix\' values=\'0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0 0 0 1 0\'/></filter></svg>#grayscale");-->
+<!--        -webkit-filter: grayscale(100%) brightness(30%);-->
+<!--    }-->
+<!--</style>-->
 <script>
     let idOfCurrentElement = {
         organizations: '',
@@ -225,7 +225,36 @@
 
 
         var c_array = [], s_array = [], a_array = [], o_array = [];
-        var clustererAutocolumns = new ymaps.Clusterer(), clustererSpots = new ymaps.Clusterer(), clustererCars = new ymaps.Clusterer();
+
+        var ClusterLayout = ymaps.templateLayoutFactory.createClass(
+            '<div class="bb-cluster"><span class="bb-num">asd</span></div>'
+        );
+
+        var CarClusterLayout = ymaps.templateLayoutFactory.createClass(
+            '<div class="bb-cluster-car"><span class="bb-num">asd</span></div>'
+        );
+
+        let clustererAutocolumns = new ymaps.Clusterer(
+            {
+                clusterIcons: '',
+                clusterIconContentLayout: ClusterLayout
+            }
+        );
+        let clustererSpots = new ymaps.Clusterer(
+            {
+                clusterIcons: '',
+                clusterIconContentLayout: ClusterLayout
+            }
+        );
+
+        let clustererCars = new ymaps.Clusterer(
+            {
+                clusterIcons: '',
+                clusterIconContentLayout: CarClusterLayout
+            }
+        );
+
+
         var myMap = new ymaps.Map('map', {
             center: [55.751574, 37.573856],
             zoom: 11,
@@ -241,16 +270,16 @@
             $organizationPrettyId = $organization->getIdWithoutNumbers();
             ?>
         var OrgLayout = ymaps.templateLayoutFactory.createClass(
-            '<div class="organizations" style="color: black; font-weight: bold; display: flex; justify-content: space-between; flex-direction: column; align-items: center; height: 50px; width: 250px;"><span style="color:white; margin-top: -50px"><?= $autocolumns[$organizationPrettyId]["cars"] ?></span> <span style="width: 250px; margin-top: 50px"></span></div>'
+            '<div class="bb"><span class="bb-num"><?= $autocolumns[$organizationPrettyId]["cars"] ?></span> <span class="bb-name"><?= $organization->getTown()?></span></div>'
         );
             o_pm = new ymaps.Placemark([<?= $organization->x_pos ?>, <?= $organization->y_pos ?>], {
                 iconCaption : '<?= $organization->getTown() ?>',
                 hintContent: '<?= $organization->getTown() ?>'
             }, {
                 iconLayout: 'default#imageWithContent',
-                iconImageHref: 'yan/img/icon/filial.svg',
+                iconImageHref: '',
                 iconImageSize: [102, 107.5],
-                iconContentOffset: [-74, 75],
+                iconContentOffset: [-74, 83],
                 iconImageOffset: [-24, -24],
                 preset: 'islands#greenDotIconWithCaption',
                 iconContentLayout: OrgLayout
@@ -365,13 +394,13 @@
                     if ($key1 !== 'bounds' && $key1 !== 'cars' && $key1 !== 'carsStatuses' && $key1 !== 'carsTypes') {
                         $autocolumnPrettyId = $autocolumn->getIdWithoutNumbers(); ?>
                 var AutoColLayout = ymaps.templateLayoutFactory.createClass(
-                    '<div class="autocolumn" style="color: black; font-weight: bold; display: flex; justify-content: space-between; flex-direction: column; align-items: center;  height: 50px; width: 250px;"><span style="color:white; margin-top: -50px"><?= $spots[$autocolumnPrettyId]["cars"] ?></span> <span style="width: 200px; display:none; margin-top: 50px"><?= $autocolumn->description ?></span></div>'
+                    '<div class="bb"><span class="bb-num"><?= $spots[$autocolumnPrettyId]["cars"] ?></span> <span id="auto_name" class="bb-name"><?= $autocolumn->name ?></span></div>'
                 );
                 a_pm = new ymaps.Placemark([<?= $autocolumn->x_pos ?>, <?= $autocolumn->y_pos ?>], {
                     hintContent: '<?= $autocolumn->description ?>'
                 }, {
                     iconLayout: 'default#imageWithContent',
-                    iconImageHref: 'yan/img/icon/autocol.svg',
+                    iconImageHref: '',
                     iconImageSize: [110, 115.5],
                     iconContentOffset: [-70, 75],
                     iconImageOffset: [-24, -24],
@@ -488,13 +517,13 @@
                         if ($key2 !== 'bounds' && $key2 !== 'cars' && $key2 !== 'carsStatuses' && $key2 !== 'carsTypes') {
                             $spotPrettyId = $spot->getIdWithoutNumbers(); ?>
                             var SpotsLayout = ymaps.templateLayoutFactory.createClass(
-                                '<div class="spots" style="color: black; font-weight: bold; display: flex; justify-content: space-between; flex-direction: column; align-items: center; height: 50px; width: 250px;"><span style="color:white;  margin-top: -42px"><?= $spot->carsNumber ?></span> <span style="width: 200px; display: none;"><?= $spot->description ?></span></div>'
+                                '<div class="bb"><span class="bb-num"><?= $spot->carsNumber ?></span><span id="spot_name" class="bb-name"><?= $spot->name ?></span></div>'
                             );
                             s_pm = new ymaps.Placemark([<?= $spot->x_pos ?>, <?= $spot->y_pos ?>],{
                                 hintContent: '<?= $spot->description ?>'
                             }, {
                                 iconLayout: 'default#imageWithContent',
-                                iconImageHref: 'yan/img/icon/spots_main.svg',
+                                iconImageHref: '',
                                 iconImageSize: [115, 115],
                                 iconContentOffset: [-68, 75],
                                 iconImageOffset: [-24, -24],
@@ -597,7 +626,15 @@
                                             clustererCars.removeAll();
                                         }
                                         myMap.geoObjects.remove(clustererSpots);
+                                            // 'Легковые ТС' => 0,
+                                            // 'Грузовые ТС' => 1,
+                                            // 'Автобусы' => 2,
+                                            // 'Спецтехника' => 3
                                         data.cars.forEach(function(el) {
+                                            console.log("../web/yan/img/auto_icon/point_" + el.type + ".svg" );
+                                            let carsLayout = ymaps.templateLayoutFactory.createClass(
+                                                '<div class="bb"><span class="bb-num-car"><img src="yan/img/auto_icon/point_' + el.type + '.svg" alt="auto"></span></div>'
+                                            );
                                           c_pm = new ymaps.Placemark([el.x_pos, el.y_pos], {
                                               hintContent: el.description,
                                               balloonContent: el.description,
@@ -607,14 +644,18 @@
                                           },{
                                               hasBalloon: false,
                                               iconLayout: 'default#imageWithContent',
-                                                  iconImageHref: 'yan/img/icon/point_'+ el.type+'.svg',
+                                                  iconImageHref: '',
                                                   iconImageSize: [110, 115.5],
                                                   iconContentOffset: [-70, 75],
                                                   iconImageOffset: [-24, -24],
+                                                  iconContentLayout: carsLayout
                                           });
                                           c_pm.breadcrumps = el.description;
                                           c_pm.events.add('click', function (c) {
-                                              console.log('---',el);
+                                              console.log('---',el, c);
+                                              let carsLayout = ymaps.templateLayoutFactory.createClass(
+                                                  '<div class="bb"><span class="bb-num-car"><img src="yan/img/auto_icon/point_blue_' + el.type + '.svg" alt="auto"></span></div>'
+                                              );
                                               window.currentElement.car = c.originalEvent.target;
                                               $('#info-company').addClass('hide');
                                               $('#info-department').addClass('hide');
