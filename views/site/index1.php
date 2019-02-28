@@ -238,7 +238,7 @@
                 clusterIcons: [{
                     href: '',
                     size: [100, 100],
-                    offset: [0, 0]
+                    offset: [-50, -50]
                 }],
                 clusterIconContentLayout: ClusterLayout
             }
@@ -248,7 +248,7 @@
                 clusterIcons: [{
                     href: '',
                     size: [100, 100],
-                    offset: [0, 0]
+                    offset: [-50, -50]
                 }],
                 clusterIconContentLayout: ClusterLayout
             }
@@ -259,7 +259,7 @@
                 clusterIcons: [{
                     href: '',
                     size: [100, 100],
-                    offset: [0, 0]
+                    offset: [-50, -50]
                 }],
                 clusterIconContentLayout: CarClusterLayout
             }
@@ -1078,8 +1078,6 @@
                 );
 
                 return true;
-
-
             }
             if(a_array) {
                 myMap.geoObjects.remove(clustererAutocolumns);
