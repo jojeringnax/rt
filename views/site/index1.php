@@ -240,6 +240,7 @@
                     size: [100, 100],
                     offset: [-50, -50]
                 }],
+                gridSize: 256,
                 clusterIconContentLayout: ClusterLayout
             }
         );
@@ -250,6 +251,7 @@
                     size: [100, 100],
                     offset: [-50, -50]
                 }],
+                gridSize: 256,
                 clusterIconContentLayout: ClusterLayout
             }
         );
@@ -261,6 +263,7 @@
                     size: [100, 100],
                     offset: [-50, -50]
                 }],
+                gridSize: 128,
                 clusterIconContentLayout: CarClusterLayout
             }
         );
@@ -653,23 +656,32 @@
                                           },{
                                               hasBalloon: false,
                                               iconLayout: 'default#imageWithContent',
-                                                  iconImageHref: '',
-                                                  iconImageSize: [110, 115.5],
-                                                  iconContentOffset: [-70, 75],
-                                                  iconImageOffset: [-24, -24],
-                                                  iconContentLayout: carsLayout
+                                              iconImageHref: '',
+                                              iconImageSize: [110, 115.5],
+                                              iconContentOffset: [-70, 75],
+                                              iconImageOffset: [-24, -24],
+                                              iconContentLayout: carsLayout
                                           });
+                                          c_pm.type = el.type;
                                           c_pm.breadcrumps = el.description;
                                           c_pm.events.add('click', function (c) {
-                                              let carsLayout = ymaps.templateLayoutFactory.createClass(
+                                              carsLayout = ymaps.templateLayoutFactory.createClass(
                                                   '<div class="bb"><span class="bb-num-car"><img src="yan/img/auto_icon/point_blue_' + el.type + '.svg" alt="auto"></span></div>'
                                               );
+                                              c.originalEvent.target.options.set('iconContentLayout', carsLayout);
+                                              if (window.currentElement.hasOwnProperty('car')) {
+                                                  let carOldLayout = ymaps.templateLayoutFactory.createClass(
+                                                      '<div class="bb"><span class="bb-num-car"><img src="yan/img/auto_icon/point_' + window.currentElement.car.type + '.svg" alt="auto"></span></div>'
+                                                  );
+                                                  window.currentElement.car.options.set('iconContentLayout', carOldLayout);
+                                              }
                                               window.currentElement.car = c.originalEvent.target;
+                                              myMap.setCenter(window.currentElement.car.geometry._coordinates, 17);
                                               $('#info-company').addClass('hide');
                                               $('#info-department').addClass('hide');
                                               $('#ts-info').removeClass('hide');
-                                              myMap.setCenter(window.currentElement.car.geometry._coordinates, 19);
                                               $('.bbb > span').html(window.currentElement.organization.breadcrumps + ' <span class="arrow-r" style="color: green"> > </span> ' + window.currentElement.autocolumn.breadcrumps + ' <span class="arrow-r" style="color: green"> > </span> ' + window.currentElement.spot.breadcrumps + ' <span class="arrow-r" style="color: green"> > </span> ' + window.currentElement.car.breadcrumps);
+
                                               console.log(window.currentElement);
 
 
