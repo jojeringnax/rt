@@ -147,22 +147,22 @@ class SiteController extends Controller
      */
     public function actionGetCarData($car_id) {
         $client = new \SoapClient("http://d.rg24.ru:5601/PUP_WS/ws/PUP.1cws?wsdl");
-        $carsData = json_decode($client->GetCarsData(['CarsID' => '013f6af2-473c-11e5-b89f-00155d630038'])->return);
+        $carsData = json_decode($client->GetCarsData(['CarsID' => $car_id])->return);
         $carsDataModel = CarsData::getOrCreate($car_id);
         $carsDataModel->car_id = $car_id;
         $carsDataModel->driver = isset($carsData->Driver) ? $carsData->Driver : null;
         $carsDataModel->phone = isset($carsData->Phone) ? $carsData->Phone : null;
-        $carsDataModel->start_time_plan = isset($carsData->StartTimePlan) ? $carsData->StartTimePlan : null;
-        $carsDataModel->end_time_plan = isset($carsData->EndTimePlan) ? $carsData->EndTimePlan : null;
-        $carsDataModel->work_time_plan = isset($carsData->EndTimePlan) ? $carsData->EndTimePlan : null;
-        $carsDataModel->start_time_fact = isset($carsData->StartTimeFact) ? $carsData->StartTimeFact : null;
-        $carsDataModel->work_time_fact = isset($carsData->WorkTimeFact) ? $carsData->WorkTimeFact : null;
-        $carsDataModel->mileage = isset($carsData->Mileage) ? $carsData->Mileage : null;
-        $carsDataModel->speed = isset($carsData->Speed) ? $carsData->Speed : null;
-        $carsDataModel->fuel_norm = isset($carsData->FuelNorm) ? $carsData->FuelNorm : null;
-        $carsDataModel->fuel_DUT = isset($carsData->FuelDUT) ? $carsData->FuelDUT : null;
+        $carsDataModel->start_time_plan = isset($carsData->StartTimePlan) ? date("Y-m-d H:i:s", strtotime($carsData->StartTimePlan)) : null;
+        $carsDataModel->end_time_plan = isset($carsData->EndTimePlan) ? date("Y-m-d H:i:s", strtotime($carsData->EndTimePlan)) : null;
+        $carsDataModel->work_time_plan = isset($carsData->WorkTimePlan) ? (float) $carsData->WorkTimePlan : null;
+        $carsDataModel->start_time_fact = isset($carsData->StartTimeFact) ? date("Y-m-d H:i:s", strtotime($carsData->StartTimeFact)) : null;
+        $carsDataModel->work_time_fact = isset($carsData->WorkTimeFact) ? (float) $carsData->WorkTimeFact : null;
+        $carsDataModel->mileage = isset($carsData->Mileage) ? (integer) $carsData->Mileage : null;
+        $carsDataModel->speed = isset($carsData->Speed) ? (integer) $carsData->Speed : null;
+        $carsDataModel->fuel_norm = isset($carsData->FuelNorm) ? (float) $carsData->FuelNorm : null;
+        $carsDataModel->fuel_DUT = isset($carsData->FuelDUT) ? (integer) $carsData->FuelDUT : null;
         $carsDataModel->driver_mark = isset($carsData->DriverMark) ? $carsData->DriverMark : null;
-        $carsDataModel->violations_count = isset($carsData->ViolationsCount) ? $carsData->ViolationsCount : null;
+        $carsDataModel->violations_count = isset($carsData->ViolationsCount) ? (integer) $carsData->ViolationsCount : null;
         $carsDataModel->save();
         return json_encode($carsDataModel);
     }
