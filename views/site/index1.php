@@ -324,7 +324,7 @@
                 idOfCurrentElement['organizations'] = "<?= $organization->id ?>";
 
                 $.ajax({
-                    url: "http://rt.xxx/web/?r=site/get-organization-statistic&organization_id=" + "<?= $organization->id ?>",
+                    url: "index.php?r=site/get-organization-statistic&organization_id=" + "<?= $organization->id ?>",
                     type: 'get',
                     success: function(res) {
                         let terminals = JSON.parse(res)['terminals'];
@@ -445,7 +445,7 @@
                     //ajax request -> AUTOCOLUMN
                     idOfCurrentElement['autocolumn'] = "<?= $autocolumn->id ?>";
                     $.ajax({
-                        url: "http://rt.xxx/web/?r=site/get-autocolumn-statistic&autocolumn_id=" + "<?= $autocolumn->id ?>",
+                        url: "index.php?r=site/get-autocolumn-statistic&autocolumn_id=" + "<?= $autocolumn->id ?>",
                         type: 'get',
                         success: function(res) {
                             let terminals = JSON.parse(res)['terminals'];
@@ -566,7 +566,7 @@
                                 //ajax request -> SPOT
                                 idOfCurrentElement['spot'] = "<?= $spot->id ?>";
                                 $.ajax({
-                                    url: "http://rt.xxx/web/?r=site/get-spot-statistic&spot_id=" + "<?= $spot->id ?>",
+                                    url: "index.php?r=site/get-spot-statistic&spot_id=" + "<?= $spot->id ?>",
                                     type: 'get',
                                     success: function(res) {
                                         let terminals = JSON.parse(res)['terminals'];
@@ -716,7 +716,7 @@
 
 
                                               $.ajax({
-                                                  url: "http://rt.xxx/web/?r=site/get-car-data&car_id=" + el.id,
+                                                  url: "index.php?r=site/get-car-data&car_id=" + el.id,
                                                   type: 'get',
                                                   success: function(res) {
                                                   }
@@ -814,7 +814,7 @@
 
                 //AJAX -> SPOT
                 $.ajax({
-                    url: "http://rt.xxx/web/?r=site/get-spot-statistic&spot_id=" + idOfCurrentElement['spot'],
+                    url: "index.php?r=site/get-spot-statistic&spot_id=" + idOfCurrentElement['spot'],
                     type: 'get',
                     success: function(res) {
                         let terminals = JSON.parse(res)['terminals'];
@@ -904,7 +904,7 @@
                 console.log(window.currentElement);
 
                 $.ajax({
-                    url: "http://rt.xxx/web/?r=site/get-autocolumn-statistic&autocolumn_id=" + idOfCurrentElement['autocolumn'],
+                    url: "index.php?r=site/get-autocolumn-statistic&autocolumn_id=" + idOfCurrentElement['autocolumn'],
                     type: 'get',
                     success: function(res) {
                         let terminals = JSON.parse(res)['terminals'];
@@ -1009,7 +1009,7 @@
                 }
 
                 $.ajax({
-                    url: "http://rt.xxx/web/?r=site/get-organization-statistic&organization_id=" + idOfCurrentElement['organizations'],
+                    url: "index.php?r=site/get-organization-statistic&organization_id=" + idOfCurrentElement['organizations'],
                     type: 'get',
                     success: function(res) {
                         let terminals = JSON.parse(res)['terminals'];
