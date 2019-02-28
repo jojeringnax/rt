@@ -1,6 +1,7 @@
 <?php
 
 namespace app\controllers;
+header('Access-Control-Allow-Origin: *');
 
 use app\models\Autocolumn;
 use app\models\Car;
