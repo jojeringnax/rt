@@ -214,6 +214,29 @@ p {
   }
 }
 
+.bb-cluster-car {
+  color: black;
+  font-weight: bold;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 100px;
+  width: 100px;
+  .bb-num {
+    width: 100px;
+    height: 100px;
+    color:white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-image: url("../img/elipse.svg");
+    background-size: 100%;
+    background-position: center;
+    z-index: 10;
+    font-size: 1vh;
+  }
+}
+
 .bb-num-car {
   width: 100px;
   height: 100px;
@@ -238,10 +261,10 @@ p {
   justify-content: space-between;
   align-items: center;
   height: 100px;
-  width: 400px;
+  width: 100px;
   //margin-left: 200px;
-  margin-left: -60px;
-  margin-top: -50px;
+  //margin-left: 50px;
+  //margin-top: 50px;
   z-index: 0;
   .bb-num {
     width: 100px;
