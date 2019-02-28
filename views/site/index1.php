@@ -666,7 +666,7 @@
                                           c_pm.breadcrumps = el.description;
                                           c_pm.events.add('click', function (c) {
                                               carsLayout = ymaps.templateLayoutFactory.createClass(
-                                                  '<div class="bb"><span class="bb-num-car"><img src="yan/img/auto_icon/point_blue_' + el.type + '.svg" alt="auto"></span></div>'
+                                                  '<div class="bb"><span class="bb-num-car-white"><img src="yan/img/auto_icon/point_blue_' + el.type + '.svg" alt="auto"></span></div>'
                                               );
                                               c.originalEvent.target.options.set('iconContentLayout', carsLayout);
                                               if (window.currentElement.hasOwnProperty('car')) {
@@ -676,7 +676,7 @@
                                                   window.currentElement.car.options.set('iconContentLayout', carOldLayout);
                                               }
                                               window.currentElement.car = c.originalEvent.target;
-                                              myMap.setCenter(window.currentElement.car.geometry._coordinates, 17);
+                                              myMap.setCenter(window.currentElement.car.geometry._coordinates, 19);
                                               $('#info-company').addClass('hide');
                                               $('#info-department').addClass('hide');
                                               $('#ts-info').removeClass('hide');
