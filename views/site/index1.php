@@ -102,7 +102,6 @@
     let firmsData = <?= json_encode($totalStats->getAttributes()) ?>;
     let totalTerminals =<?= json_encode($totalTerminals) ?>;
     let totalCarsData =<?= json_encode($totalCarsData) ?>;
-    console.log(firmsData, totalTerminals,totalCarsData);
     let changeInfo = function(totTs, onLine, onRep, onTO, passCar, freightCar, busCar, specCar) {
         $('#totTs').html(totTs);
         $('#OnLine').html(onLine);
@@ -227,29 +226,41 @@
         var c_array = [], s_array = [], a_array = [], o_array = [];
 
         var ClusterLayout = ymaps.templateLayoutFactory.createClass(
-            '<div class="bb-cluster"><span class="bb-num">asd</span></div>'
+            '<div class="bb-cluster"><span class="bb-num">{{ properties.geoObjects.length }}</span></div>'
         );
 
         var CarClusterLayout = ymaps.templateLayoutFactory.createClass(
-            '<div class="bb-cluster-car"><span class="bb-num">asd</span></div>'
+            '<div class="bb-cluster-car"><span class="bb-num">{{ properties.geoObjects.length }}</span></div>'
         );
 
         let clustererAutocolumns = new ymaps.Clusterer(
             {
-                clusterIcons: '',
+                clusterIcons: [{
+                    href: '',
+                    size: [100, 100],
+                    offset: [0, 0]
+                }],
                 clusterIconContentLayout: ClusterLayout
             }
         );
         let clustererSpots = new ymaps.Clusterer(
             {
-                clusterIcons: '',
+                clusterIcons: [{
+                    href: '',
+                    size: [100, 100],
+                    offset: [0, 0]
+                }],
                 clusterIconContentLayout: ClusterLayout
             }
         );
 
         let clustererCars = new ymaps.Clusterer(
             {
-                clusterIcons: '',
+                clusterIcons: [{
+                    href: '',
+                    size: [100, 100],
+                    offset: [0, 0]
+                }],
                 clusterIconContentLayout: CarClusterLayout
             }
         );
@@ -412,7 +423,6 @@
                     a_array.push(a_pm);
                 <?php } ?>
                 a_pm.events.add('click', function(a) {
-                    console.log('--- aut', <?= $spots[$autocolumnPrettyId]["cars"] ?>);
                     changeInfo(
                         <?= $spots[$autocolumnPrettyId]["cars"] ?>,
                         <?= $spots[$autocolumnPrettyId]["carsStatuses"]["inline"] ?>,
@@ -631,7 +641,6 @@
                                             // 'Автобусы' => 2,
                                             // 'Спецтехника' => 3
                                         data.cars.forEach(function(el) {
-                                            console.log("../web/yan/img/auto_icon/point_" + el.type + ".svg" );
                                             let carsLayout = ymaps.templateLayoutFactory.createClass(
                                                 '<div class="bb"><span class="bb-num-car"><img src="yan/img/auto_icon/point_' + el.type + '.svg" alt="auto"></span></div>'
                                             );
@@ -652,7 +661,6 @@
                                           });
                                           c_pm.breadcrumps = el.description;
                                           c_pm.events.add('click', function (c) {
-                                              console.log('---',el, c);
                                               let carsLayout = ymaps.templateLayoutFactory.createClass(
                                                   '<div class="bb"><span class="bb-num-car"><img src="yan/img/auto_icon/point_blue_' + el.type + '.svg" alt="auto"></span></div>'
                                               );
@@ -699,7 +707,6 @@
                                                   url: "http://rt.xxx/web/?r=site/get-car-data&car_id=" + el.id,
                                                   type: 'get',
                                                   success: function(res) {
-                                                      console.log('--- get-cars-data', res);
                                                   }
 
                                               })
@@ -754,7 +761,7 @@
                     clustererAutocolumns.removeAll();
                     clustererAutocolumns.add(a_array);
                     myMap.geoObjects.add(clustererAutocolumns);
-
+                    console.log();
                     <?php if(!empty($autocolumns[$organizationPrettyId]['bounds'])) { ?>
                         if(a_array.length === 1) {
                             o.originalEvent.target.center = a_array[0].geometry._coordinates;
@@ -779,7 +786,6 @@
         let button = $('.back');
         button.click( function () {
             if(window.currentElement.hasOwnProperty('car')) {
-                console.log('---car');
                 if(c_array.length) {
                     c_array = [];
                     myMap.geoObjects.remove(clustererCars);
@@ -793,14 +799,12 @@
                 myMap.setCenter(window.currentElement.spot.geometry._coordinates, 12);
                 myMap.geoObjects.add(window.currentElement.spot);
                 console.log(window.currentElement.spot);
-                console.log("---",idOfCurrentElement);
 
                 //AJAX -> SPOT
                 $.ajax({
                     url: "http://rt.xxx/web/?r=site/get-spot-statistic&spot_id=" + idOfCurrentElement['spot'],
                     type: 'get',
                     success: function(res) {
-                        //console.log('---spot', res);
                         let terminals = JSON.parse(res)['terminals'];
                         let data = JSON.parse(res)['statistic'];
 
@@ -866,7 +870,6 @@
 
             }
             if(window.currentElement.hasOwnProperty('spot')) {
-                console.log('---spot');
                 myMap.geoObjects.remove(window.currentElement.spot);
                 if(c_array.length) {
                    removeArrayFromMap(c_array, myMap);
@@ -892,7 +895,6 @@
                     url: "http://rt.xxx/web/?r=site/get-autocolumn-statistic&autocolumn_id=" + idOfCurrentElement['autocolumn'],
                     type: 'get',
                     success: function(res) {
-                        //console.log('---spot', res);
                         let terminals = JSON.parse(res)['terminals'];
                         let data = JSON.parse(res)['statistic'];
 
@@ -973,7 +975,6 @@
                 return true;
             }
             if(window.currentElement.hasOwnProperty('autocolumn')) {
-                console.log('---autocol');
                 if(s_array) {
                     myMap.geoObjects.remove(clustererSpots);
                     s_array = [];
