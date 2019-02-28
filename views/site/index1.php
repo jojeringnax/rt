@@ -1,5 +1,5 @@
 
-
+<?php header('Access-Control-Allow-Origin: *'); ?>
 <?php
 /**
  * @var $organizations \app\models\Organization[]
