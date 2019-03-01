@@ -17,6 +17,23 @@
 <!--        -webkit-filter: grayscale(100%) brightness(30%);-->
 <!--    }-->
 <!--</style>-->
+
+<script>
+    $(document).ready(function(){
+        $('.transort-department').mouseover(function(){
+            let img = $(this).children('.transport-title').children('.span-h3-filial').children('img');
+            img.attr('src', 'yan/img/auto_icon/point_' + img.attr('data-type') + '.svg')
+            console.log()
+
+        });
+
+        $('.transort-department').mouseleave(function(){
+            let img = $(this).children('.transport-title').children('.span-h3-filial').children('img');
+            console.log($(this).children('.transport-title').children('.span-h3-filial').children('img').attr('src'));
+            img.attr('src', 'yan/img/auto_icon/point_blue_' + img.attr('data-type') + '.svg');
+        });
+    })
+</script>
 <script>
     let idOfCurrentElement = {
         organizations: '',
@@ -203,7 +220,7 @@
                 removeArrayFromMap(o_array, myMap);
             }
             if (a_array.length) {
-                myMap.geoObjects.remove(clustererAutocolumns);
+                //myMap.geoObjects.remove(clustererAutocolumns);
                 if (level === 0) {
                     a_array = [];
                 }
@@ -278,11 +295,15 @@
             searchControlProvider: 'yandex#search',
             suppressMapOpenBlock: true
         });
+
+
+        console.log('---margin')
         var clustererOrg = new ymaps.Clusterer({});
 
         <?php foreach ($organizations as $organization) {
             $organizationPrettyId = $organization->getIdWithoutNumbers();
-            ?>
+        ?>
+
         var OrgLayout = ymaps.templateLayoutFactory.createClass(
             '<div class="bb"><span class="bb-num"><?= $autocolumns[$organizationPrettyId]["cars"] ?></span> <span class="bb-name"><?= $organization->getTown()?></span></div>'
         );
@@ -403,7 +424,9 @@
                     }
                 }); //end ajax request
 
+                a_array = [];
             <?php
+
                 foreach ($autocolumns[$organizationPrettyId] as $key1 => $autocolumn) {
                     if ($key1 !== 'bounds' && $key1 !== 'cars' && $key1 !== 'carsStatuses' && $key1 !== 'carsTypes') {
                         $autocolumnPrettyId = $autocolumn->getIdWithoutNumbers(); ?>
@@ -422,9 +445,11 @@
                     iconContentLayout: AutoColLayout
                 });
                 a_pm.breadcrumps = '<?= $autocolumn->name ?>';
+
                 <?php if ($spots[$autocolumnPrettyId]["cars"] !== 0) { ?>
                     a_array.push(a_pm);
                 <?php } ?>
+
                 a_pm.events.add('click', function(a) {
                     changeInfo(
                         <?= $spots[$autocolumnPrettyId]["cars"] ?>,
@@ -529,9 +554,11 @@
                     foreach ($spots[$autocolumnPrettyId] as $key2 => $spot) {
                         if ($key2 !== 'bounds' && $key2 !== 'cars' && $key2 !== 'carsStatuses' && $key2 !== 'carsTypes') {
                             $spotPrettyId = $spot->getIdWithoutNumbers(); ?>
+
                             var SpotsLayout = ymaps.templateLayoutFactory.createClass(
                                 '<div class="bb"><span class="bb-num"><?= $spot->carsNumber ?></span><span id="spot_name" class="bb-name"><?= $spot->name ?></span></div>'
                             );
+
                             s_pm = new ymaps.Placemark([<?= $spot->x_pos ?>, <?= $spot->y_pos ?>],{
                                 hintContent: '<?= $spot->description ?>'
                             }, {
@@ -756,6 +783,7 @@
                             } else {
                                 a.originalEvent.target.bounds = <?= $spots[$autocolumnPrettyId]['bounds'] ?>;
                                 myMap.setBounds(a.originalEvent.target.bounds, {checkZoomRange: true});
+
                             }
                         }
                         delete window.currentElement.spot;
@@ -769,11 +797,10 @@
           <?php } // if ($key !== bounds)
             } // foreach($autocolumns) ?>
                 if (a_array.length) {
-
-                    clustererAutocolumns.removeAll();
-                    clustererAutocolumns.add(a_array);
-                    myMap.geoObjects.add(clustererAutocolumns);
-                    console.log();
+                    // clustererAutocolumns.removeAll();
+                    // clustererAutocolumns.add(a_array);
+                    // myMap.geoObjects.add(clustererAutocolumns);
+                    addArrayOnMap(a_array, myMap);
                     <?php if(!empty($autocolumns[$organizationPrettyId]['bounds'])) { ?>
                         if(a_array.length === 1) {
                             o.originalEvent.target.center = a_array[0].geometry._coordinates;
@@ -1005,7 +1032,8 @@
                 }
                 console.log(window.currentElement);
                 if(a_array) {
-                    myMap.geoObjects.add(clustererAutocolumns);
+                    //myMap.geoObjects.add(clustererAutocolumns);
+                    addArrayOnMap(a_array, myMap);
                 }
 
                 $.ajax({
@@ -1092,7 +1120,8 @@
                 return true;
             }
             if(a_array) {
-                myMap.geoObjects.remove(clustererAutocolumns);
+                //myMap.geoObjects.remove(clustererAutocolumns);
+                removeArrayFromMap(a_array, myMap);
                 a_array = [];
             }
             if(o_array) {

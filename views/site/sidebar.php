@@ -1,5 +1,5 @@
 
-<div class="result" style="position:fixed;width: 20%; height: 100%;left:0;">
+<div class="result" style="position:fixed;width: 20%; height: 100%;left:0; ">
     <section id="info-company" class="section-info">
         <div class="main-item-result">
             <div class="logo">
@@ -142,7 +142,7 @@
                     <hr/ class="hr-trans">
                     <div id="light" class="item-info transort-department">
                         <div class="transport-title">
-                            <span class="span-h3-filial"><img src="yan/img/car-1.svg" alt="#" class="span-yan/img-h3-filial"></span>
+                            <span class="span-h3-filial"><img data-type="0" src="yan/img/auto_icon/point_blue_0.svg" alt="#" class="span-yan/img-h3-filial"></span>
                             <p id="passenger-car" class="p-type-transport">Легковые</p>
                         </div>
                         <p id="passCar" class="p-quantity">40</p>
@@ -150,7 +150,7 @@
                     <hr/ class="hr-trans">
                     <div id="truck" class="item-info transort-department">
                         <div class="transport-title">
-                            <span class="span-h3-filial"><img src="yan/img/car-2.svg" alt="#" class="span-yan/img-h3-filial"></span>
+                            <span class="span-h3-filial"><img data-type="1" src="yan/img/auto_icon/point_blue_1.svg" alt="#" class="span-yan/img-h3-filial"></span>
                             <p id="freight" class="p-type-transport">Грузовые</p>
                         </div>
                         <p id="freightCar" class="p-quantity">221</p>
@@ -158,7 +158,7 @@
                     <hr/ class="hr-trans">
                     <div id="bus" class="item-info transort-department">
                         <div class="transport-title">
-                            <span class="span-h3-filial"><img src="yan/img/car-3.svg" alt="#" class="span-yan/img-h3-filial"></span>
+                            <span class="span-h3-filial"><img data-type="2" src="yan/img/auto_icon/point_blue_2.svg" alt="#" class="span-yan/img-h3-filial"></span>
                             <p id="bus" class="p-type-transport">Автобусы</p>
                         </div>
                         <p id="busCar" class="p-quantity">20</p>
@@ -166,7 +166,7 @@
                     <hr/ class="hr-trans">
                     <div id="spec" class="item-info transort-department">
                         <div class="transport-title">
-                            <span class="span-h3-filial"><img src="yan/img/car-4.svg" alt="#" class="span-yan/img-h3-filial"></span>
+                            <span class="span-h3-filial"><img data-type="3" src="yan/img/auto_icon/point_blue_3.svg" alt="#" class="span-yan/img-h3-filial"></span>
                             <p id="spec" class="p-type-transport">Спецтехника</p>
                         </div>
                         <p id="specCar" class="p-quantity">12</p>
