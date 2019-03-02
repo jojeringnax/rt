@@ -241,7 +241,8 @@
                     offset: [-50, -50]
                 }],
                 gridSize: 256,
-                clusterIconContentLayout: ClusterLayout
+                clusterIconContentLayout: ClusterLayout,
+                zoomMargin : [50,100,50,50]
             }
         );
         let clustererSpots = new ymaps.Clusterer(
@@ -252,7 +253,8 @@
                     offset: [-50, -50]
                 }],
                 gridSize: 256,
-                clusterIconContentLayout: ClusterLayout
+                clusterIconContentLayout: ClusterLayout,
+                zoomMargin : [50,100,50,50]
             }
         );
 
@@ -264,7 +266,8 @@
                     offset: [-50, -50]
                 }],
                 gridSize: 128,
-                clusterIconContentLayout: CarClusterLayout
+                clusterIconContentLayout: CarClusterLayout,
+                zoomMargin : [50,50,50,50]
             }
         );
 
@@ -676,7 +679,7 @@
                                                   window.currentElement.car.options.set('iconContentLayout', carOldLayout);
                                               }
                                               window.currentElement.car = c.originalEvent.target;
-                                              myMap.setCenter(window.currentElement.car.geometry._coordinates, 17);
+                                              myMap.setCenter(window.currentElement.car.geometry._coordinates, 19);
                                               $('#info-company').addClass('hide');
                                               $('#info-department').addClass('hide');
                                               $('#ts-info').removeClass('hide');
@@ -727,13 +730,15 @@
                                           c_array.push(c_pm);
                                           clustererCars.add(c_array);
                                           myMap.geoObjects.add(clustererCars);
-
+                                          console.log(data.bounds);
                                           if (data.cars.length === 1) {
                                               s.originalEvent.target.center = c_pm.geometry._coordinates;
                                               myMap.setCenter(s.originalEvent.target.center, 6);
                                           } else {
                                               s.originalEvent.target.bounds = data.bounds;
-                                              myMap.setBounds(data.bounds, {checkZoomRange: true});
+                                              myMap.setBounds(data.bounds, {checkZoomRange: false}).then(function() {
+                                                  myMap.setZoom(myMap.getZoom() - 1, {duration: 1000})
+                                              });
                                           }
 
                                         });
@@ -755,7 +760,9 @@
                                 myMap.setCenter(a.originalEvent.target.center, 12);
                             } else {
                                 a.originalEvent.target.bounds = <?= $spots[$autocolumnPrettyId]['bounds'] ?>;
-                                myMap.setBounds(a.originalEvent.target.bounds, {checkZoomRange: true});
+                                myMap.setBounds(a.originalEvent.target.bounds, {checkZoomRange: true}).then(function() {
+                                    myMap.setZoom(myMap.getZoom() - 1, {duration: 1000})
+                                });;
                             }
                         }
                         delete window.currentElement.spot;
@@ -780,7 +787,9 @@
                             myMap.setCenter(o.originalEvent.target.center, 6)
                         } else {
                             o.originalEvent.target.bounds = <?= $autocolumns[$organizationPrettyId]['bounds'] ?>;
-                            myMap.setBounds(o.originalEvent.target.bounds, {checkZoomRange: true});
+                            myMap.setBounds(o.originalEvent.target.bounds, {checkZoomRange: true}).then(function() {
+                                myMap.setZoom(myMap.getZoom() - 1, {duration: 1000});
+                            });
                         }
                     <?php }?>
                 }
@@ -896,7 +905,9 @@
                 $('#info-department').removeClass('hide');
                 delete window.currentElement.spot;
                 if(window.currentElement.autocolumn.hasOwnProperty('bounds')) {
-                   myMap.setBounds(window.currentElement.autocolumn.bounds, {checkZoomRange: true});
+                   myMap.setBounds(window.currentElement.autocolumn.bounds, {checkZoomRange: true}).then(function() {
+                       myMap.setZoom(myMap.getZoom() - 1, {duration: 1000})
+                   });
                 }
                 if(window.currentElement.autocolumn.hasOwnProperty('center')) {
                    myMap.setCenter(window.currentElement.autocolumn.center, 12);
@@ -998,7 +1009,9 @@
                 $('#info-department').removeClass('hide');
                 delete window.currentElement.autocolumn;
                 if(window.currentElement.organization.hasOwnProperty('bounds')) {
-                    myMap.setBounds(window.currentElement.organization.bounds, {checkZoomRange: true});
+                    myMap.setBounds(window.currentElement.organization.bounds, {checkZoomRange: true}).then(function() {
+                        myMap.setZoom(myMap.getZoom() - 1, {duration: 1000})
+                    });
                 }
                 if(window.currentElement.organization.hasOwnProperty('center')) {
                     myMap.setCenter(window.currentElement.organization.center, 12);

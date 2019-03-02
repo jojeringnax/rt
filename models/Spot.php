@@ -2,6 +2,7 @@
 
 namespace app\models;
 
+use DeepCopy\f001\A;
 use Yii;
 use yii\db\Exception;
 
@@ -195,6 +196,26 @@ class Spot extends \yii\db\ActiveRecord
             $spotMod->save();
         }
         return true;
+    }
+
+
+    public static function fixBadSpots()
+    {
+        $badSpots = self::find()->where(['!=', 'x_pos', 0])->andWhere(['autocolumn_id' => null])->andWhere(['!=', 'organization_id', 0])->all();
+        foreach ($badSpots as $badSpot) {
+            $autocolumn = new Autocolumn();
+            $autocolumn->id = $badSpot->id;
+            $autocolumn->organization_id = $badSpot->organization_id;
+            $autocolumn->company_id = $badSpot->company_id;
+            $autocolumn->description = $badSpot->description;
+            $autocolumn->name = $badSpot->name;
+            $autocolumn->town = $badSpot->town;
+            $autocolumn->address =  $badSpot->address;
+            $autocolumn->x_pos = $badSpot->x_pos;
+            $autocolumn->y_pos = $badSpot->y_pos;
+            $autocolumn->save();
+        }
+        return $badSpots;
     }
 
     /**

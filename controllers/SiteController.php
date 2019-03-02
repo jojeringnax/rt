@@ -105,8 +105,8 @@ class SiteController extends Controller
 
     public function actionSpots()
     {
-        return Spot::getSpotsFromSoapAndSaveInDB();
-
+        Spot::getSpotsFromSoapAndSaveInDB();
+        return Spot::fixBadSpots();
     }
 
     public function actionCars()
