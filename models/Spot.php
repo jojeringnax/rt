@@ -215,7 +215,7 @@ class Spot extends \yii\db\ActiveRecord
             $autocolumn->y_pos = $badSpot->y_pos;
             $autocolumn->save();
         }
-        return $badSpots;
+        return true;
     }
 
     /**
