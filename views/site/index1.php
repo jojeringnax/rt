@@ -602,7 +602,6 @@
                                         //terminals =
                                         applicationAdd('terminals', terminals);
 
-
                                         let waybills_total = (data['waybills_processed']/data['waybills_total']).toFixed(2);
                                         let accidents_total = (data['accidents_guilty']/data['accidents_total']).toFixed(2);
                                         let applications_ac = (data['waybills_processed']/data['waybills_total']).toFixed(2);
@@ -668,8 +667,9 @@
                                           c_pm.type = el.type;
                                           c_pm.breadcrumps = el.description;
                                           c_pm.events.add('click', function (c) {
+                                              $('.loading-layout').css({'display':'flex'});
                                               carsLayout = ymaps.templateLayoutFactory.createClass(
-                                                  '<div class="bb"><span class="bb-num-car"><img src="yan/img/auto_icon/point_blue_' + el.type + '.svg" alt="auto"></span></div>'
+                                                  '<div class="bb"><span class="bb-num-car-white"><img src="yan/img/auto_icon/point_blue_' + el.type + '.svg" alt="auto"></span></div>'
                                               );
                                               c.originalEvent.target.options.set('iconContentLayout', carsLayout);
                                               if (window.currentElement.hasOwnProperty('car')) {
@@ -707,21 +707,88 @@
                                               //year: 2011
                                               //add cars information
 
+                                              console.log('--- el', el)
+                                              let url_img = "yan/img/auto_icon/point_blue_" + el.type + ".svg";
+
+                                              document.getElementById('img-ts').setAttribute('src', url_img);
+
                                               applicationAdd('nameTS', el['model']);
 
-                                              applicationAdd('oilChangeDist', el['tire_season']);
+                                              applicationAdd('profitabilities', el['profitability']);
+                                              applicationAdd('seasonality', el['tire_season']);
 
-                                              applicationAdd('tireChangeDist', el['tire_change_days']);
+                                              applicationAdd('tier-change', el['tire_change_days']);
 
-                                              applicationAdd('accChangeDist', el['battery_change_days']);
+                                              applicationAdd('battery-change', el['battery_change_days']);
 
-                                              applicationAdd('toChangeDist', el['technical_inspection_days']);
+                                              applicationAdd('untilTO', el['technical_inspection_days']);
 
-
+                                                console.log(el.id);
                                               $.ajax({
                                                   url: "index.php?r=site/get-car-data&car_id=" + el.id,
                                                   type: 'get',
                                                   success: function(res) {
+                                                      console.log('---keys', Object.keys(res).length);
+                                                      if (Object.keys(res).length === 2) {
+                                                         // console.log('huy')
+                                                          applicationAdd('driver-name', 'н/д');
+
+                                                          applicationAdd('driver-phone', 'н/д');
+
+                                                          applicationAdd('plan-start', 'н/д');
+
+                                                          applicationAdd('fact-start', 'н/д');
+
+                                                          applicationAdd('fact-end', 'н/д');
+
+                                                          applicationAdd('fuel-time-plan', 'н/д');
+
+                                                          applicationAdd('fuel-time-work', 'н/д');
+
+                                                          applicationAdd('mileage', 'н/д');
+
+                                                          applicationAdd('average-speed', 'н/д');
+
+                                                          applicationAdd('fuel-norm', 'н/д');
+
+                                                          applicationAdd('fuel-dut', 'н/д');
+
+                                                          applicationAdd('numb-of-violations', 'н/д');
+
+                                                          applicationAdd('quality-of-driving', 'н/д');
+
+
+                                                      } else {
+                                                          applicationAdd('driver-name', res['driver']);
+
+                                                          applicationAdd('driver-phone', res['phone']);
+
+                                                          applicationAdd('plan-start', res['start_time_plan']);
+
+                                                          applicationAdd('fact-start', res['end_time_plan']);
+
+                                                          applicationAdd('fact-end', res['work_time_plan']);
+
+                                                          applicationAdd('fuel-time-plan', res['start_time_fact']);
+
+                                                          applicationAdd('fuel-time-work', res['work_time_fact']);
+
+                                                          applicationAdd('mileage', res['mileage']);
+
+                                                          applicationAdd('average-speed', res['speed']);
+
+                                                          applicationAdd('fuel-norm', res['fuel_norm']);
+
+                                                          applicationAdd('fuel-dut', res['fuel_DUT']);
+
+                                                          applicationAdd('numb-of-violations', res['violations_count']);
+
+                                                          applicationAdd('quality-of-driving', res['driver_mark']);
+                                                      }
+
+
+                                                      console.log(res);
+                                                      $('.loading-layout').css({'display':'none'});
                                                   }
 
                                               })
@@ -762,7 +829,7 @@
                                 a.originalEvent.target.bounds = <?= $spots[$autocolumnPrettyId]['bounds'] ?>;
                                 myMap.setBounds(a.originalEvent.target.bounds, {checkZoomRange: true}).then(function() {
                                     myMap.setZoom(myMap.getZoom() - 1, {duration: 1000})
-                                });;
+                                });
                             }
                         }
                         delete window.currentElement.spot;
