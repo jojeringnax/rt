@@ -415,5 +415,39 @@ p {
   100% {
     transform: rotate(540deg);
     opacity: 0.6; } }
+/*==================ts-data======================*/
+.title-ts-text {
+  font-size: 1.35vh;
+  display: block;
+  line-height: 1; }
+
+.text-ts {
+  display: block;
+  font-size: 1.7vh;
+  font-weight: bold; }
+  .text-ts.cross-out {
+    text-decoration: line-through; }
+  .text-ts.blue-color {
+    color: #004781; }
+
+.item-ts-data {
+  margin-top: 2.6vh; }
+
+.ts-hr {
+  margin-top: 2.6vh;
+  margin-bottom: 2.6vh;
+  width: 90%; }
+
+.dada-ts-item {
+  width: 170px; }
+
+.d-flex {
+  display: flex; }
+
+.justify-content-between {
+  justify-content: space-between; }
+
+.flex-column {
+  flex-direction: column; }
 
 /*# sourceMappingURL=style.css.map */

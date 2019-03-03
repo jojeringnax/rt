@@ -92,7 +92,7 @@
                 </div>
 
                 <div class="indic-bot">
-                    <div class="div-meanings div-pr25">
+                    <div class="div-pr25">
                         <p id="lmch-2" class="p-meanings-2nd"></p><span id="comp_fuel" class="span-figures-2nd">5,1</span> л\мч<br/>ТМЧ</p>
                     </div>
                     <div class="div-meanings">
@@ -238,7 +238,7 @@
                 </div>
             </div>
             <div class="indic-bot">
-                <div class="div-meanings div-pr25">
+                <div class="div-pr25">
                     <p id="lmch-2" class="p-meanings-2nd"></p><span id="fuel" class="span-figures-2nd">5,1</span> л\мч<br/>ТМЧ</p>
                 </div>
                 <div class="div-meanings">
@@ -255,69 +255,109 @@
                     <img src="yan/img/logo.svg" alt="">
                 </div>
             </div>
-            <div class="title-ts">
-                <span id="nameTS" class="title-ts-text">ТС №93 BMW</span>
+            <div class="title-ts d-flex justify-content-start">
+                <img id="img-ts" src="" alt="">
+                <span id="nameTS" class="" style="color: #005498; margin-left: 1vh; font-weight: bold">ТС №93 BMW</span>
             </div>
             <div class="">
-                <div id="route" class="">
-                    <div class="route-title">
-                        <span class="yan/img"><img src="yan/img/route.svg" alt="#" class="span-yan/img-h3-2nd"></span>
-                        <span id="title-route" class="text">Маршрут</span>
+                <div id="driver" class="item-ts-data">
+                    <div class="name-driver d-flex flex-column align-items-start item-ts-data">
+                        <span class="title-driver-name title-ts-text">Водитель:</span>
+                        <span id="driver-name" class="text-ts">Постывый Ярослав Николаевич</span>
                     </div>
-                    <div class="item-info">
-                        <p id="" class="trans-auto">Кол-во пройденного пути, км</p>
-                        <p id="doneRoute" class="figures">1300</p>
+                    <div class="phone-driver d-flex flex-column align-items-start item-ts-data">
+                        <span class="title-ts-text title-driver-phone">Телефон:</span>
+                        <span id="driver-phone" class="text-ts">8-908-235-82-56</span>
                     </div>
-                    <div class="item-info">
-                        <p id="" class="trans-auto">Кол-во отработанного t, ч.</p>
-                        <p id="" class="figures">10</p>
-                    </div>
-                    <div class="item-info">
-                        <p id="" class="trans-auto">Объем потраченного топлива, л.</p>
-                        <p id="AmOfFuel" class="figures">12</p>
-                    </div>
+                    <hr class="ts-hr"/>
                 </div>
-            </div>
-            <div id="oil" class="item-distance">
-                <div class="plr-yan/img-distance my-auto">
-                    <img class="yan/img-distance" src="yan/img/fuel.svg" alt="">
-                </div>
-                <div class="plr-col-distance">
-                    <p id="oilChangeDist" class="distance-figure">50 000 км</p>
-                    <p id="total" class="distance-text">Тип шин</p>
-                </div>
-                <div id="lb1" class="longlar"></div>
-            </div>
-            <div id="wheel" class="item-distance">
-                <div class="plr-yan/img-distance my-auto">
-                    <img class="yan/img-distance" src="yan/img/wheel.svg" alt="">
-                </div>
-                <div class="plr-col-distance">
-                    <p id="tireChangeDist" class="distance-figure">2 000 км</p>
-                    <p id="total" class="distance-text">До замены шин</p>
-                </div>
-                <div id="lb2" class="longlar"></div>
-            </div>
-            <div id="wheel" class="item-distance">
-                <div class="plr-yan/img-distance my-auto">
-                    <img class="yan/img-distance" src="yan/img/battery.svg" alt="">
-                </div>
-                <div class="plr-col-distance">
-                    <p id="accChangeDist" class="distance-figure">23 000 часа</p>
-                    <p id="total" class="distance-text">До замены АКБ</p>
-                </div>
-                <div id="lb3" class="longlar"></div>
-            </div>
 
-            <div id="wheel" class="item-distance">
-                <div class="plr-yan/img-distance my-auto">
-                    <img class="yan/img-distance" src="yan/img/key.svg" alt="">
+                <div class="work-time item-ts-data">
+                    <div class="start flex flex-column item-ts-data">
+                        <span class="title-time-start title-ts-text">Время начала:</span>
+                        <div class="time d-flex justify-content-between" style="display: flex;">
+                            <span id="plan-start" class="text-ts cross-out">28.02.2019 7:00:00</span>
+                            <span id="fact-start" class="text-ts blue-color">28.02.2019 7:05:21</span>
+                        </div>
+                    </div>
+                    <div class="time-end item-ts-data">
+                        <span class="title-time-end title-ts-text">Время окончания:</span>
+                        <span id="fact-end" class="title-time-end text-ts">28.02.2019 19:00:00</span>
+                    </div>
+                    <div class="fuel-time item-ts-data">
+                        <span class="title-fuel-time title-ts-text">Время работы (часов):</span>
+                        <div class="time d-flex">
+                            <span id="fuel-time-plan" class="fuel-time-start text-ts cross-out">12</span>
+                            <span id="fuel-time-work" class="fuel-time-end text-ts blue-color" style="margin-left: 1vh">11.91</span>
+                        </div>
+                    </div>
+
+                    <hr class="ts-hr"/>
                 </div>
-                <div class="plr-col-distance">
-                    <p id="toChangeDist" class="distance-figure">70 000 км</p>
-                    <p id="total" class="distance-text">До ТО</p>
+
+                <div class="dada-ts item-ts-data">
+                    <div class="row-1 d-flex flex-row item-ts-data">
+                        <div class="dada-ts-item">
+                            <span class="title-ts-text">Пробег:</span>
+                            <span id="mileage" class="text-ts">275 км</span>
+                        </div>
+                        <div class="dada-ts-item">
+                            <span class="title-ts-text">Средняя скорость:</span>
+                            <span id="average-speed" class="text-ts">37 км/ч</span>
+                        </div>
+                    </div>
+                    <div class="row-2 d-flex flex-row item-ts-data">
+                        <div class="dada-ts-item">
+                            <span class="title-ts-text">Топливопо <br />норме:</span>
+                            <span id="fuel-norm" class="text-ts">99.55</span>
+                        </div>
+                        <div class="dada-ts-item">
+                            <span class="title-ts-text">Топливо <br />ДУТ:</span>
+                            <span id="fuel-dut" class="text-ts">0</span>
+                        </div>
+                    </div>
+                    <div class="row-3 d-flex flex-row item-ts-data">
+                        <div class="dada-ts-item">
+                            <span class="title-ts-text">Количество <br />нарушений:</span>
+                            <span id="numb-of-violations" class="text-ts">6.0</span>
+                        </div>
+                        <div class="dada-ts-item">
+                            <span class="title-ts-text">Оценка качества <br />вождения:</span>
+                            <span id="quality-of-driving" class="text-ts">6.0</span>
+                        </div>
+                    </div>
+                    <hr class="ts-hr"/>
                 </div>
-                <div id="lb4" class="longlar"></div>
+
+                <div class="dada-ts-2">
+                    <div class="row-1 d-flex flex-row item-ts-data">
+                        <div class="dada-ts-item">
+                            <span class="title-ts-text">Процент рентабельности за прошлый месяц:</span>
+                            <span id="profitabilities" class="text-ts">50</span>
+                        </div>
+                    </div>
+                    <div class="row-2 d-flex flex-row item-ts-data">
+                        <div class="dada-ts-item">
+                            <span class="title-ts-text">Осталось км <br /> до ТО:</span>
+                            <span id="untilTO" class="text-ts">1500</span>
+                        </div>
+                        <div class="dada-ts-item">
+                            <span class="title-ts-text ">Дней до замены <br /> аккумулятора:</span>
+                            <span id="battery-change" class="text-ts">911</span>
+                        </div>
+                    </div>
+                    <div class="row-3 d-flex flex-row item-ts-data">
+                        <div class="dada-ts-item">
+                            <span class="title-ts-text">Км до замены шин:</span>
+                            <span id="tier-change" class="text-ts">241</span>
+                        </div>
+                        <div class="dada-ts-item">
+                            <span class="title-ts-text">Сезонность шин:</span>
+                            <span id="seasonality" class="text-ts">Межсезонные</span>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
     </section>
