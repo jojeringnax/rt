@@ -1,5 +1,18 @@
 
 
+<script type="text/javascript">
+    $(document).ready(function(){
+        console.log('asd')
+        $('.transort-department').mouseover(function(){
+            let img = $(this).children('.transport-title').children('.span-h3-filial').children('img');
+            img.attr('src', 'yan/img/auto_icon/point_'+img.data('type')+'.svg');
+        });
+        $('.transort-department').mouseleave(function(){
+            let img = $(this).children('.transport-title').children('.span-h3-filial').children('img');
+            img.attr('src', 'yan/img/auto_icon/point_blue_'+img.data('type')+'.svg');
+        });
+    });
+</script>
 <?php
 /**
  * @var $organizations \app\models\Organization[]
@@ -17,6 +30,7 @@
 <!--        -webkit-filter: grayscale(100%) brightness(30%);-->
 <!--    }-->
 <!--</style>-->
+
 <script>
     let idOfCurrentElement = {
         organizations: '',
@@ -715,6 +729,7 @@
                                               applicationAdd('nameTS', el['model']);
 
                                               applicationAdd('profitabilities', el['profitability']);
+
                                               applicationAdd('seasonality', el['tire_season']);
 
                                               applicationAdd('tier-change', el['tire_change_days']);
@@ -729,6 +744,8 @@
                                                   type: 'get',
                                                   success: function(res) {
                                                       console.log('---keys', Object.keys(res).length);
+                                                      let obj = new Object();
+                                                      obj = JSON.parse(res);
                                                       if (Object.keys(res).length === 2) {
                                                          // console.log('huy')
                                                           applicationAdd('driver-name', 'н/д');
@@ -759,36 +776,66 @@
 
 
                                                       } else {
-                                                          applicationAdd('driver-name', res['driver']);
 
-                                                          applicationAdd('driver-phone', res['phone']);
+                                                          console.log(obj, obj['car_id']);
 
-                                                          applicationAdd('plan-start', res['start_time_plan']);
+                                                          applicationAdd('driver-name', obj['driver']);
 
-                                                          applicationAdd('fact-start', res['end_time_plan']);
+                                                          applicationAdd('driver-phone', obj['phone']);
 
-                                                          applicationAdd('fact-end', res['work_time_plan']);
+                                                          applicationAdd('plan-start', obj['start_time_plan']);
 
-                                                          applicationAdd('fuel-time-plan', res['start_time_fact']);
+                                                          applicationAdd('fact-start', obj['start_time_fact']);
 
-                                                          applicationAdd('fuel-time-work', res['work_time_fact']);
+                                                          applicationAdd('fact-end', obj['end_time_plan']);
 
-                                                          applicationAdd('mileage', res['mileage']);
+                                                          applicationAdd('fuel-time-plan', obj['work_time_plan']);
 
-                                                          applicationAdd('average-speed', res['speed']);
+                                                          applicationAdd('fuel-time-work', obj['work_time_fact']);
 
-                                                          applicationAdd('fuel-norm', res['fuel_norm']);
+                                                          applicationAdd('mileage', obj['mileage']);
 
-                                                          applicationAdd('fuel-dut', res['fuel_DUT']);
+                                                          applicationAdd('average-speed', obj['speed']);
 
-                                                          applicationAdd('numb-of-violations', res['violations_count']);
+                                                          applicationAdd('fuel-norm', obj['fuel_norm']);
 
-                                                          applicationAdd('quality-of-driving', res['driver_mark']);
+                                                          applicationAdd('fuel-dut', obj['fuel_DUT']);
+
+                                                          applicationAdd('numb-of-violations', obj['violations_count']);
+
+                                                          applicationAdd('quality-of-driving', obj['driver_mark']);
                                                       }
 
-
-                                                      console.log(res);
                                                       $('.loading-layout').css({'display':'none'});
+                                                  },
+                                                  error: function(err) {
+                                                      $('.loading-layout').css({'display':'none'});
+                                                      console.log('---err',err);
+                                                      applicationAdd('driver-name', 'н/д');
+
+                                                      applicationAdd('driver-phone', 'н/д');
+
+                                                      applicationAdd('plan-start', 'н/д');
+
+                                                      applicationAdd('fact-start', 'н/д');
+
+                                                      applicationAdd('fact-end', 'н/д');
+
+                                                      applicationAdd('fuel-time-plan', 'н/д');
+
+                                                      applicationAdd('fuel-time-work', 'н/д');
+
+                                                      applicationAdd('mileage', 'н/д');
+
+                                                      applicationAdd('average-speed', 'н/д');
+
+                                                      applicationAdd('fuel-norm', 'н/д');
+
+                                                      applicationAdd('fuel-dut', 'н/д');
+
+                                                      applicationAdd('numb-of-violations', 'н/д');
+
+                                                      applicationAdd('quality-of-driving', 'н/д');
                                                   }
 
                                               })

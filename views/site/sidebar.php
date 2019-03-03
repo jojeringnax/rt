@@ -87,7 +87,7 @@
                         <div id="comp_WB_M" class="circle"></div>
                     </div>
                     <div class="div-bar-text">
-                        <p id="mileage" class="p-bar-text">Принятый пробег<br/>по БСМТ, %</p>
+                        <p id="mileage-bsmt" class="p-bar-text">Принятый пробег<br/>по БСМТ, %</p>
                     </div>
                 </div>
 
