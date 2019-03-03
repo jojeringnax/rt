@@ -165,7 +165,8 @@ class SiteController extends Controller
         $carsDataModel->driver_mark = isset($carsData->DriverMark) ? $carsData->DriverMark : null;
         $carsDataModel->violations_count = isset($carsData->ViolationsCount) ? (integer) $carsData->ViolationsCount : null;
         $carsDataModel->save();
-        return json_encode($carsDataModel);
+        $carData = CarsData::findOne($car_id);
+        return json_encode($carData);
     }
 
     /**
