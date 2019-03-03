@@ -214,6 +214,8 @@ class Spot extends \yii\db\ActiveRecord
             $autocolumn->x_pos = $badSpot->x_pos;
             $autocolumn->y_pos = $badSpot->y_pos;
             $autocolumn->save();
+            $badSpot->autocolumn_id = $badSpot->id;
+            $badSpot->save();
         }
         return true;
     }
