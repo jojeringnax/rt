@@ -41,5 +41,9 @@ function longBar(name, value, color) {
 }
 
 function applicationAdd(id, value) {
+    if (value === "" || value === null) {
+        value = 'н/д';
+    }
+
     document.getElementById(id).innerHTML = value;
 }
