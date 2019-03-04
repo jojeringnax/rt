@@ -430,6 +430,12 @@ p {
   .text-ts.blue-color {
     color: #004781; }
 
+.active-transport {
+  background-color: #004781;
+  color: white; }
+  .active-transport .transport-title p {
+    color: white !important; }
+
 .item-ts-data {
   margin-top: 2.6vh; }
 
