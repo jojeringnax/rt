@@ -1,4 +1,11 @@
-
+<?php
+/**
+ * @var $organizations \app\models\Organization[]
+ * @var $autocolumns \app\models\Autocolumn[]
+ * @var $spots \app\models\Spot[]
+ * @var $this \yii\web\View
+ */
+?>
 
 <script type="text/javascript">
     $(document).ready(function(){
@@ -11,17 +18,11 @@
             let img = $(this).children('.transport-title').children('.span-h3-filial').children('img');
             img.attr('src', 'yan/img/auto_icon/point_blue_'+img.data('type')+'.svg');
         });
+
     });
 </script>
-<?php
-/**
- * @var $organizations \app\models\Organization[]
- * @var $autocolumns \app\models\Autocolumn[]
- * @var $spots \app\models\Spot[]
- */
-?>
-<?= $this->render('sidebar') ?>
 
+<?= $this->render('sidebar') ?>
 <?php $breadcrumps = []; ?>
 <!---->
 <!--<style>-->
@@ -1243,6 +1244,27 @@
             $('#ts-info').addClass('hide');
             $('#info-department').addClass('hide');
             $('.bbb > span').html('ООО РесурсТранс');
+        });
+        var types = {
+            light: 0,
+            truck: 1,
+            bus: 2,
+            spec: 3
+        };
+        var typeButton = $('.item-info.transort-department');
+        typeButton.click(function () {
+            var thisButton = $(this);
+            if (window.currentElement.hasOwnProperty('spot') && !window.currentElement.hasOwnProperty('car')) {
+                console.log('Клик произведен');
+                c_array.forEach(function(car) {
+                    if(car.type !== types[thisButton.attr('id')]) {
+                        console.log('type',car.type,'types_peenis', thisButton.attr('id'))
+                        clustererCars.remove(car);
+                    } else {
+                        clustererCars.add(car);
+                    }
+                });
+            }
         });
     });
 </script>
