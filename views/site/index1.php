@@ -238,7 +238,7 @@
             }
         };
 
-
+        let town_autocol, town_spot;
         var c_array = [], s_array = [], a_array = [], o_array = [];
 
         var ClusterLayout = ymaps.templateLayoutFactory.createClass(
@@ -425,9 +425,18 @@
                 foreach ($autocolumns[$organizationPrettyId] as $key1 => $autocolumn) {
                     if ($key1 !== 'bounds' && $key1 !== 'cars' && $key1 !== 'carsStatuses' && $key1 !== 'carsTypes') {
                         $autocolumnPrettyId = $autocolumn->getIdWithoutNumbers(); ?>
+
+
+                town_autocol = "<?= $autocolumn->name ?>";
+                if(town_autocol.match('-')){
+                    town_autocol = town_autocol.replace('-', '&minus;');
+                }
+
                 var AutoColLayout = ymaps.templateLayoutFactory.createClass(
-                    '<div class="bb"><span class="bb-num"><?= $spots[$autocolumnPrettyId]["cars"] ?></span> <span id="auto_name" class="bb-name"><?= $autocolumn->name ?></span></div>'
+                    '<div class="bb"><span class="bb-num"><?= $spots[$autocolumnPrettyId]["cars"] ?></span> <span id="auto_name" class="bb-name">'+town_autocol+'</span></div>'
                 );
+
+
                 a_pm = new ymaps.Placemark([<?= $autocolumn->x_pos ?>, <?= $autocolumn->y_pos ?>], {
                     hintContent: '<?= $autocolumn->description ?>'
                 }, {
@@ -547,9 +556,16 @@
                     foreach ($spots[$autocolumnPrettyId] as $key2 => $spot) {
                         if ($key2 !== 'bounds' && $key2 !== 'cars' && $key2 !== 'carsStatuses' && $key2 !== 'carsTypes') {
                             $spotPrettyId = $spot->getIdWithoutNumbers(); ?>
+
+                            town_spot = "<?= $spot->name ?>";
+                            if(town_spot.match('-')){
+                                town_spot = town_autocol.replace('-', '&minus;');
+                            }
+
                             var SpotsLayout = ymaps.templateLayoutFactory.createClass(
-                                '<div class="bb"><span class="bb-num"><?= $spot->carsNumber ?></span><span id="spot_name" class="bb-name"><?= $spot->name ?></span></div>'
+                                '<div class="bb"><span class="bb-num"><?= $spot->carsNumber ?></span><span id="spot_name" class="bb-name">'+town_spot+'</span></div>'
                             );
+
                             s_pm = new ymaps.Placemark([<?= $spot->x_pos ?>, <?= $spot->y_pos ?>],{
                                 hintContent: '<?= $spot->description ?>'
                             }, {
@@ -580,7 +596,6 @@
                                 $('#info-company').addClass('hide');
                                 $('#info-department').removeClass('hide');
                                 $('#ts-info').addClass('hide');
-
 
 
 
