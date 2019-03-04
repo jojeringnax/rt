@@ -7,20 +7,20 @@
  */
 ?>
 
-<script type="text/javascript">
-    $(document).ready(function(){
-        console.log('asd')
-        $('.transort-department').mouseover(function(){
-            let img = $(this).children('.transport-title').children('.span-h3-filial').children('img');
-            img.attr('src', 'yan/img/auto_icon/point_'+img.data('type')+'.svg');
-        });
-        $('.transort-department').mouseleave(function(){
-            let img = $(this).children('.transport-title').children('.span-h3-filial').children('img');
-            img.attr('src', 'yan/img/auto_icon/point_blue_'+img.data('type')+'.svg');
-        });
-
-    });
-</script>
+<!--<script type="text/javascript">-->
+<!--    $(document).ready(function(){-->
+<!--        console.log('asd')-->
+<!--        $('.transort-department').mouseover(function(){-->
+<!--            let img = $(this).children('.transport-title').children('.span-h3-filial').children('img');-->
+<!--            img.attr('src', 'yan/img/auto_icon/point_'+img.data('type')+'.svg');-->
+<!--        });-->
+<!--        $('.transort-department').mouseleave(function(){-->
+<!--            let img = $(this).children('.transport-title').children('.span-h3-filial').children('img');-->
+<!--            img.attr('src', 'yan/img/auto_icon/point_blue_'+img.data('type')+'.svg');-->
+<!--        });-->
+<!---->
+<!--    });-->
+<!--</script>-->
 
 <?= $this->render('sidebar') ?>
 <?php $breadcrumps = []; ?>
@@ -893,7 +893,6 @@
                     console.log(window.currentElement);
                 }); //Autocolumn click
 
-
           <?php } // if ($key !== bounds)
             } // foreach($autocolumns) ?>
                 if (a_array.length) {
@@ -977,8 +976,6 @@
                         //terminals =
                         applicationAdd('terminals', terminals);
 
-
-
                         //totalCars: <?//= $spot->carsNumber ?>//,
                         //oinLine:  <?//= $spot->carsStatuses["inline"] ?>//,
                         //onRep: <?//= $spot->carsStatuses["R"] ?>//,
@@ -1005,11 +1002,9 @@
                             dataLevel['spot']['bus'],
                             dataLevel['spot']['spec'],
                         );
-
                     }
                 }); //end ajax request
                 return true;
-
             }
             if(window.currentElement.hasOwnProperty('spot')) {
                 myMap.geoObjects.remove(window.currentElement.spot);
@@ -1245,20 +1240,30 @@
             $('#info-department').addClass('hide');
             $('.bbb > span').html('ООО РесурсТранс');
         });
-        var types = {
+        let types = {
             light: 0,
             truck: 1,
             bus: 2,
             spec: 3
         };
-        var typeButton = $('.item-info.transort-department');
+        let typeButton = $('.item-info.transort-department');
         typeButton.click(function () {
-            var thisButton = $(this);
+            let thisButton = $(this);
+            $(this).parent().children('.transort-department').removeClass('active-transport');
+            thisButton.addClass('active-transport');
+            $('.img-transport').each(function(){
+                $(this).attr('src', 'yan/img/auto_icon/point_blue_'+ $(this).data('type')+'.svg');
+            });
+
+            let img = $(this).children('.transport-title').children('.span-h3-filial').children('img');
+            img.attr('src', 'yan/img/auto_icon/point_'+img.data('type')+'.svg');
+
+
             if (window.currentElement.hasOwnProperty('spot') && !window.currentElement.hasOwnProperty('car')) {
                 console.log('Клик произведен');
                 c_array.forEach(function(car) {
                     if(car.type !== types[thisButton.attr('id')]) {
-                        console.log('type',car.type,'types_peenis', thisButton.attr('id'))
+                        console.log('type',car.type,'types_peenis', thisButton.attr('id'));
                         clustererCars.remove(car);
                     } else {
                         clustererCars.add(car);

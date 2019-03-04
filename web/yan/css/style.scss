@@ -616,6 +616,16 @@ p {
   }
 }
 
+.active-transport {
+  background-color: #004781;
+  color: white;
+  .transport-title {
+    p {
+      color: white !important;
+    }
+  }
+}
+
 .item-ts-data {
   margin-top: 2.6vh;
 }
