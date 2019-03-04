@@ -100,7 +100,7 @@ p {
 /*===============company===============*/
 .ts-title {
   display: flex;
-  margin-top: 10px;
+  margin-top: 1.2vh;
   margin-bottom: 1.2vh;
   span.img {
     display: flex;
@@ -537,6 +537,7 @@ p {
     height: 50%;
     margin-right: 25px;
     margin-left: 25px;
+    font-size: 1.5vh;
   }
 }
 
@@ -638,6 +639,14 @@ p {
 
 .dada-ts-item {
   width: 170px;
+}
+
+@media screen and (min-width: 3000px) {
+
+  .dada-ts-item {
+    min-width: 350px;
+    margin-right: 1.2vh;
+  }
 }
 
 .d-flex {
