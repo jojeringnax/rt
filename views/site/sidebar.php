@@ -139,7 +139,7 @@
                 </div>
 
                 <div class="div-transport">
-                    <hr/ class="hr-trans">
+                    <hr class="hr-trans" />
                     <div id="light" class="item-info transort-department">
                         <div class="transport-title">
                             <span class="span-h3-filial"><img data-type="0" src="yan/img/auto_icon/point_blue_0.svg" alt="#" class="span-yan/img-h3-filial"></span>
@@ -147,7 +147,7 @@
                         </div>
                         <p id="passCar" class="p-quantity">40</p>
                     </div>
-                    <hr/ class="hr-trans">
+                    <hr class="hr-trans" />
                     <div id="truck" class="item-info transort-department">
                         <div class="transport-title">
                             <span class="span-h3-filial"><img data-type="1" src="yan/img/auto_icon/point_blue_1.svg" alt="#" class="span-yan/img-h3-filial"></span>
@@ -155,15 +155,15 @@
                         </div>
                         <p id="freightCar" class="p-quantity">221</p>
                     </div>
-                    <hr/ class="hr-trans">
+                    <hr class="hr-trans" />
                     <div id="bus" class="item-info transort-department">
                         <div class="transport-title">
                             <span class="span-h3-filial"><img data-type="2" src="yan/img/auto_icon/point_blue_2.svg" alt="#" class="span-yan/img-h3-filial"></span>
-                            <p id="bus" class="p-type-transport">Автобусы</p>
+                            <p class="p-type-transport">Автобусы</p>
                         </div>
                         <p id="busCar" class="p-quantity">20</p>
                     </div>
-                    <hr/ class="hr-trans">
+                    <hr class="hr-trans" />
                     <div id="spec" class="item-info transort-department">
                         <div class="transport-title">
                             <span class="span-h3-filial"><img data-type="3" src="yan/img/auto_icon/point_blue_3.svg" alt="#" class="span-yan/img-h3-filial"></span>
