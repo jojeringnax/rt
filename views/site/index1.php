@@ -150,7 +150,6 @@
         terminals: totalTerminals
     };
 
-    console.log(dataLevel['firms']);
     //add data -> COMPANY
 
         //compAmOfTs
@@ -217,13 +216,15 @@
                 removeArrayFromMap(o_array, myMap);
             }
             if (a_array.length) {
-                myMap.geoObjects.remove(clustererAutocolumns);
+                //myMap.geoObjects.remove(clustererAutocolumns);
+                removeArrayFromMap(a_array, myMap);
                 if (level === 0) {
                     a_array = [];
                 }
             }
             if (s_array.length) {
-                myMap.geoObjects.remove(clustererSpots);
+                //myMap.geoObjects.remove(clustererSpots);
+                removeArrayFromMap(s_array, myMap);
                 if (level > 0) {
                     s_array = [];
                 }
@@ -295,7 +296,6 @@
             searchControlProvider: 'yandex#search',
             suppressMapOpenBlock: true
         });
-        var clustererOrg = new ymaps.Clusterer({});
 
         <?php foreach ($organizations as $organization) {
             $organizationPrettyId = $organization->getIdWithoutNumbers();
@@ -580,6 +580,11 @@
                                 $('#info-department').removeClass('hide');
                                 $('#ts-info').addClass('hide');
 
+
+
+
+
+
                                 //ajax request -> SPOT
                                 idOfCurrentElement['spot'] = "<?= $spot->id ?>";
                                 $.ajax({
@@ -654,7 +659,8 @@
                                             myMap.geoObjects.remove(clustererCars);
                                             clustererCars.removeAll();
                                         }
-                                        myMap.geoObjects.remove(clustererSpots);
+                                        removeArrayFromMap(s_array, myMap);
+                                        //myMap.geoObjects.remove(clustererSpots);
                                             // 'Легковые ТС' => 0,
                                             // 'Грузовые ТС' => 1,
                                             // 'Автобусы' => 2,
@@ -682,16 +688,16 @@
                                           c_pm.breadcrumps = el.description;
                                           c_pm.events.add('click', function (c) {
                                               $('.loading-layout').css({'display':'flex'});
-                                              carsLayout = ymaps.templateLayoutFactory.createClass(
-                                                  '<div class="bb"><span class="bb-num-car-white"><img src="yan/img/auto_icon/point_blue_' + el.type + '.svg" alt="auto"></span></div>'
-                                              );
-                                              c.originalEvent.target.options.set('iconContentLayout', carsLayout);
                                               if (window.currentElement.hasOwnProperty('car')) {
                                                   let carOldLayout = ymaps.templateLayoutFactory.createClass(
                                                       '<div class="bb"><span class="bb-num-car"><img src="yan/img/auto_icon/point_' + window.currentElement.car.type + '.svg" alt="auto"></span></div>'
                                                   );
                                                   window.currentElement.car.options.set('iconContentLayout', carOldLayout);
                                               }
+                                              carsLayout = ymaps.templateLayoutFactory.createClass(
+                                                  '<div class="bb"><span class="bb-num-car-white"><img src="yan/img/auto_icon/point_blue_' + el.type + '.svg" alt="auto"></span></div>'
+                                              );
+                                              c.originalEvent.target.options.set('iconContentLayout', carsLayout);
                                               window.currentElement.car = c.originalEvent.target;
                                               myMap.setCenter(window.currentElement.car.geometry._coordinates, 19);
                                               $('#info-company').addClass('hide');
@@ -844,7 +850,6 @@
                                           c_array.push(c_pm);
                                           clustererCars.add(c_array);
                                           myMap.geoObjects.add(clustererCars);
-                                          console.log(data.bounds);
                                           if (data.cars.length === 1) {
                                               s.originalEvent.target.center = c_pm.geometry._coordinates;
                                               myMap.setCenter(s.originalEvent.target.center, 6);
@@ -867,8 +872,9 @@
                     } ?>
                         if(s_array.length) {
                             clustererSpots.removeAll();
-                            clustererSpots.add(s_array);
-                            myMap.geoObjects.add(clustererSpots);
+                            clustererSpots.add(s_array, myMap);
+                            //myMap.geoObjects.add(clustererSpots);
+                            addArrayOnMap(s_array, myMap);
                             if(s_array.length === 1) {
                                 a.originalEvent.target.center = s_array[0].geometry._coordinates;
                                 myMap.setCenter(a.originalEvent.target.center, 12);
@@ -893,8 +899,8 @@
 
                     clustererAutocolumns.removeAll();
                     clustererAutocolumns.add(a_array);
-                    myMap.geoObjects.add(clustererAutocolumns);
-                    console.log();
+                    //myMap.geoObjects.add(clustererAutocolumns);
+                    addArrayOnMap(a_array, myMap);
                     <?php if(!empty($autocolumns[$organizationPrettyId]['bounds'])) { ?>
                         if(a_array.length === 1) {
                             o.originalEvent.target.center = a_array[0].geometry._coordinates;
@@ -1012,7 +1018,8 @@
                     myMap.geoObjects.remove(clustererCars);
                     clustererCars.removeAll();
                 }
-                myMap.geoObjects.add(clustererSpots);
+                //myMap.geoObjects.add(clustererSpots);
+                addArrayOnMap(s_array, myMap);
                 $('.bbb > span').html(window.currentElement.organization.breadcrumps + ' <span class="arrow-r" style="color: green"> > </span> ' + window.currentElement.autocolumn.breadcrumps);
                 $('#info-company').addClass('hide');
                 $('#ts-info').addClass('hide');
@@ -1113,7 +1120,8 @@
             }
             if(window.currentElement.hasOwnProperty('autocolumn')) {
                 if(s_array) {
-                    myMap.geoObjects.remove(clustererSpots);
+                    //myMap.geoObjects.remove(clustererSpots);
+                    removeArrayFromMap(s_array, myMap);
                     s_array = [];
                 }
 
@@ -1132,7 +1140,8 @@
                 }
                 console.log(window.currentElement);
                 if(a_array) {
-                    myMap.geoObjects.add(clustererAutocolumns);
+                   //myMap.geoObjects.add(clustererAutocolumns);
+                    addArrayOnMap(a_array, myMap);
                 }
 
                 $.ajax({
@@ -1219,7 +1228,8 @@
                 return true;
             }
             if(a_array) {
-                myMap.geoObjects.remove(clustererAutocolumns);
+                //myMap.geoObjects.remove(clustererAutocolumns);
+                removeArrayFromMap(a_array, myMap);
                 a_array = [];
             }
             if(o_array) {
