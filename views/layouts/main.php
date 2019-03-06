@@ -33,9 +33,9 @@ AppAsset::register($this);
 </div>
 
 <div class="bbb" style="left:20%; display: flex; justify-content: flex-start; min-height: 50px; position: absolute; z-index: 100; top: 0; width: 80%">
-    <div class="layout" style="width: 100%; height: 100%; position:absolute; background-color: black; opacity: 0.9"></div>
+    <div class="layout" style="width: 100%; height: 100%; position:absolute; opacity: 0.9"></div>
     <button class="btn btn-success back" style="z-index: 12321; width: 8vw;">&larr; Назад</button>
-    <span class=""  style="display: block; font-size: 2.5vh; font-weight: bold; color: white; z-index: 123123123;"></span>
+    <span class=""  style="display: block; font-size: 2.5vh; font-weight: bold; color: black; z-index: 123123123;"></span>
 </div>
 <div class="wrap">
     <?php
