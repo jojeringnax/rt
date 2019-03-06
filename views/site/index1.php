@@ -683,7 +683,7 @@
                                             // 'Спецтехника' => 3
                                         data.cars.forEach(function(el) {
                                             let carsLayout = ymaps.templateLayoutFactory.createClass(
-                                                '<div class="bb"><span class="bb-num-car"><img src="yan/img/auto_icon/point_' + el.type + '.svg" alt="auto"></span></div>'
+                                                '<div class="bb"><span class="bb-num-car"><img src="yan/img/auto_icon/point_blue_' + el.type + '.svg" alt="auto"></span></div>'
                                             );
                                           c_pm = new ymaps.Placemark([el.x_pos, el.y_pos], {
                                               hintContent: el.description,
@@ -706,12 +706,12 @@
                                               $('.loading-layout').css({'display':'flex'});
                                               if (window.currentElement.hasOwnProperty('car')) {
                                                   let carOldLayout = ymaps.templateLayoutFactory.createClass(
-                                                      '<div class="bb"><span class="bb-num-car"><img src="yan/img/auto_icon/point_' + window.currentElement.car.type + '.svg" alt="auto"></span></div>'
+                                                      '<div class="bb"><span class="bb-num-car"><img src="yan/img/auto_icon/point_blue_' + window.currentElement.car.type + '.svg" alt="auto"></span></div>'
                                                   );
                                                   window.currentElement.car.options.set('iconContentLayout', carOldLayout);
                                               }
                                               carsLayout = ymaps.templateLayoutFactory.createClass(
-                                                  '<div class="bb"><span class="bb-num-car-white"><img src="yan/img/auto_icon/point_blue_' + el.type + '.svg" alt="auto"></span></div>'
+                                                  '<div class="bb"><span class="bb-num-car-white"><img src="yan/img/auto_icon/point_' + el.type + '.svg" alt="auto"></span></div>'
                                               );
                                               c.originalEvent.target.options.set('iconContentLayout', carsLayout);
                                               window.currentElement.car = c.originalEvent.target;
@@ -719,7 +719,7 @@
                                               $('#info-company').addClass('hide');
                                               $('#info-department').addClass('hide');
                                               $('#ts-info').removeClass('hide');
-                                              $('.bbb > span').html(window.currentElement.organization.breadcrumps + ' <span class="arrow-r" style="color: green"> > </span> ' + window.currentElement.autocolumn.breadcrumps + ' <span class="arrow-r" style="color: green"> > </span> ' + window.currentElement.spot.breadcrumps + ' <span class="arrow-r" style="color: green"> > </span> ' + window.currentElement.car.breadcrumps);
+                                              $('.bbb > span').html(window.currentElement.car.breadcrumps);
 
                                               console.log(window.currentElement);
 
@@ -881,7 +881,8 @@
                                     }
                                 });
                                 window.currentElement.spot = s.originalEvent.target;
-                                $('.bbb > span').html(window.currentElement.organization.breadcrumps + ' <span class="arrow-r" style="color: green"> > </span> ' + window.currentElement.autocolumn.breadcrumps + ' <span class="arrow-r" style="color: green"> > </span> ' + window.currentElement.spot.breadcrumps);
+                                $('.bbb > span').html(window.currentElement.spot.breadcrumps);
+                                console.log(window.currentElement);
                                 console.log(window.currentElement);
                             }); //spots click
                 <?php   }
@@ -904,7 +905,7 @@
                         delete window.currentElement.spot;
             <?php } // if (array_key_exists($autocolumnPrettyId, $spots)) ?>
                     window.currentElement.autocolumn = a.originalEvent.target;
-                    $('.bbb > span').html(window.currentElement.organization.breadcrumps + '<span class="arrow-r" style="color: green"> > </span> ' + window.currentElement.autocolumn.breadcrumps);
+                    $('.bbb > span').html(window.currentElement.autocolumn.breadcrumps);
                     console.log(window.currentElement);
                 }); //Autocolumn click
 
@@ -947,7 +948,7 @@
                     myMap.geoObjects.remove(clustererCars);
                     clustererCars.removeAll();
                 }
-                $('.bbb > span').html(window.currentElement.organization.breadcrumps + '<span class="arrow-r" style="color: green"> > </span>' + window.currentElement.autocolumn.breadcrumps + ' <span class="arrow-r" style="color: green"> > </span> ' + window.currentElement.spot.breadcrumps);
+                $('.bbb > span').html(window.currentElement.spot.breadcrumps);
                 $('#info-company').addClass('hide');
                 $('#ts-info').addClass('hide');
                 $('#info-department').removeClass('hide');
@@ -1031,7 +1032,7 @@
                 }
                 //myMap.geoObjects.add(clustererSpots);
                 addArrayOnMap(s_array, myMap);
-                $('.bbb > span').html(window.currentElement.organization.breadcrumps + ' <span class="arrow-r" style="color: green"> > </span> ' + window.currentElement.autocolumn.breadcrumps);
+                $('.bbb > span').html(window.currentElement.autocolumn.breadcrumps);
                 $('#info-company').addClass('hide');
                 $('#ts-info').addClass('hide');
                 $('#info-department').removeClass('hide');

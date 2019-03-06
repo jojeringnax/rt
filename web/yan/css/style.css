@@ -170,11 +170,11 @@ p {
   .bb-cluster-car .bb-num {
     width: 100px;
     height: 100px;
-    color: white;
+    color: #004781;
     display: flex;
     align-items: center;
     justify-content: center;
-    background-image: url("../img/elipse.svg");
+    background-image: url("../img/elipse_white.svg");
     background-size: 100%;
     background-position: center;
     z-index: 10;
@@ -187,7 +187,7 @@ p {
   display: flex;
   align-items: center;
   justify-content: center;
-  background-image: url("../img/elipse_white.svg");
+  background-image: url("../img/elipse.svg");
   background-size: 100%;
   background-position: center;
   z-index: 10;
@@ -202,7 +202,7 @@ p {
   display: flex;
   align-items: center;
   justify-content: center;
-  background-image: url("../img/elipse.svg");
+  background-image: url("../img/elipse_white.svg");
   background-size: 100%;
   background-position: center;
   z-index: 10;
