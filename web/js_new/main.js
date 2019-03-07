@@ -180,3 +180,67 @@
 // // console.log('hey',$('.'+key));
 //
 // })
+let obj = {
+    comments : [
+        {
+            id: '',
+            name: '',
+            date: '',
+            time: '',
+            text: '',
+            photo: '',
+            comments: [
+                {
+                    id: '',
+                    name: '',
+                    date: '',
+                    time: '',
+                    text: '',
+                    photo: '',
+                    comments: []
+                },
+
+            ]
+        },
+        {
+            id: '',
+            name: '',
+            date: '',
+            time: '',
+            text: '',
+            photo: '',
+            comments: [
+                {
+                    id: '',
+                    name: '',
+                    date: '',
+                    time: '',
+                    text: '',
+                    photo: '',
+                    comments: []
+                },
+
+            ]
+        },
+        {
+            id: '',
+            name: '',
+            date: '',
+            time: '',
+            text: '',
+            photo: '',
+            comments: [
+                {
+                    id: '',
+                    name: '',
+                    date: '',
+                    time: '',
+                    text: '',
+                    photo: '',
+                    comments: []
+                },
+
+            ]
+        }
+    ]
+};
