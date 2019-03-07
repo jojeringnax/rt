@@ -766,6 +766,7 @@
                                                   url: "index.php?r=site/get-car-data&car_id=" + el.id,
                                                   type: 'get',
                                                   success: function(res) {
+                                                      navigation();
                                                       console.log('---keys', Object.keys(res).length);
                                                       let obj = new Object();
                                                       obj = JSON.parse(res);
@@ -1295,5 +1296,104 @@
                 });
             }
         });
+        myMap.geoObjects.events.add('boundschange', function() {
+            navigation();
+        });
+
+        let navigation = function() {
+            $('div#firm.nav-sidebar').children().each(function() {
+                let navItem = $(this);
+                navItem.click( function() {
+                    let bread = $('.nav-sidebar');
+
+                    switch ($(this).attr('id')) {
+                        case 'organization':
+                            if(window.currentElement.hasOwnProperty('autocolumn')) {
+                                delete window.currentElement.autocolumn;
+                                removeArrayFromMap(s_array, myMap);
+                                s_array = [];
+                            }
+                            if(window.currentElement.hasOwnProperty('spot')) {
+                                delete window.currentElement.spot;
+                                myMap.geoObjects.remove(clustererCars);
+                                clustererCars.removeAll();
+                                c_array = [];
+                            }
+                            if(window.currentElement.hasOwnProperty('car')) {
+                                delete window.currentElement.car;
+                            }
+                            addArrayOnMap(a_array, myMap);
+                            break;
+
+                        case 'autocolumn':
+                            if(window.currentElement.hasOwnProperty('spot')) {
+                                delete window.currentElement.spot;
+                                myMap.geoObjects.remove(clustererCars);
+                                clustererCars.removeAll();
+                                c_array = [];
+                            }
+                            if(window.currentElement.hasOwnProperty('car')) {
+                                delete window.currentElement.car;
+                            }
+                            addArrayOnMap(s_array, myMap);
+                            break;
+
+                        case 'spot':
+                            if(window.currentElement.hasOwnProperty('car')) {
+                                delete window.currentElement.car;
+                            }
+                            break;
+
+                        case 'firm':
+                            if(window.currentElement.hasOwnProperty('organization')) {
+                                delete window.currentElement.organization;
+                                removeArrayFromMap(a_array, myMap);
+                                a_array = [];
+                            }
+                            if(window.currentElement.hasOwnProperty('autocolumn')) {
+                                delete window.currentElement.autocolumn;
+                                removeArrayFromMap(s_array, myMap);
+                                s_array = [];
+                            }
+                            if(window.currentElement.hasOwnProperty('spot')) {
+                                delete window.currentElement.spot;
+                                myMap.geoObjects.remove(clustererCars);
+                                clustererCars.removeAll();
+                                c_array = [];
+                            }
+                            if(window.currentElement.hasOwnProperty('car')) {
+                                delete window.currentElement.car;
+                            }
+                            addArrayOnMap(o_array, myMap);
+                            break;
+                    }
+                    if ($(this).attr('id') !== 'firm') {
+                        $('.bbb > span').html(window.currentElement[$(this).attr('id')].breadcrumps);
+                        console.log(window.currentElement);
+                        bread.html('<a id="firm">Компания </a>');
+                        for(let key in window.currentElement) {
+                            bread.append(' >>> ');
+                            bread.append('<a id=' + key + '>' + window.currentElement[key].breadcrumps + '</a>');
+                        }
+                        if (window.currentElement[$(this).attr('id')].hasOwnProperty('center') || (window.currentElement[$(this).attr('id')].hasOwnProperty('bounds') &&
+                            (window.currentElement[$(this).attr('id')].bounds[0][0] === window.currentElement[$(this).attr('id')].bounds[1][0] && window.currentElement[$(this).attr('id')].bounds[0][1] === window.currentElement[$(this).attr('id')].bounds[1][1]))) {
+                            if (window.currentElement[$(this).attr('id')].hasOwnProperty('center')) {
+                                myMap.setCenter(window.currentElement[$(this).attr('id')].center, 6)
+                            } else {
+                                myMap.setCenter(window.currentElement[$(this).attr('id')].bounds[0], 6)
+                            }
+
+                        } else {
+                            myMap.setBounds(window.currentElement[$(this).attr('id')].bounds, {checkZoomRange: false});
+                        }
+                    } else {
+                        myMap.setBounds(<?= \app\models\Organization::getMaxAndMinCoordinatesForAPI() ?>, {checkZoomRange: true});
+                        $('.bbb > span').html('ООО Ресурс Транс');
+                        bread.html('Компания');
+                    }
+
+                });
+            });
+        }
     });
 </script>
