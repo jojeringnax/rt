@@ -302,7 +302,7 @@
             $organizationPrettyId = $organization->getIdWithoutNumbers();
             ?>
         var OrgLayout = ymaps.templateLayoutFactory.createClass(
-            '<div class="bb"><span class="bb-num"><?= $autocolumns[$organizationPrettyId]["cars"] ?></span> <span class="bb-name"><?= $organization->getTown()?></span></div>'
+            '<div class="bb"><span class="bb-num"><?= $autocolumns[$organizationPrettyId]["cars"] ?></span><span class="bb-name"><?= $organization->getTown()?></span></div>'
         );
             o_pm = new ymaps.Placemark([<?= $organization->x_pos ?>, <?= $organization->y_pos ?>], {
                 iconCaption : '<?= $organization->getTown() ?>',
@@ -720,6 +720,7 @@
                                               $('#info-department').addClass('hide');
                                               $('#ts-info').removeClass('hide');
                                               $('.bbb > span').html(window.currentElement.car.breadcrumps);
+                                              $('.nav-sidebar').html('<a id="firm">Компания </a> >> ' + '<a id="organization">' + window.currentElement.organization.breadcrumps+ '</a>' + ' >> ' + '<a id="autocolumn">' +window.currentElement.autocolumn.breadcrumps + '</a>'  + ' >> ' + '<a id="spot">' +window.currentElement.spot.breadcrumps + '</a>' +  ' >> ' + '<a id="car">' + window.currentElement.car.breadcrumps + '</a>');
 
                                               console.log(window.currentElement);
 
@@ -743,7 +744,7 @@
                                               //year: 2011
                                               //add cars information
 
-                                              console.log('--- el', el)
+                                              console.log('--- el', el);
                                               let url_img = "yan/img/auto_icon/point_blue_" + el.type + ".svg";
 
                                               document.getElementById('img-ts').setAttribute('src', url_img);
@@ -882,6 +883,7 @@
                                 });
                                 window.currentElement.spot = s.originalEvent.target;
                                 $('.bbb > span').html(window.currentElement.spot.breadcrumps);
+                                $('.nav-sidebar').html('<a id="firm">Компания </a> >> ' + '<a id="organization">' + window.currentElement.organization.breadcrumps + '</a>' + ' >> ' + '<a id="autocolumn">' + window.currentElement.autocolumn.breadcrumps + '</a>'  + ' >> ' + '<a id="spot">' +window.currentElement.spot.breadcrumps + '</a>');
                                 console.log(window.currentElement);
                                 console.log(window.currentElement);
                             }); //spots click
@@ -906,6 +908,7 @@
             <?php } // if (array_key_exists($autocolumnPrettyId, $spots)) ?>
                     window.currentElement.autocolumn = a.originalEvent.target;
                     $('.bbb > span').html(window.currentElement.autocolumn.breadcrumps);
+                    $('.nav-sidebar').html(' <a id="firm">Компания </a> >> ' + '<a id="organization">'+ window.currentElement.organization.breadcrumps+ '</a>' + ' >> ' + '<a id="autocolumn">' + window.currentElement.autocolumn.breadcrumps);
                     console.log(window.currentElement);
                 }); //Autocolumn click
 
@@ -933,6 +936,7 @@
                 delete window.currentElement.autocolumn;
                 window.currentElement.organization = o.originalEvent.target;
                 $('.bbb > span').html(window.currentElement.organization.breadcrumps);
+                $('.nav-sidebar').html('<a id="firm"> Компания </a> >> ' + '<a id="organization">' + window.currentElement.organization.breadcrumps + '</a>');
                 console.log(window.currentElement);
             }); // Organization click
         <?php } ?>
@@ -949,6 +953,7 @@
                     clustererCars.removeAll();
                 }
                 $('.bbb > span').html(window.currentElement.spot.breadcrumps);
+                $('.nav-sidebar').html('<a id="firm">Компания </a> >> ' + '<a id="organization">'+ window.currentElement.organization.breadcrumps + '</a>' + ' >> ' + '<a id="autocolumn">' +window.currentElement.autocolumn.breadcrumps + '</a>'  + ' >> ' + '<a id="spot">' +window.currentElement.spot.breadcrumps + '</a>');
                 $('#info-company').addClass('hide');
                 $('#ts-info').addClass('hide');
                 $('#info-department').removeClass('hide');
@@ -1033,6 +1038,7 @@
                 //myMap.geoObjects.add(clustererSpots);
                 addArrayOnMap(s_array, myMap);
                 $('.bbb > span').html(window.currentElement.autocolumn.breadcrumps);
+                $('.nav-sidebar').html('<a id="firm">Компания </a> >> ' + '<a id="organization">' + window.currentElement.organization.breadcrumps + '</a>' + ' >> ' + '<a id="autocolumn">' +window.currentElement.autocolumn.breadcrumps + '</a>');
                 $('#info-company').addClass('hide');
                 $('#ts-info').addClass('hide');
                 $('#info-department').removeClass('hide');
@@ -1138,6 +1144,7 @@
                 }
 
                 $('.bbb > span').html(window.currentElement.organization.breadcrumps);
+                $('.nav-sidebar').html('<a id="firm"> Компания </a> >> ' + '<a id="organization">' + window.currentElement.organization.breadcrumps + '</a>');
                 $('#info-company').addClass('hide');
                 $('#ts-info').addClass('hide');
                 $('#info-department').removeClass('hide');
