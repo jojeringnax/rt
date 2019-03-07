@@ -1308,6 +1308,89 @@
 
                     switch ($(this).attr('id')) {
                         case 'organization':
+
+                            $.ajax({
+                                url: "index.php?r=site/get-organization-statistic&organization_id=" + idOfCurrentElement['organizations'],
+                                type: 'get',
+                                success: function(res) {
+                                    let terminals = JSON.parse(res)['terminals'];
+                                    let data = JSON.parse(res)['statistic'];
+
+                                    //example of data = {
+                                    //{"id":null,
+                                    // "spot_id":null,
+                                    // "autocolumn_id":null,
+                                    // "applications_total":289,
+                                    // "applications_executed":260,
+                                    // "applications_canceled":11,
+                                    // "applications_sub":3,
+                                    // "applications_ac":0,
+                                    // "applications_mp":0,
+                                    // "waybills_total":3769,
+                                    // "waybills_processed":3438,
+                                    // "accidents_total":0,
+                                    // "accidents_guilty":0,
+                                    // "time":91025.12,
+                                    // "fuel":25134.369999999995,
+                                    // "WB_M":1988,"WB_ALL":2013}
+
+                                    //executed_app
+                                    applicationAdd('applications_executed',data['applications_executed']);
+
+                                    //canceled_app
+                                    applicationAdd('applications_canceled',data['applications_canceled']);
+
+                                    //sub_app
+                                    applicationAdd('applications_sub',data['applications_sub']);
+
+                                    //ac_app
+                                    circleBar('applications_ac', (data['applications_ac']/data['applications_total']).toFixed(2));
+
+                                    //waybills = waybills_processed / waybills_total
+                                    circleBar('waybills_total', (data['waybills_processed']/data['waybills_total']).toFixed(2));
+
+                                    //accidents = accidents_guilty / accidents_total
+                                    circleBar('accidents_total', (data['accidents_guilty']/data['accidents_total']).toFixed(2));
+
+                                    //GetWBMonitoring =  CountM/CountAll
+                                    circleBar('WB_M', (Math.round(data['WB_M'])/data['WB_ALL']).toFixed(2));
+
+                                    // TMCH = fuel/time
+                                    applicationAdd('fuel', (Math.round(data['fuel'])/data['time']).toFixed(2));
+
+                                    //terminals =
+                                    applicationAdd('terminals', terminals);
+                                }
+                            }); //end ajax request
+
+                            //totalCars: <?//= $spot->carsNumber ?>//,
+                            //oinLine:  <?//= $spot->carsStatuses["inline"] ?>//,
+                            //onRep: <?//= $spot->carsStatuses["R"] ?>//,
+                            //onTO: <?//= $spot->carsStatuses["TO"] ?>//,
+                            //light: <?//= $spot->carsTypes[\app\models\Car::LIGHT] ?>//,
+                            //truck: <?//= $spot->carsTypes[\app\models\Car::TRUCK] ?>//,
+                            //bus: <?//= $spot->carsTypes[\app\models\Car::BUS] ?>//,
+                            //spec: <?//= $spot->carsTypes[\app\models\Car::SPEC] ?>//,
+                            //applications_executed: data['applications_executed'],
+                            //applications_canceled: data['applications_canceled'],
+                            //applications_sub: data['applications_sub'],
+                            //applications_ac: applications_ac,
+                            //waybills_total: waybills_total,
+                            //accidents_total: accidents_total,
+                            //WB_M: WB_M
+
+                            changeInfo(
+                                dataLevel['organization']['totalCars'],
+                                dataLevel['organization']['onLine'],
+                                dataLevel['organization']['onRep'],
+                                dataLevel['organization']['onTO'],
+                                dataLevel['organization']['light'],
+                                dataLevel['organization']['truck'],
+                                dataLevel['organization']['bus'],
+                                dataLevel['organization']['spec'],
+                            );
+
+
                             if(window.currentElement.hasOwnProperty('autocolumn')) {
                                 delete window.currentElement.autocolumn;
                                 removeArrayFromMap(s_array, myMap);
@@ -1326,7 +1409,76 @@
                             break;
 
                         case 'autocolumn':
+
+                            $.ajax({
+                                url: "index.php?r=site/get-autocolumn-statistic&autocolumn_id=" + idOfCurrentElement['autocolumn'],
+                                type: 'get',
+                                success: function(res) {
+                                    let terminals = JSON.parse(res)['terminals'];
+                                    let data = JSON.parse(res)['statistic'];
+
+                                    //example of data = {
+                                    // "id":null,
+                                    // "spot_id":null,
+                                    // "autocolumn_id":"68280a1c-2acf-11e5-b13d-00155dc6002b",
+                                    // "applications_total":76,
+                                    // "applications_executed":67,
+                                    // "applications_canceled":3,
+                                    // "applications_sub":0,
+                                    // "applications_ac":0,
+                                    // "applications_mp":0,
+                                    // "waybills_total":433,
+                                    // "waybills_processed":427,
+                                    // "accidents_total":0,
+                                    // "accidents_guilty":0,
+                                    // "time":9681,
+                                    // "fuel":2340.9700000000003
+                                    // }
+
+                                    //executed_app
+                                    applicationAdd('applications_executed',data['applications_executed']);
+
+                                    //canceled_app
+                                    applicationAdd('applications_canceled',data['applications_canceled']);
+
+                                    //sub_app
+                                    applicationAdd('applications_sub',data['applications_sub']);
+
+                                    //ac_app
+                                    circleBar('applications_ac', (data['applications_ac']/data['applications_total']).toFixed(2));
+
+                                    //waybills = waybills_processed / waybills_total
+                                    circleBar('waybills_total', (data['waybills_processed']/data['waybills_total']).toFixed(2));
+
+                                    //accidents = accidents_guilty / accidents_total
+                                    circleBar('accidents_total', (data['accidents_guilty']/data['accidents_total']).toFixed(2));
+
+                                    //GetWBMonitoring =  CountM/CountAll
+                                    circleBar('WB_M', (Math.round(data['WB_M'])/data['WB_ALL']).toFixed(2));
+
+                                    // TMCH = fuel/time
+                                    applicationAdd('fuel', (Math.round(data['fuel'])/data['time']).toFixed(2));
+
+                                    //terminals =
+                                    applicationAdd('terminals', terminals);
+                                }
+                            }); //end ajax request
+
+                            changeInfo(
+                                dataLevel['autocolumn']['totalCars'],
+                                dataLevel['autocolumn']['onLine'],
+                                dataLevel['autocolumn']['onRep'],
+                                dataLevel['autocolumn']['onTO'],
+                                dataLevel['autocolumn']['light'],
+                                dataLevel['autocolumn']['truck'],
+                                dataLevel['autocolumn']['bus'],
+                                dataLevel['autocolumn']['spec'],
+                            );
+
+
+                            console.log('--- auto');
                             if(window.currentElement.hasOwnProperty('spot')) {
+
                                 delete window.currentElement.spot;
                                 myMap.geoObjects.remove(clustererCars);
                                 clustererCars.removeAll();
@@ -1339,12 +1491,124 @@
                             break;
 
                         case 'spot':
+
+                            //AJAX -> SPOT
+                            $.ajax({
+                                url: "index.php?r=site/get-spot-statistic&spot_id=" + idOfCurrentElement['spot'],
+                                type: 'get',
+                                success: function(res) {
+                                    let terminals = JSON.parse(res)['terminals'];
+                                    let data = JSON.parse(res)['statistic'];
+
+                                    //executed_app
+                                    applicationAdd('applications_executed',data['applications_executed']);
+
+                                    //canceled_app
+                                    applicationAdd('applications_canceled',data['applications_canceled']);
+
+                                    //sub_app
+                                    applicationAdd('applications_sub',data['applications_sub']);
+
+                                    //ac_app
+                                    circleBar('applications_ac', (data['applications_ac']/data['applications_total']).toFixed(2));
+
+                                    //waybills = waybills_processed / waybills_total
+                                    circleBar('waybills_total', (data['waybills_processed']/data['waybills_total']).toFixed(2));
+
+                                    //accidents = accidents_guilty / accidents_total
+                                    circleBar('accidents_total', (data['accidents_guilty']/data['accidents_total']).toFixed(2));
+
+                                    //GetWBMonitoring =  CountM/CountAll
+                                    circleBar('WB_M', (Math.round(data['WB_M'])/data['WB_ALL']).toFixed(2));
+
+                                    // TMCH = fuel/time
+                                    applicationAdd('fuel', (Math.round(data['fuel'])/data['time']).toFixed(2));
+
+                                    //terminals =
+                                    applicationAdd('terminals', terminals);
+
+                                    //totalCars: <?//= $spot->carsNumber ?>//,
+                                    //oinLine:  <?//= $spot->carsStatuses["inline"] ?>//,
+                                    //onRep: <?//= $spot->carsStatuses["R"] ?>//,
+                                    //onTO: <?//= $spot->carsStatuses["TO"] ?>//,
+                                    //light: <?//= $spot->carsTypes[\app\models\Car::LIGHT] ?>//,
+                                    //truck: <?//= $spot->carsTypes[\app\models\Car::TRUCK] ?>//,
+                                    //bus: <?//= $spot->carsTypes[\app\models\Car::BUS] ?>//,
+                                    //spec: <?//= $spot->carsTypes[\app\models\Car::SPEC] ?>//,
+                                    //applications_executed: data['applications_executed'],
+                                    //applications_canceled: data['applications_canceled'],
+                                    //applications_sub: data['applications_sub'],
+                                    //applications_ac: applications_ac,
+                                    //waybills_total: waybills_total,
+                                    //accidents_total: accidents_total,
+                                    //WB_M: WB_M
+
+                                    changeInfo(
+                                        dataLevel['spot']['totalCars'],
+                                        dataLevel['spot']['onLine'],
+                                        dataLevel['spot']['onRep'],
+                                        dataLevel['spot']['onTO'],
+                                        dataLevel['spot']['light'],
+                                        dataLevel['spot']['truck'],
+                                        dataLevel['spot']['bus'],
+                                        dataLevel['spot']['spec'],
+                                    );
+                                }
+                            }); //end ajax request
+
+
                             if(window.currentElement.hasOwnProperty('car')) {
                                 delete window.currentElement.car;
                             }
                             break;
 
                         case 'firm':
+                            //add data -> COMPANY
+                            $('#info-company').removeClass('hide');
+                            $('#ts-info').addClass('hide');
+                            $('#info-department').addClass('hide');
+                            //compAmOfTs
+                            applicationAdd('compAmOfTs', totalCarsData['G']);
+
+                            //compOnLine
+                            applicationAdd('compOnLine', totalCarsData['totalInline']);
+
+                            //compOnRep
+                            applicationAdd('compOnRep', totalCarsData['R']);
+
+                            //compOnTo
+                            applicationAdd('compOnTo', totalCarsData['TO']);
+
+                            //comp_applications_executed
+                            applicationAdd('comp_applications_executed',firmsData['applications_executed']);
+
+                            //canceled_app
+                            applicationAdd('comp_applications_canceled',firmsData['applications_canceled']);
+
+                            //sub_app
+                            applicationAdd('comp_applications_sub',firmsData['applications_sub']);
+
+                            //ac_app
+                            circleBar('comp_applications_ac', (firmsData['applications_ac']/firmsData['applications_total']).toFixed(2));
+
+                            //waybills = waybills_processed / waybills_total
+                            circleBar('comp_waybills_total', (firmsData['waybills_processed']/firmsData['waybills_total']).toFixed(2));
+
+                            //accidents = accidents_guilty / accidents_total
+                            circleBar('comp_accidents_total', (firmsData['accidents_guilty']/firmsData['accidents_total']).toFixed(2));
+
+                            //GetWBMonitoring =  CountM/CountAll
+                            circleBar('comp_WB_M', (Math.round(firmsData['WB_M'])/firmsData['WB_ALL']).toFixed(2));
+
+                            // TMCH = fuel/time
+                            applicationAdd('comp_fuel', (Math.round(firmsData['fuel'])/firmsData['time']).toFixed(2));
+
+                            //terminals =
+                            applicationAdd('comp_terminals', totalTerminals);
+
+                            //end add data -> COMPANY
+
+                            
                             if(window.currentElement.hasOwnProperty('organization')) {
                                 delete window.currentElement.organization;
                                 removeArrayFromMap(a_array, myMap);

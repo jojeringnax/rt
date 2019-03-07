@@ -372,6 +372,7 @@ p {
     padding:  0 25px 0 45px;
     box-shadow: 0 3px 10px rgba(4, 67, 154, 0.12);
     text-align: left;
+    box-sizing: content-box;
   }
 }
 
