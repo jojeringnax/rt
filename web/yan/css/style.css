@@ -1,5 +1,5 @@
 * {
-  font-size: 1.5vh;
+  font-size: 1.35vh;
   margin: 0;
   padding: 0;
   font-family: 'Open Sans'; }
@@ -27,6 +27,14 @@ body {
 
 .sidebarr {
   position: absolute; }
+
+.nav-sidebar {
+  margin-top: 1.5vh;
+  font-size: 1.4vh;
+  color: #808080; }
+  .nav-sidebar a {
+    cursor: pointer;
+    color: #808080; }
 
 .hide {
   display: none; }
@@ -322,7 +330,7 @@ p {
 .title-ts {
   display: flex;
   flex-direction: row;
-  margin-top: 3.5vh; }
+  margin-top: 1.5vh; }
   .title-ts .title-ts-text {
     font-size: 14px; }
 

@@ -8,6 +8,9 @@
                 </div>
             </div>
             <div id="company-info">
+                <div class="nav-sidebar-comp" id="firm">
+                    Компания
+                </div>
                 <div class="ts-title">
                     <span class="img"><img src="yan/img/delivery-truck.svg" alt="#" class="span-yan/img-h3"></span>
                     <span id="tranport-means" class="ts-text h3-main">Транспортные средства</span>
@@ -116,6 +119,9 @@
                     </div>
                 </div>
                 <div class="">
+                    <div class="nav-sidebar" id="firm">
+                        Компания
+                    </div>
                     <div class="ts-title">
                         <span class="img"><img src="yan/img/delivery-truck.svg" alt="#" class="span-yan/img-h3"></span>
                         <span id="tranport-means" class="ts-text h3-main">Транспортные средства</span>
@@ -254,6 +260,9 @@
                 <div class="img-logo">
                     <img src="yan/img/logo.svg" alt="">
                 </div>
+            </div>
+            <div class="nav-sidebar" id="ts">
+                Компания
             </div>
             <div class="title-ts d-flex justify-content-start">
                 <img id="img-ts" src="" alt="">
