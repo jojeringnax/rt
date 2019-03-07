@@ -1262,6 +1262,7 @@
             $('#ts-info').addClass('hide');
             $('#info-department').addClass('hide');
             $('.bbb > span').html('ООО РесурсТранс');
+            $('.nav-sidebar').html('<a id="firm">Компания </a>');
         });
         let types = {
             light: 0,
