@@ -278,8 +278,8 @@
             {
                 clusterIcons: [{
                     href: '',
-                    size: [100, 100],
-                    offset: [-50, -50]
+                    size: [62, 62],
+                    offset: [-26, -26]
                 }],
                 gridSize: 128,
                 clusterIconContentLayout: CarClusterLayout,
@@ -310,7 +310,7 @@
             }, {
                 iconLayout: 'default#imageWithContent',
                 iconImageHref: '',
-                iconImageSize: [102, 107.5],
+                iconImageSize: [62, 67.5],
                 iconContentOffset: [-74, 83],
                 iconImageOffset: [-24, -24],
                 preset: 'islands#greenDotIconWithCaption',
@@ -571,7 +571,7 @@
                             }, {
                                 iconLayout: 'default#imageWithContent',
                                 iconImageHref: '',
-                                iconImageSize: [115, 115],
+                                iconImageSize: [62, 62],
                                 iconContentOffset: [-68, 75],
                                 iconImageOffset: [-24, -24],
                                 preset: 'islands#greenDotIconWithCaption',
@@ -695,7 +695,7 @@
                                               hasBalloon: false,
                                               iconLayout: 'default#imageWithContent',
                                               iconImageHref: '',
-                                              iconImageSize: [110, 115.5],
+                                              iconImageSize: [62, 62],
                                               iconContentOffset: [-70, 75],
                                               iconImageOffset: [-24, -24],
                                               iconContentLayout: carsLayout
