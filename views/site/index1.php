@@ -306,7 +306,7 @@
         );
             o_pm = new ymaps.Placemark([<?= $organization->x_pos ?>, <?= $organization->y_pos ?>], {
                 iconCaption : '<?= $organization->getTown() ?>',
-                hintContent: '<?= $organization->getTown() ?>'
+                //hintContent: '<?= $organization->getTown() ?>'
             }, {
                 iconLayout: 'default#imageWithContent',
                 iconImageHref: '',
@@ -438,11 +438,11 @@
 
 
                 a_pm = new ymaps.Placemark([<?= $autocolumn->x_pos ?>, <?= $autocolumn->y_pos ?>], {
-                    hintContent: '<?= $autocolumn->description ?>'
+
                 }, {
                     iconLayout: 'default#imageWithContent',
                     iconImageHref: '',
-                    iconImageSize: [110, 115.5],
+                    iconImageSize: [62, 62.5],
                     iconContentOffset: [-70, 75],
                     iconImageOffset: [-24, -24],
                     preset: 'islands#greenDotIconWithCaption',
@@ -567,7 +567,7 @@
                             );
 
                             s_pm = new ymaps.Placemark([<?= $spot->x_pos ?>, <?= $spot->y_pos ?>],{
-                                hintContent: '<?= $spot->description ?>'
+
                             }, {
                                 iconLayout: 'default#imageWithContent',
                                 iconImageHref: '',
@@ -686,7 +686,6 @@
                                                 '<div class="bb"><span class="bb-num-car"><img src="yan/img/auto_icon/point_blue_' + el.type + '.svg" alt="auto"></span></div>'
                                             );
                                           c_pm = new ymaps.Placemark([el.x_pos, el.y_pos], {
-                                              hintContent: el.description,
                                               balloonContent: el.description,
                                               balloonContentHeader: el.model,
                                               balloonContentBody: el.number,
