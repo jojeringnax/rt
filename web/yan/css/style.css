@@ -173,11 +173,11 @@ p {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  height: 100px;
-  width: 100px; }
+  height: 60px;
+  width: 60px; }
   .bb-cluster-car .bb-num {
-    width: 100px;
-    height: 100px;
+    width: 60px;
+    height: 60px;
     color: #004781;
     display: flex;
     align-items: center;
@@ -189,8 +189,8 @@ p {
     font-size: 1vh; }
 
 .bb-num-car-white {
-  width: 100px;
-  height: 100px;
+  width: 60px;
+  height: 60px;
   color: white;
   display: flex;
   align-items: center;
@@ -204,8 +204,8 @@ p {
     width: 130%; }
 
 .bb-num-car {
-  width: 100px;
-  height: 100px;
+  width: 60px;
+  height: 60px;
   color: white;
   display: flex;
   align-items: center;
@@ -228,8 +228,8 @@ p {
   width: 100px;
   z-index: 0; }
   .bb-cluster .bb-num {
-    width: 100px;
-    height: 100px;
+    width: 60px;
+    height: 60px;
     color: white;
     display: flex;
     align-items: center;
@@ -252,8 +252,8 @@ p {
   z-index: 0;
   margin-left: 75px; }
   .bb .bb-num {
-    width: 100px;
-    height: 100px;
+    width: 60px;
+    height: 60px;
     color: white;
     display: flex;
     align-items: center;
@@ -266,12 +266,12 @@ p {
     font-size: 1vh; }
   .bb .bb-name {
     position: absolute;
-    margin-left: 75px;
+    margin-left: 25px;
     z-index: 1;
-    min-width: 250px;
-    height: 75px;
+    min-width: 80px;
+    height: 40px;
     background-color: white;
-    font-size: 1vh;
+    font-size: 0.8vh;
     display: flex;
     font-weight: bold;
     align-items: center;
