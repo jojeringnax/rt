@@ -765,7 +765,6 @@
                                                   url: "index.php?r=site/get-car-data&car_id=" + el.id,
                                                   type: 'get',
                                                   success: function(res) {
-                                                      navigation();
                                                       console.log('---keys', Object.keys(res).length);
                                                       let obj = new Object();
                                                       obj = JSON.parse(res);
@@ -830,6 +829,10 @@
                                                       }
 
                                                       $('.loading-layout').css({'display':'none'});
+                                                  },
+                                                  complete: function() {
+
+                                                      navigation();
                                                   },
                                                   error: function(err) {
                                                       $('.loading-layout').css({'display':'none'});
@@ -1295,7 +1298,7 @@
                 });
             }
         });
-        myMap.geoObjects.events.add('boundschange', function() {
+        $("body").on('DOMSubtreeModified', ".nav-sidebar#firm", function() {
             navigation();
         });
 
@@ -1654,7 +1657,6 @@
                         $('.bbb > span').html('ООО Ресурс Транс');
                         bread.html('Компания');
                     }
-
                 });
             });
         }
