@@ -964,6 +964,17 @@
         let button = $('.back');
         button.click( function () {
             if(window.currentElement.hasOwnProperty('car')) {
+                $('.div-transport > .transort-department').removeClass('active-transport');
+                $('.item-info.transort-department').each( function() {
+                    $(this).css({
+                        "background-color": "white",
+                        "color": "#004781"
+                    });
+                });
+
+                $('.img-transport').each(function(){
+                    $(this).attr('src', 'yan/img/auto_icon/point_blue_'+ $(this).data('type')+'.svg');
+                });
                 if(c_array.length) {
                     c_array = [];
                     myMap.geoObjects.remove(clustererCars);
