@@ -250,7 +250,8 @@ p {
   min-width: 200px;
   margin-top: -80px;
   z-index: 0;
-  margin-left: 75px; }
+  margin-left: 75px;
+  position: relative; }
   .bb .bb-num {
     width: 60px;
     height: 60px;
@@ -268,7 +269,7 @@ p {
     position: absolute;
     margin-left: 25px;
     z-index: 1;
-    min-width: 120px;
+    min-width: 50px;
     height: 40px;
     background-color: white;
     font-size: 1vh;
@@ -278,7 +279,8 @@ p {
     padding: 0 25px 0 45px;
     box-shadow: 0 3px 10px rgba(4, 67, 154, 0.12);
     text-align: left;
-    box-sizing: content-box; }
+    box-sizing: content-box;
+    flex-grow: 1; }
 
 .hr-trans {
   margin-top: 3px;
