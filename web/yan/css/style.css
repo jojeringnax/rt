@@ -1,5 +1,5 @@
 * {
-  font-size: 1.35vh;
+  font-size: 1.1vh;
   margin: 0;
   padding: 0;
   font-family: 'Open Sans'; }
@@ -74,7 +74,7 @@ p {
 /*===============company===============*/
 .ts-title {
   display: flex;
-  margin-top: 1.2vh;
+  margin-top: 1.5vh;
   margin-bottom: 1.2vh; }
   .ts-title span.img {
     display: flex;
@@ -93,7 +93,7 @@ p {
 
 .request-title {
   display: flex;
-  margin-top: 10px;
+  margin-top: 2.2vh;
   margin-bottom: 1.2vh; }
   .request-title span.img {
     display: flex;
@@ -107,11 +107,11 @@ p {
     margin-left: 15px; }
 
 .div-transport {
-  margin: 1.2vh 0 1.2vh 0; }
+  margin: 2.2vh 0 1.7vh 0; }
 
 .indicators-title {
   display: flex;
-  margin-top: 10px;
+  margin-top: 2.2vh;
   margin-bottom: 1.2vh; }
   .indicators-title span.img {
     display: flex;
@@ -130,8 +130,8 @@ p {
   justify-content: flex-start;
   align-items: center; }
   .item-bar .ilia {
-    width: 6.5vh;
-    height: 6.5vh; }
+    width: 5vh;
+    height: 5vh; }
   .item-bar .cirk {
     width: 6.5vh;
     margin-left: 0 !important;
@@ -264,7 +264,7 @@ p {
     background-repeat: no-repeat;
     background-position: center;
     z-index: 10;
-    font-size: 1vh; }
+    font-size: 0.8vh; }
   .bb .bb-name {
     position: absolute;
     margin-left: 25px;
@@ -272,7 +272,7 @@ p {
     min-width: 50px;
     height: 40px;
     background-color: white;
-    font-size: 1vh;
+    font-size: 0.56vh;
     display: flex;
     font-weight: bold;
     align-items: center;
@@ -292,8 +292,8 @@ p {
   .transport-title span img {
     height: 1.5vh; }
   .transport-title p {
-    font-size: 1.5vh;
-    margin-left: 7px;
+    font-size: 1vh;
+    margin-left: 1.5vh;
     color: #004781; }
 
 .transort-department {
@@ -311,7 +311,7 @@ p {
       color: white; }
 
 .indicators-title .text {
-  font-size: 1.5vh; }
+  font-size: 1.2vh; }
 
 .figures {
   color: #949494; }
@@ -429,13 +429,13 @@ p {
     opacity: 0.6; } }
 /*==================ts-data======================*/
 .title-ts-text {
-  font-size: 1.35vh;
+  font-size: 1.1vh;
   display: block;
   line-height: 1; }
 
 .text-ts {
   display: block;
-  font-size: 1.7vh;
+  font-size: 1.4vh;
   font-weight: bold; }
   .text-ts.cross-out {
     text-decoration: line-through; }
@@ -449,7 +449,7 @@ p {
     color: white !important; }
 
 .item-ts-data {
-  margin-top: 2.6vh; }
+  margin-top: 2.2vh; }
 
 .ts-hr {
   margin-top: 2.6vh;
