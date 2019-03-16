@@ -310,7 +310,7 @@
             $organizationPrettyId = $organization->getIdWithoutNumbers();
             ?>
         var OrgLayout = ymaps.templateLayoutFactory.createClass(
-            '<div class="bb"><span class="bb-num"><?= $autocolumns[$organizationPrettyId]["cars"] ?></span><span class="bb-name"><?= $organization->getTown()?></span></div>'
+            '<div class="bb"><span class="bb-num-org"><?= $autocolumns[$organizationPrettyId]["cars"] ?></span><span class="bb-name"><?= $organization->getTown()?></span></div>'
         );
             o_pm = new ymaps.Placemark([<?= $organization->x_pos ?>, <?= $organization->y_pos ?>], {
                 iconCaption : '<?= $organization->getTown() ?>',
@@ -574,7 +574,7 @@
                             }
 
                             var SpotsLayout = ymaps.templateLayoutFactory.createClass(
-                                '<div class="bb"><span class="bb-num"><?= $spot->carsNumber ?></span><span id="spot_name" class="bb-name">'+town_spot+'</span></div>'
+                                '<div class="bb"><span class="bb-num-spot"><?= $spot->carsNumber ?></span><span id="spot_name" class="bb-name">'+town_spot+'</span></div>'
                             );
 
                             s_pm = new ymaps.Placemark([<?= $spot->x_pos ?>, <?= $spot->y_pos ?>],{
@@ -608,6 +608,7 @@
                                 $('#info-company').addClass('hide');
                                 $('#info-department').removeClass('hide');
                                 $('#ts-info').addClass('hide');
+                                $('#all').addClass('active-transport');
 
 
 
@@ -1045,6 +1046,18 @@
                 return true;
             }
             if(window.currentElement.hasOwnProperty('spot')) {
+                $('.div-transport > .transort-department').removeClass('active-transport');
+                $('.item-info.transort-department').each( function() {
+                    $(this).css({
+                        "background-color": "white",
+                        "color": "#004781"
+                    });
+                });
+
+                $('.img-transport').each(function(){
+                    $(this).attr('src', 'yan/img/auto_icon/point_blue_'+ $(this).data('type')+'.svg');
+                });
+
                 myMap.geoObjects.remove(window.currentElement.spot);
                 if(c_array.length) {
                    removeArrayFromMap(c_array, myMap);
@@ -1303,7 +1316,11 @@
             img.attr('src', 'yan/img/auto_icon/point_'+img.data('type')+'.svg');
 
             if (window.currentElement.hasOwnProperty('spot') && !window.currentElement.hasOwnProperty('car')) {
-                if (window.currentCarsTypeSelected === thisButton.attr('id')) {
+                if($(this).attr('id') === "all") {
+                    clustererCars.removeAll();
+                    clustererCars.add(c_array);
+                    return;
+                } else if (window.currentCarsTypeSelected === thisButton.attr('id')) {
                     clustererCars.removeAll();
                     clustererCars.add(c_array);
                     thisButton.removeClass('active_transport');
@@ -1319,8 +1336,8 @@
                 });
 
             }
-
         });
+
         $("body").on('DOMSubtreeModified', ".nav-sidebar#firm", function() {
             navigation();
             if (window.currentElement.hasOwnProperty('spot')) {
