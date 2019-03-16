@@ -327,12 +327,14 @@ class Car extends \yii\db\ActiveRecord
         $R = 0;
         $TO = 0;
         $totalInline = 0;
+        $totalCount = 0;
         foreach ($cars as $car) {
             if ($car->x_pos == null || $car->spot_id == null || $car->status == null) continue;
             $flag = $car->status;
             $$flag += 1;
             if ($car->inline) $totalInline += 1;
+            $totalCount++;
         }
-        return ['G' => $G, 'R' => $R, 'TO' => $TO, 'totalInline' => $totalInline];
+        return ['G' => $G, 'R' => $R, 'TO' => $TO, 'totalInline' => $totalInline, 'total' => $totalCount];
     }
 }

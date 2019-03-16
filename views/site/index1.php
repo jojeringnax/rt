@@ -42,9 +42,10 @@
     let dataLevel = {
         firms :{
             totalCars: '',
-            oinLine:'',
+            onReady:'',
             onRep:'',
             onTO: '',
+            oinLine:'',
             applications_executed: '',
             applications_canceled: '',
             applications_sub: '',
@@ -80,7 +81,8 @@
             bus: '',
             spec: '',
             totalCars: '',
-            oinLine:'',
+            onLine:'',
+            onReady:'',
             onRep:'',
             onTO: '',
             applications_executed: '',
@@ -99,7 +101,8 @@
             bus: '',
             spec: '',
             totalCars: '',
-            oinLine:'',
+            onLine:'',
+            onReady:'',
             onRep:'',
             onTO: '',
             applications_executed: '',
@@ -117,8 +120,9 @@
     let firmsData = <?= json_encode($totalStats->getAttributes()) ?>;
     let totalTerminals =<?= json_encode($totalTerminals) ?>;
     let totalCarsData =<?= json_encode($totalCarsData) ?>;
-    let changeInfo = function(totTs, onLine, onRep, onTO, passCar, freightCar, busCar, specCar) {
+    let changeInfo = function(totTs, readyTs, onRep, onTO, onLine, passCar, freightCar, busCar, specCar) {
         $('#totTs').html(totTs);
+        $('#OnReady').html(readyTs);
         $('#OnLine').html(onLine);
         $('#OnRep').html(onRep);
         $('#onTo').html(onTO);
@@ -136,10 +140,11 @@
 
 
     dataLevel['firms'] = {
-        totalCars: totalCarsData['G'],
-        onLine: totalCarsData['totalInline'],
+        totalCars: totalCarsData['total'],
+        onReady: totalCarsData['G'],
         onRep: totalCarsData['R'],
         onTO: totalCarsData['TO'],
+        onLine: totalCarsData['totalInline'],
         applications_executed: firmsData['applications_executed'],
         applications_canceled: firmsData['applications_canceled'],
         applications_sub: firmsData['applications_sub'],
@@ -154,16 +159,19 @@
     //add data -> COMPANY
 
         //compAmOfTs
-        applicationAdd('compAmOfTs', totalCarsData['G']);
+        applicationAdd('compAmOfTs', totalCarsData['total']);
 
         //compOnLine
-        applicationAdd('compOnLine', totalCarsData['totalInline']);
+        applicationAdd('compReady', totalCarsData['G']);
 
         //compOnRep
         applicationAdd('compOnRep', totalCarsData['R']);
 
         //compOnTo
         applicationAdd('compOnTo', totalCarsData['TO']);
+
+        //compOnLine
+        applicationAdd('compOnLine', totalCarsData['totalInline']);
 
         //comp_applications_executed
         applicationAdd('comp_applications_executed',firmsData['applications_executed']);
@@ -324,9 +332,10 @@
             o_pm.events.add('click', function(o) {
                 changeInfo(
                     <?= $autocolumns[$organizationPrettyId]["cars"] ?>,
-                    <?= $autocolumns[$organizationPrettyId]["carsStatuses"]["inline"] ?>,
+                    <?= $autocolumns[$organizationPrettyId]["carsStatuses"]["G"] ?>,
                     <?= $autocolumns[$organizationPrettyId]["carsStatuses"]["R"] ?>,
                     <?= $autocolumns[$organizationPrettyId]["carsStatuses"]["TO"] ?>,
+                    <?= $autocolumns[$organizationPrettyId]["carsStatuses"]["inline"] ?>,
                     <?= $autocolumns[$organizationPrettyId]["carsTypes"][\app\models\Car::LIGHT] ?>,
                     <?= $autocolumns[$organizationPrettyId]["carsTypes"][\app\models\Car::TRUCK] ?>,
                     <?= $autocolumns[$organizationPrettyId]["carsTypes"][\app\models\Car::BUS] ?>,
@@ -356,9 +365,10 @@
 
                         dataLevel['organization'] = {
                             totalCars: <?= $autocolumns[$organizationPrettyId]["cars"] ?>,
-                            onLine:  <?= $autocolumns[$organizationPrettyId]["carsStatuses"]["inline"] ?>,
+                            onReady:  <?= $autocolumns[$organizationPrettyId]["carsStatuses"]["G"] ?>,
                             onRep: <?= $autocolumns[$organizationPrettyId]["carsStatuses"]["R"] ?>,
                             onTO: <?= $autocolumns[$organizationPrettyId]["carsStatuses"]["TO"] ?>,
+                            onLine:  <?= $autocolumns[$organizationPrettyId]["carsStatuses"]["inline"] ?>,
                             light: <?= $autocolumns[$organizationPrettyId]["carsTypes"][\app\models\Car::LIGHT] ?>,
                             truck: <?= $autocolumns[$organizationPrettyId]["carsTypes"][\app\models\Car::TRUCK] ?>,
                             bus: <?= $autocolumns[$organizationPrettyId]["carsTypes"][\app\models\Car::BUS] ?>,
@@ -455,9 +465,10 @@
                 a_pm.events.add('click', function(a) {
                     changeInfo(
                         <?= $spots[$autocolumnPrettyId]["cars"] ?>,
-                        <?= $spots[$autocolumnPrettyId]["carsStatuses"]["inline"] ?>,
+                        <?= $spots[$autocolumnPrettyId]["carsStatuses"]["G"] ?>,
                         <?= $spots[$autocolumnPrettyId]["carsStatuses"]["R"] ?>,
                         <?= $spots[$autocolumnPrettyId]["carsStatuses"]["TO"] ?>,
+                        <?= $spots[$autocolumnPrettyId]["carsStatuses"]["inline"] ?>,
                         <?= $spots[$autocolumnPrettyId]["carsTypes"][\app\models\Car::LIGHT] ?>,
                         <?= $spots[$autocolumnPrettyId]["carsTypes"][\app\models\Car::TRUCK] ?>,
                         <?= $spots[$autocolumnPrettyId]["carsTypes"][\app\models\Car::BUS] ?>,
@@ -584,9 +595,10 @@
                             s_pm.events.add('click', function(s) {
                                 changeInfo(
                                     <?= $spot->carsNumber ?>,
-                                    <?= $spot->carsStatuses["inline"] ?>,
+                                    <?= $spot->carsStatuses["G"] ?>,
                                     <?= $spot->carsStatuses["R"] ?>,
                                     <?= $spot->carsStatuses["TO"] ?>,
+                                    <?= $spot->carsStatuses["inline"] ?>,
                                     <?= $spot->carsTypes[\app\models\Car::LIGHT] ?>,
                                     <?= $spot->carsTypes[\app\models\Car::TRUCK] ?>,
                                     <?= $spot->carsTypes[\app\models\Car::BUS] ?>,
@@ -645,9 +657,10 @@
 
                                         dataLevel['spot'] = {
                                             totalCars: <?= $spot->carsNumber ?>,
-                                            onLine:  <?= $spot->carsStatuses["inline"] ?>,
+                                            onReady:  <?= $spot->carsStatuses["G"] ?>,
                                             onRep: <?= $spot->carsStatuses["R"] ?>,
                                             onTO: <?= $spot->carsStatuses["TO"] ?>,
+                                            onLine:  <?= $spot->carsStatuses["inline"] ?>,
                                             light: <?= $spot->carsTypes[\app\models\Car::LIGHT] ?>,
                                             truck: <?= $spot->carsTypes[\app\models\Car::TRUCK] ?>,
                                             bus: <?= $spot->carsTypes[\app\models\Car::BUS] ?>,
@@ -1018,9 +1031,10 @@
 
                         changeInfo(
                             dataLevel['spot']['totalCars'],
-                            dataLevel['spot']['onLine'],
+                            dataLevel['spot']['onReady'],
                             dataLevel['spot']['onRep'],
                             dataLevel['spot']['onTO'],
+                            dataLevel['spot']['onLine'],
                             dataLevel['spot']['light'],
                             dataLevel['spot']['truck'],
                             dataLevel['spot']['bus'],
@@ -1128,9 +1142,10 @@
 
                 changeInfo(
                     dataLevel['autocolumn']['totalCars'],
-                    dataLevel['autocolumn']['onLine'],
+                    dataLevel['autocolumn']['onReady'],
                     dataLevel['autocolumn']['onRep'],
                     dataLevel['autocolumn']['onTO'],
+                    dataLevel['autocolumn']['onLine'],
                     dataLevel['autocolumn']['light'],
                     dataLevel['autocolumn']['truck'],
                     dataLevel['autocolumn']['bus'],
@@ -1238,9 +1253,10 @@
 
                 changeInfo(
                     dataLevel['organization']['totalCars'],
-                    dataLevel['organization']['onLine'],
+                    dataLevel['organization']['onReady'],
                     dataLevel['organization']['onRep'],
                     dataLevel['organization']['onTO'],
+                    dataLevel['organization']['onLine'],
                     dataLevel['organization']['light'],
                     dataLevel['organization']['truck'],
                     dataLevel['organization']['bus'],
@@ -1277,6 +1293,7 @@
         typeButton.click(function () {
             let thisButton = $(this);
             $(this).parent().children('.transort-department').removeClass('active-transport');
+
             thisButton.addClass('active-transport');
             $('.img-transport').each(function(){
                 $(this).attr('src', 'yan/img/auto_icon/point_blue_'+ $(this).data('type')+'.svg');
@@ -1285,21 +1302,42 @@
             let img = $(this).children('.transport-title').children('.span-h3-filial').children('img');
             img.attr('src', 'yan/img/auto_icon/point_'+img.data('type')+'.svg');
 
-
             if (window.currentElement.hasOwnProperty('spot') && !window.currentElement.hasOwnProperty('car')) {
-                console.log('Клик произведен');
+                if (window.currentCarsTypeSelected === thisButton.attr('id')) {
+                    clustererCars.removeAll();
+                    clustererCars.add(c_array);
+                    thisButton.removeClass('active_transport');
+                    return;
+                }
                 c_array.forEach(function(car) {
                     if(car.type !== types[thisButton.attr('id')]) {
-                        console.log('type',car.type,'types_peenis', thisButton.attr('id'));
                         clustererCars.remove(car);
                     } else {
                         clustererCars.add(car);
                     }
+                    window.currentCarsTypeSelected = thisButton.attr('id');
                 });
+
             }
+
         });
         $("body").on('DOMSubtreeModified', ".nav-sidebar#firm", function() {
             navigation();
+            if (window.currentElement.hasOwnProperty('spot')) {
+                $('.item-info.transort-department').click(function() {
+                    let part = $(this);
+                    $('.item-info.transort-department').each( function() {
+                       $(this).css({
+                           "background-color": "white",
+                           "color": "#004781"
+                       });
+                    });
+                    part.css({
+                        "background-color": "#004781",
+                        "color": "white"
+                    });
+                });
+            }
         });
 
         let navigation = function() {
@@ -1383,9 +1421,10 @@
 
                             changeInfo(
                                 dataLevel['organization']['totalCars'],
-                                dataLevel['organization']['onLine'],
+                                dataLevel['organization']['onReady'],
                                 dataLevel['organization']['onRep'],
                                 dataLevel['organization']['onTO'],
+                                dataLevel['organization']['onLine'],
                                 dataLevel['organization']['light'],
                                 dataLevel['organization']['truck'],
                                 dataLevel['organization']['bus'],
@@ -1468,9 +1507,10 @@
 
                             changeInfo(
                                 dataLevel['autocolumn']['totalCars'],
-                                dataLevel['autocolumn']['onLine'],
+                                dataLevel['autocolumn']['onReady'],
                                 dataLevel['autocolumn']['onRep'],
                                 dataLevel['autocolumn']['onTO'],
+                                dataLevel['autocolumn']['onLine'],
                                 dataLevel['autocolumn']['light'],
                                 dataLevel['autocolumn']['truck'],
                                 dataLevel['autocolumn']['bus'],
@@ -1547,9 +1587,10 @@
 
                                     changeInfo(
                                         dataLevel['spot']['totalCars'],
-                                        dataLevel['spot']['onLine'],
+                                        dataLevel['spot']['onReady'],
                                         dataLevel['spot']['onRep'],
                                         dataLevel['spot']['onTO'],
+                                        dataLevel['spot']['onLine'],
                                         dataLevel['spot']['light'],
                                         dataLevel['spot']['truck'],
                                         dataLevel['spot']['bus'],

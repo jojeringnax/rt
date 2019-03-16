@@ -22,8 +22,8 @@
                         <span id="compAmOfTs" class="figures">311</span>
                     </div>
                     <div class="item-info">
-                        <p class="trans-auto">На линии, шт.</p>
-                        <p id="compOnLine" class="figures">124</p>
+                        <p class="trans-auto">Готовы, шт.</p>
+                        <p id="compReady" class="figures">4</p>
                     </div>
                     <div class="item-info">
                         <p class="trans-auto">На ремонте, шт.</p>
@@ -32,6 +32,10 @@
                     <div class="item-info">
                         <p class="trans-auto">На ТО, шт.</p>
                         <p id="compOnTo" class="figures">4</p>
+                    </div>
+                    <div class="item-info">
+                        <p class="trans-auto">На линии, шт.</p>
+                        <p id="compOnLine" class="figures">124</p>
                     </div>
                 </div>
 
@@ -122,8 +126,8 @@
                             <span id="totTs" class="figures">311</span>
                         </div>
                         <div class="item-info">
-                            <p id="on-line-department" class="trans-auto">На линии, шт.</p>
-                            <p id="OnLine" class="figures">124</p>
+                            <p class="trans-auto">Готовы, шт.</p>
+                            <p id="OnReady" class="figures">4</p>
                         </div>
                         <div class="item-info">
                             <p id="on-repair" class="trans-auto">На ремонте, шт.</p>
@@ -132,6 +136,10 @@
                         <div class="item-info">
                             <p id="on-to" class="trans-auto">На ТО, шт.</p>
                             <p id="onTo" class="figures">4</p>
+                        </div>
+                        <div class="item-info">
+                            <p id="on-line-department" class="trans-auto">На линии, шт.</p>
+                            <p id="OnLine" class="figures">124</p>
                         </div>
                     </div>
 
