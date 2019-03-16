@@ -357,6 +357,34 @@ p {
    z-index: 10;
    font-size: 0.8vh;
   }
+  .bb-num-org {
+    width: 60px;
+    height: 60px;
+    color:white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-image: url("../img/elipse_firm.svg");
+    background-size: 100%;
+    background-repeat: no-repeat;
+    background-position: center;
+    z-index: 10;
+    font-size: 0.8vh;
+  }
+  .bb-num-spot {
+    width: 60px;
+    height: 60px;
+    color:white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-image: url("../img/elipse_spot.svg");
+    background-size: 100%;
+    background-repeat: no-repeat;
+    background-position: center;
+    z-index: 10;
+    font-size: 0.8vh;
+  }
 
   .bb-name {
     position: absolute;
@@ -421,18 +449,18 @@ p {
   height: 3vh;
   align-items: center;
 
-  &:hover {
-    background-color: #004781;
-    .transport-title {
-      p {
-        color: white;
-      }
-    }
-
-    .p-quantity {
-      color: white;
-    }
-  }
+  //&:hover {
+  //  background-color: #004781;
+  //  .transport-title {
+  //    p {
+  //      color: white;
+  //    }
+  //  }
+  //
+  //  .p-quantity {
+  //    color: white;
+  //  }
+  //}
 }
 
 .indicators-title {
@@ -633,8 +661,8 @@ p {
 }
 
 .active-transport {
-  background-color: #004781;
-  color: white;
+  background-color: #004781 !important;
+  color: white !important;
   .transport-title {
     p {
       color: white !important;

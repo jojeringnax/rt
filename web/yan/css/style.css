@@ -265,6 +265,32 @@ p {
     background-position: center;
     z-index: 10;
     font-size: 0.8vh; }
+  .bb .bb-num-org {
+    width: 60px;
+    height: 60px;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-image: url("../img/elipse_firm.svg");
+    background-size: 100%;
+    background-repeat: no-repeat;
+    background-position: center;
+    z-index: 10;
+    font-size: 0.8vh; }
+  .bb .bb-num-spot {
+    width: 60px;
+    height: 60px;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-image: url("../img/elipse_spot.svg");
+    background-size: 100%;
+    background-repeat: no-repeat;
+    background-position: center;
+    z-index: 10;
+    font-size: 0.8vh; }
   .bb .bb-name {
     position: absolute;
     margin-left: 25px;
@@ -303,12 +329,6 @@ p {
   border-radius: 5px;
   height: 3vh;
   align-items: center; }
-  .transort-department:hover {
-    background-color: #004781; }
-    .transort-department:hover .transport-title p {
-      color: white; }
-    .transort-department:hover .p-quantity {
-      color: white; }
 
 .indicators-title .text {
   font-size: 1.2vh; }
@@ -443,8 +463,8 @@ p {
     color: #004781; }
 
 .active-transport {
-  background-color: #004781;
-  color: white; }
+  background-color: #004781 !important;
+  color: white !important; }
   .active-transport .transport-title p {
     color: white !important; }
 

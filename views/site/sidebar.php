@@ -145,6 +145,13 @@
 
                     <div class="div-transport">
                         <hr class="hr-trans" />
+                        <div id="all" class="item-info transort-department ">
+                            <div class="transport-title">
+<!--                                <span class="span-h3-filial"><img data-type="0" src="yan/img/auto_icon/point_blue_0.svg" alt="#" class=img-transport></span>-->
+                                <p id="passenger-car" class="p-type-transport" style="margin: 0 !important">Все транспортные средства</p>
+                            </div>
+                        </div>
+                        <hr class="hr-trans" />
                         <div id="light" class="item-info transort-department">
                             <div class="transport-title">
                                 <span class="span-h3-filial"><img data-type="0" src="yan/img/auto_icon/point_blue_0.svg" alt="#" class=img-transport></span>
