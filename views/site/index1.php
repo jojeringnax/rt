@@ -285,7 +285,7 @@ let c_data =[];
         var carBalloonContentLayout = ymaps.templateLayoutFactory.createClass([
             '<ul class=list>',
             '{% for geoObject in properties.geoObjects %}',
-            '<li><a href=# id="{{geoObject.carID}}" class="list_item car-baloon">{{ geoObject.properties.balloonContentHeader|raw }}</a></li>',
+            '<li><a href=# id="{{geoObject.carID}}" class="list_item car-baloon"><img src="yan/img/auto_icon/point_blue_{{geoObject.type}}.svg" alt="">{{ geoObject.properties.balloonContentHeader|raw }}</a></li>',
             '{% endfor %}',
             '</ul>'
         ].join(''));

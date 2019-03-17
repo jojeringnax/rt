@@ -462,6 +462,15 @@ p {
   .text-ts.blue-color {
     color: #004781; }
 
+.list {
+  padding: 0.8vh 1.5vh 1.5vh 1.5vh; }
+  .list li {
+    margin-top: 0.6vh;
+    list-style-type: none; }
+    .list li .car-baloon img {
+      width: 2vh;
+      margin-right: 2vh; }
+
 .active-transport {
   background-color: #004781 !important;
   color: white !important; }
