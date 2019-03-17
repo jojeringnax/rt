@@ -116,7 +116,7 @@
             terminals: ''
         }
     };
-
+let c_data =[];
     let firmsData = <?= json_encode($totalStats->getAttributes()) ?>;
     let totalTerminals =<?= json_encode($totalTerminals) ?>;
     let totalCarsData =<?= json_encode($totalCarsData) ?>;
@@ -289,6 +289,9 @@
             '{% endfor %}',
             '</ul>'
         ].join(''));
+
+
+
 
 
         let clustererCars = new ymaps.Clusterer(
@@ -689,6 +692,8 @@
                                     }
                                 }); //end ajax request
 
+
+
                                 $.ajax({
                                     url: 'index.php?r=site/carsforspot&id=<?= $spot->id ?>',
                                     method: 'GET',
@@ -705,6 +710,163 @@
                                             // 'Грузовые ТС' => 1,
                                             // 'Автобусы' => 2,
                                             // 'Спецтехника' => 3
+
+                                        jQuery(document).on( "click", "a.list_item", function() {
+                                            let car__id = $(this).attr('id');
+                                            //console.log('---click',c_data);
+                                            $('.loading-layout').css({'display':'flex'});
+
+                                            c_data.forEach(function(car){
+                                                if (car__id == car.id) {
+                                                    console.log('---yes', c_data);
+                                                    $('.bbb > span').html(car.data.model);
+                                                    $('.nav-sidebar').html('<a id="firm">Компания </a> >> ' + '<a id="organization">' + window.currentElement.organization.breadcrumps+ '</a>' + ' >> ' + '<a id="autocolumn">' +window.currentElement.autocolumn.breadcrumps + '</a>'  + ' >> ' + '<a id="spot">' +window.currentElement.spot.breadcrumps + '</a>' +  ' >> ' + '<a id="car">' + car.data.model + '</a>');
+
+                                                    let url_img = "yan/img/auto_icon/point_blue_" + car.data.type + ".svg";
+
+                                                    document.getElementById('img-ts').setAttribute('src', url_img);
+
+                                                    applicationAdd('nameTS', car.data['model']);
+
+                                                    applicationAdd('profitabilities', car.data['profitability']);
+
+                                                    applicationAdd('seasonality', car.data['tire_season']);
+
+                                                    applicationAdd('tier-change', car.data['tire_change_days']);
+
+                                                    applicationAdd('battery-change', car.data['battery_change_days']);
+
+                                                    applicationAdd('untilTO', car.data['technical_inspection_days']);
+                                                }
+
+
+
+                                            })
+                                            // if (window.currentElement.hasOwnProperty('car')) {
+                                            //     let carOldLayout = ymaps.templateLayoutFactory.createClass(
+                                            //         '<div class="bb"><span class="bb-num-car"><img src="yan/img/auto_icon/point_blue_' + window.currentElement.car.type + '.svg" alt="auto"></span></div>'
+                                            //     );
+                                            //     window.currentElement.car.options.set('iconContentLayout', carOldLayout);
+                                            // }
+                                            // carsLayout = ymaps.templateLayoutFactory.createClass(
+                                            //     '<div class="bb"><span class="bb-num-car-white"><img src="yan/img/auto_icon/point_' + el.type + '.svg" alt="auto"></span></div>'
+                                            // );
+                                            // c.originalEvent.target.options.set('iconContentLayout', carsLayout);
+                                            // window.currentElement.car = c.originalEvent.target;
+                                            // myMap.setCenter(window.currentElement.car.geometry._coordinates, 19);
+                                            $('#info-company').addClass('hide');
+                                            $('#info-department').addClass('hide');
+                                            $('#ts-info').removeClass('hide');
+
+                                            console.log(window.currentElement);
+
+
+                                            $.ajax({
+                                                url: "index.php?r=site/get-car-data&car_id=" + car__id,
+                                                type: 'get',
+                                                success: function(res) {
+                                                    console.log('---keys', Object.keys(res).length);
+                                                    let obj = new Object();
+                                                    obj = JSON.parse(res);
+                                                    if (Object.keys(res).length === 2) {
+                                                        // console.log('huy')
+                                                        applicationAdd('driver-name', 'н/д');
+
+                                                        applicationAdd('driver-phone', 'н/д');
+
+                                                        applicationAdd('plan-start', 'н/д');
+
+                                                        applicationAdd('fact-start', 'н/д');
+
+                                                        applicationAdd('fact-end', 'н/д');
+
+                                                        applicationAdd('fuel-time-plan', 'н/д');
+
+                                                        applicationAdd('fuel-time-work', 'н/д');
+
+                                                        applicationAdd('mileage', 'н/д');
+
+                                                        applicationAdd('average-speed', 'н/д');
+
+                                                        applicationAdd('fuel-norm', 'н/д');
+
+                                                        applicationAdd('fuel-dut', 'н/д');
+
+                                                        applicationAdd('numb-of-violations', 'н/д');
+
+                                                        applicationAdd('quality-of-driving', 'н/д');
+
+
+                                                    } else {
+
+                                                        console.log(obj, obj['car_id']);
+
+                                                        applicationAdd('driver-name', obj['driver']);
+
+                                                        applicationAdd('driver-phone', obj['phone']);
+
+                                                        applicationAdd('plan-start', obj['start_time_plan']);
+
+                                                        applicationAdd('fact-start', obj['start_time_fact']);
+
+                                                        applicationAdd('fact-end', obj['end_time_plan']);
+
+                                                        applicationAdd('fuel-time-plan', obj['work_time_plan']);
+
+                                                        applicationAdd('fuel-time-work', obj['work_time_fact']);
+
+                                                        applicationAdd('mileage', obj['mileage']);
+
+                                                        applicationAdd('average-speed', obj['speed']);
+
+                                                        applicationAdd('fuel-norm', obj['fuel_norm']);
+
+                                                        applicationAdd('fuel-dut', obj['fuel_DUT']);
+
+                                                        applicationAdd('numb-of-violations', obj['violations_count']);
+
+                                                        applicationAdd('quality-of-driving', obj['driver_mark']);
+                                                    }
+
+                                                    $('.loading-layout').css({'display':'none'});
+                                                },
+                                                complete: function() {
+
+                                                    navigation();
+                                                },
+                                                error: function(err) {
+                                                    $('.loading-layout').css({'display':'none'});
+                                                    console.log('---err',err);
+                                                    applicationAdd('driver-name', 'н/д');
+
+                                                    applicationAdd('driver-phone', 'н/д');
+
+                                                    applicationAdd('plan-start', 'н/д');
+
+                                                    applicationAdd('fact-start', 'н/д');
+
+                                                    applicationAdd('fact-end', 'н/д');
+
+                                                    applicationAdd('fuel-time-plan', 'н/д');
+
+                                                    applicationAdd('fuel-time-work', 'н/д');
+
+                                                    applicationAdd('mileage', 'н/д');
+
+                                                    applicationAdd('average-speed', 'н/д');
+
+                                                    applicationAdd('fuel-norm', 'н/д');
+
+                                                    applicationAdd('fuel-dut', 'н/д');
+
+                                                    applicationAdd('numb-of-violations', 'н/д');
+
+                                                    applicationAdd('quality-of-driving', 'н/д');
+                                                }
+
+                                            })
+                                        });
+                                        c_data = [];
                                         data.cars.forEach(function(el) {
                                             let carsLayout = ymaps.templateLayoutFactory.createClass(
                                                 '<div class="bb"><span class="bb-num-car"><img src="yan/img/auto_icon/point_blue_' + el.type + '.svg" alt="auto"></span></div>'
@@ -723,6 +885,8 @@
                                               iconImageOffset: [-24, -24],
                                               iconContentLayout: carsLayout
                                           });
+
+                                          c_data.push({id: el.id, data: el});
                                           c_pm.type = el.type;
                                           c_pm.breadcrumps = el.description;
                                           c_pm.carID = el.id;
