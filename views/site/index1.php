@@ -282,8 +282,18 @@
             }
         );
 
+        var carBalloonContentLayout = ymaps.templateLayoutFactory.createClass([
+            '<ul class=list>',
+            '{% for geoObject in properties.geoObjects %}',
+            '<li><a href=# id="{{geoObject.carID}}" class="list_item car-baloon">{{ geoObject.properties.balloonContentHeader|raw }}</a></li>',
+            '{% endfor %}',
+            '</ul>'
+        ].join(''));
+
+
         let clustererCars = new ymaps.Clusterer(
             {
+                clusterBalloonContentLayout: carBalloonContentLayout,
                 clusterIcons: [{
                     href: '',
                     size: [62, 62],
@@ -715,6 +725,7 @@
                                           });
                                           c_pm.type = el.type;
                                           c_pm.breadcrumps = el.description;
+                                          c_pm.carID = el.id;
                                           c_pm.events.add('click', function (c) {
                                               $('.loading-layout').css({'display':'flex'});
                                               if (window.currentElement.hasOwnProperty('car')) {
