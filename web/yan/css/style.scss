@@ -441,6 +441,15 @@ p {
   }
 }
 
+.tr-fake {
+  display: flex;
+  cursor: pointer;
+  padding: 3px;
+  border-radius: 5px;
+  height: 3vh;
+  align-items: center;
+}
+
 .transort-department {
   display: flex;
   cursor: pointer;
@@ -674,6 +683,9 @@ p {
 
 }
 
+.isDisabled {
+  pointer-events: none;
+}
 
 .active-transport {
   background-color: #004781 !important;
@@ -688,6 +700,7 @@ p {
 .item-ts-data {
   margin-top: 2.2vh;
 }
+
 
 .ts-hr {
   margin-top: 2.6vh;

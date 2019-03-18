@@ -338,9 +338,8 @@ let c_data =[];
                 iconContentLayout: OrgLayout
             });
 
-            <?php if ($autocolumns[$organizationPrettyId]["cars"] !== 0) { ?>
-                o_array.push(o_pm);
-            <?php } ?>
+
+            o_array.push(o_pm);
             o_pm.breadcrumps = '<?= 'Филиал '.$organization->getTown() ?>';
             o_pm.events.add('click', function(o) {
                 changeInfo(
@@ -472,9 +471,8 @@ let c_data =[];
                     iconContentLayout: AutoColLayout
                 });
                 a_pm.breadcrumps = '<?= $autocolumn->name ?>';
-                <?php if ($spots[$autocolumnPrettyId]["cars"] !== 0) { ?>
-                    a_array.push(a_pm);
-                <?php } ?>
+                a_array.push(a_pm);
+
                 a_pm.events.add('click', function(a) {
                     changeInfo(
                         <?= $spots[$autocolumnPrettyId]["cars"] ?>,
@@ -601,10 +599,11 @@ let c_data =[];
                                 preset: 'islands#greenDotIconWithCaption',
                                 iconContentLayout: SpotsLayout
                             });
-                            <?php if ($spot->carsNumber) { ?>
-                                s_array.push(s_pm);
-                            <?php } ?>
+
+                            s_array.push(s_pm);
+
                             s_pm.breadcrumps = '<?= $spot->name ?>';
+                        <?php if ($spot->carsNumber) { ?>
                             s_pm.events.add('click', function(s) {
                                 changeInfo(
                                     <?= $spot->carsNumber ?>,
@@ -622,8 +621,6 @@ let c_data =[];
                                 $('#info-department').removeClass('hide');
                                 $('#ts-info').addClass('hide');
                                 $('#all').addClass('active-transport');
-
-
 
 
 
@@ -1079,6 +1076,8 @@ let c_data =[];
                                 console.log(window.currentElement);
                                 console.log(window.currentElement);
                             }); //spots click
+                    <?php } ?>
+
                 <?php   }
                     } ?>
                         if(s_array.length) {
@@ -1491,17 +1490,16 @@ let c_data =[];
         let typeButton = $('.item-info.transort-department');
         typeButton.click(function () {
             let thisButton = $(this);
-            $(this).parent().children('.transort-department').removeClass('active-transport');
+            if (window.currentElement.hasOwnProperty('spot')) {
+                $(this).parent().children('.transort-department').removeClass('active-transport');
 
-            thisButton.addClass('active-transport');
-            $('.img-transport').each(function(){
-                $(this).attr('src', 'yan/img/auto_icon/point_blue_'+ $(this).data('type')+'.svg');
-            });
+                thisButton.addClass('active-transport');
+                $('.img-transport').each(function(){
+                    $(this).attr('src', 'yan/img/auto_icon/point_blue_'+ $(this).data('type')+'.svg');
+                });
 
-            let img = $(this).children('.transport-title').children('.span-h3-filial').children('img');
-            img.attr('src', 'yan/img/auto_icon/point_'+img.data('type')+'.svg');
-
-            if (window.currentElement.hasOwnProperty('spot') && !window.currentElement.hasOwnProperty('car')) {
+                let img = $(this).children('.transport-title').children('.span-h3-filial').children('img');
+                img.attr('src', 'yan/img/auto_icon/point_'+img.data('type')+'.svg');
                 if($(this).attr('id') === "all") {
                     clustererCars.removeAll();
                     clustererCars.add(c_array);
