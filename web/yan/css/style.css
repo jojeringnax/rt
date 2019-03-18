@@ -322,6 +322,14 @@ p {
     margin-left: 1.5vh;
     color: #004781; }
 
+.tr-fake {
+  display: flex;
+  cursor: pointer;
+  padding: 3px;
+  border-radius: 5px;
+  height: 3vh;
+  align-items: center; }
+
 .transort-department {
   display: flex;
   cursor: pointer;
@@ -470,6 +478,9 @@ p {
     .list li .car-baloon img {
       width: 2vh;
       margin-right: 2vh; }
+
+.isDisabled {
+  pointer-events: none; }
 
 .active-transport {
   background-color: #004781 !important;
