@@ -284,6 +284,39 @@ p {
   }
 }
 
+.bb-num-car-inline {
+  width: 60px;
+  height: 60px;
+  color:white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-image: url("../img/auto_icon/ellipse_noIn.svg");
+  background-size: 100%;
+  background-position: center;
+  z-index: 10;
+  font-size: 1vh;
+  svg {
+    width: 130%;
+  }
+}
+
+.bb-num-car-inline_checked {
+  width: 60px;
+  height: 60px;
+  color:white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-image: url("../img/auto_icon/ellipse_noIn_checked.svg");
+  background-size: 100%;
+  background-position: center;
+  z-index: 10;
+  font-size: 1vh;
+  svg {
+    width: 130%;
+  }
+}
 
 .bb-num-car {
   width: 60px;
