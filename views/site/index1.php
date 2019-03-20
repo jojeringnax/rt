@@ -900,7 +900,7 @@ let c_data =[];
                                               );
                                               c.originalEvent.target.options.set('iconContentLayout', carsLayout);
                                               window.currentElement.car = c.originalEvent.target;
-                                              myMap.setCenter(window.currentElement.car.geometry._coordinates, 19);
+                                              //myMap.setCenter(window.currentElement.car.geometry._coordinates);
                                               $('#info-company').addClass('hide');
                                               $('#info-department').addClass('hide');
                                               $('#ts-info').removeClass('hide');
@@ -1520,7 +1520,7 @@ let c_data =[];
                 });
 
             }
-        });
+        }   );
 
         $("body").on('DOMSubtreeModified', ".nav-sidebar#firm", function() {
             navigation();
@@ -1549,7 +1549,9 @@ let c_data =[];
 
                     switch ($(this).attr('id')) {
                         case 'organization':
-
+                            $('#info-company').addClass('hide');
+                            $('#ts-info').removeClass('hide');
+                            $('#info-department').removeClass('hide');
                             $.ajax({
                                 url: "index.php?r=site/get-organization-statistic&organization_id=" + idOfCurrentElement['organizations'],
                                 type: 'get',
@@ -1651,6 +1653,9 @@ let c_data =[];
                             break;
 
                         case 'autocolumn':
+                            $('#info-company').addClass('hide');
+                            $('#ts-info').removeClass('hide');
+                            $('#info-department').removeClass('hide');
 
                             $.ajax({
                                 url: "index.php?r=site/get-autocolumn-statistic&autocolumn_id=" + idOfCurrentElement['autocolumn'],
@@ -1734,7 +1739,9 @@ let c_data =[];
                             break;
 
                         case 'spot':
-
+                            $('#info-company').addClass('hide');
+                            $('#ts-info').removeClass('hide');
+                            $('#info-department').removeClass('hide');
                             //AJAX -> SPOT
                             $.ajax({
                                 url: "index.php?r=site/get-spot-statistic&spot_id=" + idOfCurrentElement['spot'],
