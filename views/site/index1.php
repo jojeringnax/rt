@@ -865,8 +865,12 @@ let c_data =[];
                                         });
                                         c_data = [];
                                         data.cars.forEach(function(el) {
+                                            let url_car, classCar;
+                                            url_car = el.inline ? 'yan/img/auto_icon/point_blue_' + el.type + '.svg' : 'yan/img/auto_icon/point_noIn_' + el.type + '.svg';
+                                            classCar = el.inline ? "bb-num-car" : "bb-num-car-inline";
+
                                             let carsLayout = ymaps.templateLayoutFactory.createClass(
-                                                '<div class="bb"><span class="bb-num-car"><img src="yan/img/auto_icon/point_blue_' + el.type + '.svg" alt="auto"></span></div>'
+                                                '<div class="bb"><span class="' + classCar + '"><img src="'+url_car+'" alt="auto"></span></div>'
                                             );
                                           c_pm = new ymaps.Placemark([el.x_pos, el.y_pos], {
                                               balloonContent: el.description,
@@ -887,16 +891,24 @@ let c_data =[];
                                           c_pm.type = el.type;
                                           c_pm.breadcrumps = el.description;
                                           c_pm.carID = el.id;
+                                          c_pm.inline = el.inline;
                                           c_pm.events.add('click', function (c) {
+                                              let url_car, classCar,classCarChecked,urlCarChecked;
                                               $('.loading-layout').css({'display':'flex'});
                                               if (window.currentElement.hasOwnProperty('car')) {
+                                                  url_car = window.currentElement.car.inline ? 'yan/img/auto_icon/point_blue_' + window.currentElement.car.type + '.svg' : url_car = 'yan/img/auto_icon/point_noIn_' + window.currentElement.car.type + '.svg';
+                                                  classCar = window.currentElement.car.inline ? "bb-num-car" : "bb-num-car-inline";
+
                                                   let carOldLayout = ymaps.templateLayoutFactory.createClass(
-                                                      '<div class="bb"><span class="bb-num-car"><img src="yan/img/auto_icon/point_blue_' + window.currentElement.car.type + '.svg" alt="auto"></span></div>'
+                                                      '<div class="bb"><span class="'+ classCar +'"><img src="'+ url_car +'" alt="auto"></span></div>'
                                                   );
                                                   window.currentElement.car.options.set('iconContentLayout', carOldLayout);
                                               }
+                                              classCarChecked = c.originalEvent.target.inline ? "bb-num-car-white" : "bb-num-car-inline_checked";
+                                              urlCarChecked = c.originalEvent.target.inline ? 'yan/img/auto_icon/point_' + c.originalEvent.target.type + '.svg' : 'yan/img/auto_icon/point_noIn_check_' + c.originalEvent.target.type + '.svg';
+
                                               carsLayout = ymaps.templateLayoutFactory.createClass(
-                                                  '<div class="bb"><span class="bb-num-car-white"><img src="yan/img/auto_icon/point_' + el.type + '.svg" alt="auto"></span></div>'
+                                                  '<div class="bb"><span class="'+ classCarChecked +'"><img src="'+ urlCarChecked +'" alt="auto"></span></div>'
                                               );
                                               c.originalEvent.target.options.set('iconContentLayout', carsLayout);
                                               window.currentElement.car = c.originalEvent.target;
@@ -928,8 +940,6 @@ let c_data =[];
                                               //y_pos: 36.7841
                                               //year: 2011
                                               //add cars information
-
-                                              console.log('--- el', el);
                                               let url_img = "yan/img/auto_icon/point_blue_" + el.type + ".svg";
 
                                               document.getElementById('img-ts').setAttribute('src', url_img);
@@ -946,12 +956,10 @@ let c_data =[];
 
                                               applicationAdd('untilTO', el['technical_inspection_days']);
 
-                                                console.log(el.id);
                                               $.ajax({
                                                   url: "index.php?r=site/get-car-data&car_id=" + el.id,
                                                   type: 'get',
                                                   success: function(res) {
-                                                      console.log('---keys', Object.keys(res).length);
                                                       let obj = new Object();
                                                       obj = JSON.parse(res);
                                                       if (Object.keys(res).length === 2) {
