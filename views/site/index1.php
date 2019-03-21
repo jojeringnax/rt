@@ -738,7 +738,7 @@ let c_data =[];
 
 
 
-                                            })
+                                            });
                                             // if (window.currentElement.hasOwnProperty('car')) {
                                             //     let carOldLayout = ymaps.templateLayoutFactory.createClass(
                                             //         '<div class="bb"><span class="bb-num-car"><img src="yan/img/auto_icon/point_blue_' + window.currentElement.car.type + '.svg" alt="auto"></span></div>'
@@ -896,7 +896,7 @@ let c_data =[];
                                               let url_car, classCar,classCarChecked,urlCarChecked;
                                               $('.loading-layout').css({'display':'flex'});
                                               if (window.currentElement.hasOwnProperty('car')) {
-                                                  url_car = window.currentElement.car.inline ? 'yan/img/auto_icon/point_blue_' + window.currentElement.car.type + '.svg' : url_car = 'yan/img/auto_icon/point_noIn_' + window.currentElement.car.type + '.svg';
+                                                  url_car = 'yan/img/auto_icon/point_' + (window.currentElement.car.inline ? 'blue_' : 'noIn_') + window.currentElement.car.type + '.svg';
                                                   classCar = window.currentElement.car.inline ? "bb-num-car" : "bb-num-car-inline";
 
                                                   let carOldLayout = ymaps.templateLayoutFactory.createClass(
@@ -905,7 +905,7 @@ let c_data =[];
                                                   window.currentElement.car.options.set('iconContentLayout', carOldLayout);
                                               }
                                               classCarChecked = c.originalEvent.target.inline ? "bb-num-car-white" : "bb-num-car-inline_checked";
-                                              urlCarChecked = c.originalEvent.target.inline ? 'yan/img/auto_icon/point_' + c.originalEvent.target.type + '.svg' : 'yan/img/auto_icon/point_noIn_check_' + c.originalEvent.target.type + '.svg';
+                                              urlCarChecked = 'yan/img/auto_icon/point_' + (c.originalEvent.target.inline ? 'noIn_check_' : '') + c.originalEvent.target.type + '.svg';
 
                                               carsLayout = ymaps.templateLayoutFactory.createClass(
                                                   '<div class="bb"><span class="'+ classCarChecked +'"><img src="'+ urlCarChecked +'" alt="auto"></span></div>'
@@ -1069,9 +1069,7 @@ let c_data =[];
                                               myMap.setCenter(s.originalEvent.target.center, 6);
                                           } else {
                                               s.originalEvent.target.bounds = data.bounds;
-                                              myMap.setBounds(data.bounds, {checkZoomRange: false}).then(function() {
-                                                  myMap.setZoom(myMap.getZoom() - 1, {duration: 1000})
-                                              });
+                                              myMap.setBounds(data.bounds, {checkZoomRange: false});
                                           }
 
                                         });
@@ -1099,7 +1097,7 @@ let c_data =[];
                             } else {
                                 a.originalEvent.target.bounds = <?= $spots[$autocolumnPrettyId]['bounds'] ?>;
                                 myMap.setBounds(a.originalEvent.target.bounds, {checkZoomRange: true}).then(function() {
-                                    myMap.setZoom(myMap.getZoom() - 1, {duration: 1000})
+                                    myMap.setZoom(myMap.getZoom() - 1)
                                 });
                             }
                         }
@@ -1126,7 +1124,7 @@ let c_data =[];
                         } else {
                             o.originalEvent.target.bounds = <?= $autocolumns[$organizationPrettyId]['bounds'] ?>;
                             myMap.setBounds(o.originalEvent.target.bounds, {checkZoomRange: true}).then(function() {
-                                myMap.setZoom(myMap.getZoom() - 1, {duration: 1000});
+                                myMap.setZoom(myMap.getZoom() - 1);
                             });
                         }
                     <?php }?>
@@ -1157,19 +1155,20 @@ let c_data =[];
                 $('.img-transport').each(function(){
                     $(this).attr('src', 'yan/img/auto_icon/point_blue_'+ $(this).data('type')+'.svg');
                 });
+                /*
                 if(c_array.length) {
                     c_array = [];
                     myMap.geoObjects.remove(clustererCars);
                     clustererCars.removeAll();
-                }
+                }*/
                 $('.bbb > span').html(window.currentElement.spot.breadcrumps);
                 $('.nav-sidebar').html('<a id="firm">Компания </a> >> ' + '<a id="organization">'+ window.currentElement.organization.breadcrumps + '</a>' + ' >> ' + '<a id="autocolumn">' +window.currentElement.autocolumn.breadcrumps + '</a>'  + ' >> ' + '<a id="spot">' +window.currentElement.spot.breadcrumps + '</a>');
                 $('#info-company').addClass('hide');
                 $('#ts-info').addClass('hide');
                 $('#info-department').removeClass('hide');
                 delete window.currentElement.car;
-                myMap.setCenter(window.currentElement.spot.geometry._coordinates, 12);
-                myMap.geoObjects.add(window.currentElement.spot);
+                //myMap.setCenter(window.currentElement.spot.geometry._coordinates, 12);
+                //myMap.geoObjects.add(window.currentElement.spot);
                 console.log(window.currentElement.spot);
 
                 //AJAX -> SPOT
@@ -1268,7 +1267,7 @@ let c_data =[];
                 delete window.currentElement.spot;
                 if(window.currentElement.autocolumn.hasOwnProperty('bounds')) {
                    myMap.setBounds(window.currentElement.autocolumn.bounds, {checkZoomRange: true}).then(function() {
-                       myMap.setZoom(myMap.getZoom() - 1, {duration: 1000})
+                       myMap.setZoom(myMap.getZoom() - 1)
                    });
                 }
                 if(window.currentElement.autocolumn.hasOwnProperty('center')) {
@@ -1375,7 +1374,7 @@ let c_data =[];
                 delete window.currentElement.autocolumn;
                 if(window.currentElement.organization.hasOwnProperty('bounds')) {
                     myMap.setBounds(window.currentElement.organization.bounds, {checkZoomRange: true}).then(function() {
-                        myMap.setZoom(myMap.getZoom() - 1, {duration: 1000})
+                        myMap.setZoom(myMap.getZoom() - 1)
                     });
                 }
                 if(window.currentElement.organization.hasOwnProperty('center')) {
