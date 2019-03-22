@@ -1143,18 +1143,19 @@ let c_data =[];
 
         let button = $('.back');
         button.click( function () {
+            if(!window.currentElement.hasOwnProperty('car')) {
+                $('.item-info.transort-department').each(function() {
+                    $(this).removeClass('active-transport');
+                });
+            }
             if(window.currentElement.hasOwnProperty('car')) {
-                $('.div-transport > .transort-department').removeClass('active-transport');
-                $('.item-info.transort-department').each( function() {
-                    $(this).css({
-                        "background-color": "white",
-                        "color": "#004781"
-                    });
-                });
+                let url_car = 'yan/img/auto_icon/point_' + (window.currentElement.car.inline ? 'blue_' : 'noIn_') + window.currentElement.car.type + '.svg';
+                let classCar = window.currentElement.car.inline ? "bb-num-car" : "bb-num-car-inline";
 
-                $('.img-transport').each(function(){
-                    $(this).attr('src', 'yan/img/auto_icon/point_blue_'+ $(this).data('type')+'.svg');
-                });
+                let carOldLayout = ymaps.templateLayoutFactory.createClass(
+                    '<div class="bb"><span class="'+ classCar +'"><img src="'+ url_car +'" alt="auto"></span></div>'
+                );
+                window.currentElement.car.options.set('iconContentLayout', carOldLayout);
                 /*
                 if(c_array.length) {
                     c_array = [];
@@ -1238,13 +1239,6 @@ let c_data =[];
                 return true;
             }
             if(window.currentElement.hasOwnProperty('spot')) {
-                $('.div-transport > .transort-department').removeClass('active-transport');
-                $('.item-info.transort-department').each( function() {
-                    $(this).css({
-                        "background-color": "white",
-                        "color": "#004781"
-                    });
-                });
 
                 $('.img-transport').each(function(){
                     $(this).attr('src', 'yan/img/auto_icon/point_blue_'+ $(this).data('type')+'.svg');
@@ -1526,25 +1520,17 @@ let c_data =[];
                     window.currentCarsTypeSelected = thisButton.attr('id');
                 });
 
+            } else {
+                return;
             }
-        }   );
+        });
 
         $("body").on('DOMSubtreeModified', ".nav-sidebar#firm", function() {
             navigation();
-            if (window.currentElement.hasOwnProperty('spot')) {
-                $('.item-info.transort-department').click(function() {
-                    let part = $(this);
-                    $('.item-info.transort-department').each( function() {
-                       $(this).css({
-                           "background-color": "white",
-                           "color": "#004781"
-                       });
-                    });
-                    part.css({
-                        "background-color": "#004781",
-                        "color": "white"
-                    });
-                });
+            if (!window.currentElement.hasOwnProperty('spot') && !window.currentElement.hasOwnProperty('car')) {
+                $('.item-info.transort-department').each(function() {
+                    $(this).removeClass('active-transport');
+                })
             }
         });
 
