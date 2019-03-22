@@ -338,6 +338,11 @@ p {
     box-sizing: content-box;
     flex-grow: 1; }
 
+.icon-ts {
+  width: 2.5vh; }
+  .icon-ts img {
+    width: 100%; }
+
 .hr-trans {
   margin-top: 3px;
   margin-bottom: 3px; }
