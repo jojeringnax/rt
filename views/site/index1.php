@@ -1147,6 +1147,9 @@ let c_data =[];
                 $('.item-info.transort-department').each(function() {
                     $(this).removeClass('active-transport');
                 });
+                $('.img-transport').each(function(){
+                    $(this).attr('src', 'yan/img/auto_icon/point_blue_'+ $(this).data('type')+'.svg');
+                });
             }
             if(window.currentElement.hasOwnProperty('car')) {
                 let url_car = 'yan/img/auto_icon/point_' + (window.currentElement.car.inline ? 'blue_' : 'noIn_') + window.currentElement.car.type + '.svg';
@@ -1531,6 +1534,9 @@ let c_data =[];
                 $('.item-info.transort-department').each(function() {
                     $(this).removeClass('active-transport');
                 })
+                $('.img-transport').each(function(){
+                    $(this).attr('src', 'yan/img/auto_icon/point_blue_'+ $(this).data('type')+'.svg');
+                });
             }
         });
 
