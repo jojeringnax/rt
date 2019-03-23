@@ -263,8 +263,13 @@
             <!-- SECTION 3 -->
             <div id="ts-info" class="hide">
                 <div class="title-ts d-flex justify-content-start">
-                    <img id="img-ts" src="" alt="">
-                    <span id="nameTS" class="" style="color: #005498; margin-left: 1vh; font-weight: bold">ТС №93 BMW</span>
+                    <div style="width: 2.5vh">
+                        <img id="img-ts" src="" alt="" style="">
+                    </div>
+                    <div>
+                        <span id="nameTS" class="" style="color: #005498; margin-left: 1.5vh; font-weight: bold">ТС №93 BMW</span>
+                    </div>
+
                 </div>
                 <div class="main-info-ts">
                     <div id="driver" class="item-ts-data">
@@ -324,7 +329,7 @@
                         <div class="row-1 d-flex flex-row item-ts-data">
                             <div class="dada-ts-item d-flex">
                                 <div class="icon-ts">
-                                    <img src="yan/img/info_auto_icon/speedometer.svg" alt="">
+                                    <img src="yan/img/info_auto_icon/speedometer.svg" alt="" style="height: 1.5vh">
                                 </div>
                                 <div class="d-flex flex-column align-items-start" style="margin-left: 1.5vh">
                                     <span class="title-ts-text">Пробег:</span>
@@ -342,7 +347,7 @@
                                     <img src="yan/img/info_auto_icon/gas-station.svg" alt="">
                                 </div>
                                 <div class="d-flex flex-column align-items-start" style="margin-left: 1.5vh">
-                                    <span class="title-ts-text">Топливопо <br />норме:</span>
+                                    <span class="title-ts-text">Топливо по <br />норме:</span>
                                     <span id="fuel-norm" class="text-ts">99.55</span>
                                 </div>
                             </div>
