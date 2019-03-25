@@ -141,21 +141,14 @@ class Organization extends \yii\db\ActiveRecord
         $client = new \SoapClient('http://d.rg24.ru:5601/PUP_WS/ws/PUP.1cws?wsdl');
         $organizations = json_decode($client->getOrganization()->return);
         foreach ($organizations as $organization) {
-            try {
-                $organizationMod = self::getOrCreate($organization->ID);
-                $organizationMod->id = $organization->ID;
-                $organizationMod->company_id = '762b8f6f-1a46-11e5-be74-00155dc6002b';
-                $organizationMod->description = $organization->Description;
-                $organizationMod->address = $organization->Address;
-                $organizationMod->x_pos = $organization->XPos;
-                $organizationMod->y_pos = $organization->YPos;
-                $organizationMod->save();
-            } catch (Exception $e) {
-                $log = new Log();
-                $log->message = $e->getTraceAsString();
-                $log->created_at = date('Y-m-d H:i:s');
-                $log->save();
-            }
+            $organizationMod = self::getOrCreate($organization->ID);
+            $organizationMod->id = $organization->ID;
+            $organizationMod->company_id = '762b8f6f-1a46-11e5-be74-00155dc6002b';
+            $organizationMod->description = $organization->Description;
+            $organizationMod->address = $organization->Address;
+            $organizationMod->x_pos = $organization->XPos;
+            $organizationMod->y_pos = $organization->YPos;
+            $organizationMod->save();
         }
         return var_dump($organizations, true);
     }
