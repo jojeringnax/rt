@@ -59,6 +59,7 @@ class Statistic extends ActiveRecord
         self::setAutocolumnsIds();
     }
 
+    
     public static function setAutocolumnsIds()
     {
         $statistics = self::find()->all();
@@ -77,13 +78,17 @@ class Statistic extends ActiveRecord
         Console::endProgress();
     }
 
+    /**
+     * @param \SoapClient $client
+     * @return bool
+     */
     public static function getApplications(\SoapClient $client)
     {
         $applications = json_decode($client->GetRequests()->return);
         try {
             $count = count($applications);
         } catch (\Exception $e) {
-            $count = 0;
+            return true;
         };
         echo 'Only applications processing';
         Console::startProgress(0,$count);
@@ -116,13 +121,17 @@ class Statistic extends ActiveRecord
         Console::endProgress();
     }
 
+    /**
+     * @param \SoapClient $client
+     * @return bool
+     */
     public static function getAccidents(\SoapClient $client)
     {
         $accidents = json_decode($client->GetDTP()->return);
         try {
             $count = count($accidents);
         } catch (\Exception $e) {
-            $count = 0;
+            return true;
         };
         echo 'Only accidents processing';
         Console::startProgress(0,$count);
@@ -151,13 +160,17 @@ class Statistic extends ActiveRecord
         Console::endProgress();
     }
 
+    /**
+     * @param \SoapClient $client
+     * @return bool
+     */
     public static function getWaybills(\SoapClient $client)
     {
         $waybills = json_decode($client->GetWayBillProcessing()->return);
         try {
             $count = count($waybills);
         } catch (\Exception $e) {
-            $count = 0;
+            return true;
         };
         echo 'Only waybills processing';
         Console::startProgress(0,$count);
@@ -188,6 +201,7 @@ class Statistic extends ActiveRecord
 
     /**
      * @param \SoapClient $client
+     * @return bool
      */
     public static function getTMCH(\SoapClient $client)
     {
@@ -195,7 +209,7 @@ class Statistic extends ActiveRecord
         try {
             $count = count($tmchs);
         } catch (\Exception $e) {
-            $count = 0;
+            return true;
         };
         Console::startProgress(0,$count);
         $i = 0;
@@ -225,6 +239,7 @@ class Statistic extends ActiveRecord
 
     /**
      * @param \SoapClient $client
+     * @return bool
      */
     public static function getWBs(\SoapClient $client)
     {
@@ -232,7 +247,7 @@ class Statistic extends ActiveRecord
         try {
             $count = count($wbs);
         } catch (\Exception $e) {
-            $count = 0;
+            return true;
         };
         Console::startProgress(0,$count);
         $i = 0;

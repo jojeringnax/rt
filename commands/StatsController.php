@@ -56,9 +56,19 @@ class StatsController extends Controller
         }
         if ($this->tmch) {
             Statistic::getTMCH($client);
+            echo 'Finished';
+            return true;
         }
         if ($this->monitoring) {
             Statistic::getWBs($client);
+            echo 'Finished';
+            return true;
+        }
+
+        if ($this->accidents) {
+            Statistic::getAccidents($client);
+            echo 'Finished';
+            return true;
         }
         throw new Exception('Nothing to do here');
     }

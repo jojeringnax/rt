@@ -150,7 +150,7 @@ class Organization extends \yii\db\ActiveRecord
             $organizationMod->y_pos = $organization->YPos;
             $organizationMod->save();
         }
-        return var_dump($organizations, true);
+        return true;
     }
 
 
