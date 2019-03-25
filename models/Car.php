@@ -152,8 +152,8 @@ class Car extends \yii\db\ActiveRecord
             }
             foreach($carsPositions as $carsPosition) {
                 if($carsPosition->CarsID === $car->ID) {
-                    $resultArray[$car->ID]['x_pos'] = preg_replace('/,/', '.',$carsPosition->XPos);
-                    $resultArray[$car->ID]['y_pos'] = preg_replace('/,/', '.',$carsPosition->YPos);
+                    $resultArray[$car->ID]['x_pos'] = preg_replace('/,/', '.',$carsPosition->YPos);
+                    $resultArray[$car->ID]['y_pos'] = preg_replace('/,/', '.',$carsPosition->XPos);
                 } else {
                     continue;
                 }

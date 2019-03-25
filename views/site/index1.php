@@ -1120,10 +1120,10 @@ let c_data =[];
                     <?php if(!empty($autocolumns[$organizationPrettyId]['bounds'])) { ?>
                         if(a_array.length === 1) {
                             o.originalEvent.target.center = a_array[0].geometry._coordinates;
-                            myMap.setCenter(o.originalEvent.target.center, 6)
+                            myMap.setCenter(o.originalEvent.target.center, 6, {duration: 1000})
                         } else {
                             o.originalEvent.target.bounds = <?= $autocolumns[$organizationPrettyId]['bounds'] ?>;
-                            myMap.setBounds(o.originalEvent.target.bounds, {checkZoomRange: true}).then(function() {
+                            myMap.setBounds(o.originalEvent.target.bounds, {checkZoomRange: true, duration: 1000}).then(function() {
                                 myMap.setZoom(myMap.getZoom() - 1);
                             });
                         }
@@ -1136,6 +1136,8 @@ let c_data =[];
                 $('.nav-sidebar').html('<a id="firm"> Компания </a> >> ' + '<a id="organization">' + window.currentElement.organization.breadcrumps + '</a>');
                 console.log(window.currentElement);
             }); // Organization click
+
+
         <?php } ?>
         addArrayOnMap(o_array, myMap);
         myMap.setBounds(<?= \app\models\Organization::getMaxAndMinCoordinatesForAPI() ?>, {checkZoomRange: true});
