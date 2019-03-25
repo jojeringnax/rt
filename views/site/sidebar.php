@@ -263,50 +263,78 @@
             <!-- SECTION 3 -->
             <div id="ts-info" class="hide">
                 <div class="title-ts d-flex justify-content-start">
-                    <img id="img-ts" src="" alt="">
-                    <span id="nameTS" class="" style="color: #005498; margin-left: 1vh; font-weight: bold">ТС №93 BMW</span>
+                    <div style="width: 2.5vh">
+                        <img id="img-ts" src="" alt="" style="">
+                    </div>
+                    <div>
+                        <span id="nameTS" class="" style="color: #005498; margin-left: 1.5vh; font-weight: bold">ТС №93 BMW</span>
+                    </div>
+
                 </div>
                 <div class="main-info-ts">
                     <div id="driver" class="item-ts-data">
-                        <div class="name-driver d-flex flex-column align-items-start item-ts-data">
-                            <span class="title-driver-name title-ts-text">Водитель:</span>
-                            <span id="driver-name" class="text-ts">Постывый Ярослав Николаевич</span>
-                        </div>
-                        <div class="phone-driver d-flex flex-column align-items-start item-ts-data">
-                            <span class="title-ts-text title-driver-phone">Телефон:</span>
-                            <span id="driver-phone" class="text-ts">8-908-235-82-56</span>
+                        <div>
+                            <div class="name-driver d-flex item-ts-data">
+                                <div class="d-flex align-items-start icon-ts">
+                                    <img src="yan/img/info_auto_icon/user.svg" alt="driver_icon">
+                                </div>
+                                <div class="d-flex flex-column align-items-start" style="margin-left: 1.5vh">
+                                    <span class="title-driver-name title-ts-text">Водитель:</span>
+                                    <span id="driver-name" class="text-ts">Постывый Ярослав Николаевич</span>
+                                </div>
+                            </div>
+                            <div class="phone-driver d-flex align-items-start item-ts-data">
+                                <div class="d-flex align-items-start icon-ts">
+                                    <img src="yan/img/info_auto_icon/call-answer.svg" alt="phone_driver">
+                                </div>
+                                <div class="d-flex flex-column align-items-start" style="margin-left: 1.5vh">
+                                    <span class="title-ts-text title-driver-phone">Телефон:</span>
+                                    <span id="driver-phone" class="text-ts">8-908-235-82-56</span>
+                                </div>
+                            </div>
                         </div>
                         <hr class="ts-hr"/>
                     </div>
 
-                    <div class="work-time item-ts-data">
-                        <div class="start flex flex-column item-ts-data">
-                            <span class="title-time-start title-ts-text">Время начала:</span>
-                            <div class="time d-flex justify-content-between" style="display: flex;">
-                                <span id="plan-start" class="text-ts cross-out">28.02.2019 7:00:00</span>
-                                <span id="fact-start" class="text-ts blue-color">28.02.2019 7:05:21</span>
+                    <div class="work-time item-ts-data d-flex flex-column">
+                        <div class="d-flex">
+                            <div class="icon-ts">
+                                <img src="yan/img/info_auto_icon/clock.svg" alt="clock_icon">
+                            </div>
+                            <div class="d-flex flex-column align-items-start" style="margin-left: 1.5vh">
+                                <div class="start flex flex-column">
+                                    <span class="title-time-start title-ts-text">Время начала:</span>
+                                    <div class="time d-flex justify-content-between" style="display: flex;">
+                                        <span id="plan-start" class="text-ts cross-out">28.02.2019 7:00:00</span>
+                                        <span id="fact-start" class="text-ts blue-color" style="margin-left: 1vh">28.02.2019 7:05:21</span>
+                                    </div>
+                                </div>
+                                <div class="time-end item-ts-data">
+                                    <span class="title-time-end title-ts-text">Время окончания:</span>
+                                    <span id="fact-end" class="title-time-end text-ts">28.02.2019 19:00:00</span>
+                                </div>
+                                <div class="fuel-time item-ts-data">
+                                    <span class="title-fuel-time title-ts-text">Время работы (часов):</span>
+                                    <div class="time d-flex">
+                                        <span id="fuel-time-plan" class="fuel-time-start text-ts cross-out">12</span>
+                                        <span id="fuel-time-work" class="fuel-time-end text-ts blue-color" style="margin-left: 1vh">11.91</span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        <div class="time-end item-ts-data">
-                            <span class="title-time-end title-ts-text">Время окончания:</span>
-                            <span id="fact-end" class="title-time-end text-ts">28.02.2019 19:00:00</span>
-                        </div>
-                        <div class="fuel-time item-ts-data">
-                            <span class="title-fuel-time title-ts-text">Время работы (часов):</span>
-                            <div class="time d-flex">
-                                <span id="fuel-time-plan" class="fuel-time-start text-ts cross-out">12</span>
-                                <span id="fuel-time-work" class="fuel-time-end text-ts blue-color" style="margin-left: 1vh">11.91</span>
-                            </div>
-                        </div>
-
-                        <hr class="ts-hr"/>
+                        <hr class="ts-hr" style="width: 100%;"/>
                     </div>
 
                     <div class="dada-ts item-ts-data">
                         <div class="row-1 d-flex flex-row item-ts-data">
-                            <div class="dada-ts-item">
-                                <span class="title-ts-text">Пробег:</span>
-                                <span id="mileage" class="text-ts">275 км</span>
+                            <div class="dada-ts-item d-flex">
+                                <div class="icon-ts">
+                                    <img src="yan/img/info_auto_icon/speedometer.svg" alt="" style="height: 1.5vh">
+                                </div>
+                                <div class="d-flex flex-column align-items-start" style="margin-left: 1.5vh">
+                                    <span class="title-ts-text">Пробег:</span>
+                                    <span id="mileage" class="text-ts">275 км</span>
+                                </div>
                             </div>
                             <div class="dada-ts-item">
                                 <span class="title-ts-text">Средняя скорость:</span>
@@ -314,9 +342,14 @@
                             </div>
                         </div>
                         <div class="row-2 d-flex flex-row item-ts-data">
-                            <div class="dada-ts-item">
-                                <span class="title-ts-text">Топливопо <br />норме:</span>
-                                <span id="fuel-norm" class="text-ts">99.55</span>
+                            <div class="dada-ts-item d-flex">
+                                <div class="icon-ts">
+                                    <img src="yan/img/info_auto_icon/gas-station.svg" alt="">
+                                </div>
+                                <div class="d-flex flex-column align-items-start" style="margin-left: 1.5vh">
+                                    <span class="title-ts-text">Топливо по <br />норме:</span>
+                                    <span id="fuel-norm" class="text-ts">99.55</span>
+                                </div>
                             </div>
                             <div class="dada-ts-item">
                                 <span class="title-ts-text">Топливо <br />ДУТ:</span>
@@ -324,9 +357,14 @@
                             </div>
                         </div>
                         <div class="row-3 d-flex flex-row item-ts-data">
-                            <div class="dada-ts-item">
-                                <span class="title-ts-text">Количество <br />нарушений:</span>
-                                <span id="numb-of-violations" class="text-ts">6.0</span>
+                            <div class="dada-ts-item d-flex">
+                                <div class="icon-ts">
+                                    <img src="yan/img/info_auto_icon/star.svg" alt="">
+                                </div>
+                                <div class="d-flex flex-column align-items-start" style="margin-left: 1.5vh">
+                                    <span class="title-ts-text">Количество <br />нарушений:</span>
+                                    <span id="numb-of-violations" class="text-ts">6.0</span>
+                                </div>
                             </div>
                             <div class="dada-ts-item">
                                 <span class="title-ts-text">Оценка качества <br />вождения:</span>
@@ -338,15 +376,27 @@
 
                     <div class="dada-ts-2">
                         <div class="row-1 d-flex flex-row item-ts-data">
-                            <div class="dada-ts-item">
-                                <span class="title-ts-text">Процент рентабельности за прошлый месяц:</span>
-                                <span id="profitabilities" class="text-ts">50</span>
+                            <div class="dada-ts-item d-flex" style="width:100%">
+                                <div class="icon-ts">
+                                    <img src="yan/img/info_auto_icon/percentage-discount.svg" alt="">
+                                </div>
+                                <div class="d-flex flex-column align-items-start" style="margin-left: 1.5vh; width: 170px">
+                                    <span class="title-ts-text">Процент рентабельности за прошлый месяц:</span>
+                                    <span id="profitabilities" class="text-ts">50</span>
+                                </div>
+
                             </div>
                         </div>
                         <div class="row-2 d-flex flex-row item-ts-data">
-                            <div class="dada-ts-item">
-                                <span class="title-ts-text">Осталось км <br /> до ТО:</span>
-                                <span id="untilTO" class="text-ts">1500</span>
+                            <div class="dada-ts-item d-flex">
+                                <div class="icon-ts">
+                                    <img src="yan/img/info_auto_icon/tools-and-utensils.svg" alt="">
+                                </div>
+                                <div class="d-flex flex-column align-items-start" style="margin-left: 1.5vh">
+                                    <span class="title-ts-text">Осталось км <br /> до ТО:</span>
+                                    <span id="untilTO" class="text-ts">1500</span>
+                                </div>
+
                             </div>
                             <div class="dada-ts-item">
                                 <span class="title-ts-text ">Дней до замены <br /> аккумулятора:</span>
@@ -354,9 +404,15 @@
                             </div>
                         </div>
                         <div class="row-3 d-flex flex-row item-ts-data">
-                            <div class="dada-ts-item">
-                                <span class="title-ts-text">Км до замены шин:</span>
-                                <span id="tier-change" class="text-ts">241</span>
+                            <div class="dada-ts-item d-flex">
+                                <div class="icon-ts">
+                                    <img src="yan/img/info_auto_icon/car-wheel.svg" alt="">
+                                </div>
+                                <div class="d-flex flex-column align-items-start" style="margin-left: 1.5vh">
+                                    <span class="title-ts-text">Км до замены шин:</span>
+                                    <span id="tier-change" class="text-ts">241</span>
+                                </div>
+
                             </div>
                             <div class="dada-ts-item">
                                 <span class="title-ts-text">Сезонность шин:</span>

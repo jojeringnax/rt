@@ -338,6 +338,13 @@ p {
     box-sizing: content-box;
     flex-grow: 1; }
 
+.icon-ts {
+  width: 2.5vh;
+  text-align: center; }
+  .icon-ts img {
+    height: 1.8vh;
+    margin-top: 3px; }
+
 .hr-trans {
   margin-top: 3px;
   margin-bottom: 3px; }
