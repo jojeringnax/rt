@@ -449,8 +449,8 @@ let c_data =[];
                         $autocolumnPrettyId = $autocolumn->getIdWithoutNumbers(); ?>
 
 
-                town_autocol = "<?= $autocolumn->name ?>";
-                if(town_autocol.match('-')){
+            town_autocol = "<?= $autocolumn->name ?>";
+                 if(town_autocol.match('-')){
                     town_autocol = town_autocol.replace('-', '&minus;');
                 }
 
@@ -581,7 +581,7 @@ let c_data =[];
 
                             town_spot = "<?= $spot->name ?>";
                             if(town_spot.match('-')){
-                                town_spot = town_autocol.replace('-', '&minus;');
+                                town_spot = town_spot.replace('-', '&minus;');
                             }
 
                             var SpotsLayout = ymaps.templateLayoutFactory.createClass(
@@ -1366,6 +1366,7 @@ let c_data =[];
                 }
 
                 $('.bbb > span').html(window.currentElement.organization.breadcrumps);
+                console.log('bbb-autocol', window.currentElement.organization.breadcrumps);
                 $('.nav-sidebar').html('<a id="firm"> Компания </a> >> ' + '<a id="organization">' + window.currentElement.organization.breadcrumps + '</a>');
                 $('#info-company').addClass('hide');
                 $('#ts-info').addClass('hide');
