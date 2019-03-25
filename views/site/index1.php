@@ -1551,7 +1551,7 @@ let c_data =[];
                     switch ($(this).attr('id')) {
                         case 'organization':
                             $('#info-company').addClass('hide');
-                            $('#ts-info').removeClass('hide');
+                            $('#ts-info').addClass('hide');
                             $('#info-department').removeClass('hide');
                             $.ajax({
                                 url: "index.php?r=site/get-organization-statistic&organization_id=" + idOfCurrentElement['organizations'],
@@ -1655,7 +1655,7 @@ let c_data =[];
 
                         case 'autocolumn':
                             $('#info-company').addClass('hide');
-                            $('#ts-info').removeClass('hide');
+                            $('#ts-info').addClass('hide');
                             $('#info-department').removeClass('hide');
 
                             $.ajax({
@@ -1741,7 +1741,7 @@ let c_data =[];
 
                         case 'spot':
                             $('#info-company').addClass('hide');
-                            $('#ts-info').removeClass('hide');
+                            $('#ts-info').addClass('hide');
                             $('#info-department').removeClass('hide');
                             //AJAX -> SPOT
                             $.ajax({
