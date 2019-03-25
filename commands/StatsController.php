@@ -24,7 +24,7 @@ class StatsController extends Controller
 
     public function options($actionID)
     {
-        return ['all', 'applications', 'waybills', 'accidents', 'tmch'];
+        return ['all', 'applications', 'waybills', 'accidents', 'tmch', 'monitoring'];
     }
 
     public function optionAliases()
