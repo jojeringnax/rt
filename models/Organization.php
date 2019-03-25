@@ -157,7 +157,7 @@ class Organization extends \yii\db\ActiveRecord
                 $log->save();
             }
         }
-        return true;
+        return var_dump($organizations, true);
     }
 
 
