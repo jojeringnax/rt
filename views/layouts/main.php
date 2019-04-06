@@ -27,10 +27,10 @@ AppAsset::register($this);
 </head>
 <body>
 <?php $this->beginBody() ?>
-<div class="loading-layout">
+<!--<div class="loading-layout">
     <div class="wrapper"></div>
     <img id="loading" src="../web/yan/img/loading-rt.svg" alt="">
-</div>
+</div>-->
 
 <div class="bbb" style="left:20%; display: flex; justify-content: flex-start; min-height: 50px; position: absolute; z-index: 100; top: 0; width: 80%">
     <div class="layout" style="width: 100%; height: 100%; position:absolute; opacity: 0.9"></div>

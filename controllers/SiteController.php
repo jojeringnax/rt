@@ -4,6 +4,7 @@ namespace app\controllers;
 header('Access-Control-Allow-Origin: *');
 
 use app\models\Autocolumn;
+use app\models\BadSpot;
 use app\models\Car;
 use app\models\CarsData;
 use app\models\Company;
@@ -72,7 +73,17 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        return $this->render('index');
+
+        $organizations = \app\models\Organization::getActives();
+        foreach ($organizations as $organization) {
+            $organization->carsTotal = $organization->getTotalCars();
+        }
+        return $this->render('index', [
+            'organizations' => $organizations,
+            'totalCarsData' => Car::getTotalData(),
+            'totalTerminals' => Car::getNumberOfTerminals(),
+            'totalStats' => Statistic::getTotalStatistic(),
+        ]);
     }
 
     public function actionWork($cars=0)
@@ -207,8 +218,70 @@ class SiteController extends Controller
         $organizations = Organization::getActives();
         $spots = Spot::getActives();
         $autocolumns = Autocolumn::getActives();
+        $badSpots = BadSpot::getActives();
         foreach ($organizations as $organization) {
             $organizationGoodId = $organization->getIdWithoutNumbers();
+
+            $carsWithGStatus = 0;
+            $carsWithRStatus = 0;
+            $carsWithTOStatus = 0;
+            $xMinBadSpots = 1000;
+            $xMaxBadSpots = 0;
+            $yMinBadSpots = 1000;
+            $yMaxBadSpots = 0;
+            foreach($badSpots as $badSpot) {
+                $carsInlineBadSpot = 0;
+                $carsTypesBadSpot = [0,0,0,0];
+                if ($badSpot->organization_id !== $organization->id) {
+                    continue;
+                }
+                $carsQuery = Car::find()->where(['spot_id' => $badSpot->id])->andWhere(['not', ['x_pos' => null]]);
+                $carsSum = $carsQuery->count();
+                $cars = $carsQuery->all();
+                foreach($cars as $car) {
+                    if ($car->type !== null){
+                        $carsTypesBadSpot[$car->type]++;
+                    }
+
+                    if ($car->inline) {
+                        $carsInlineBadSpot++;
+                    }
+                    if ($car->status === 'G') {
+                        $carsWithGStatus++;
+                    } elseif ($car->status === 'R') {
+                        $carsWithRStatus++;
+                    } elseif ($car->status === 'TO') {
+                        $carsWithTOStatus++;
+                    } else {
+                        continue;
+                    }
+                }
+                $badSpot->carsTypes = $carsTypesBadSpot;
+                $badSpot->carsNumber = $carsSum;
+                $badSpot->carsStatuses = [
+                    'G' => $carsWithGStatus,
+                    'R' => $carsWithRStatus,
+                    'TO' => $carsWithTOStatus,
+                    'inline' => $carsInlineBadSpot
+                ];
+                $badSpotsOrgnaization[$organizationGoodId][] = $badSpot;
+                if($badSpot->x_pos < $xMinBadSpots) {
+                    $xMinBadSpots = $badSpot->x_pos;
+                }
+                if($badSpot->x_pos > $xMaxBadSpots) {
+                    $xMaxBadSpots = $badSpot->x_pos;
+                }
+                if($badSpot->y_pos < $yMinBadSpots) {
+                    $yMinBadSpots = $badSpot->y_pos;
+                }
+                if($badSpot->y_pos > $yMaxBadSpots) {
+                    $yMaxBadSpots = $badSpot->y_pos;
+                }
+                if($xMaxBadSpots === 0) {continue;}
+
+            }
+
+
             $xMinAutocolumns = 1000;
             $xMaxAutocolumns = 0;
             $yMinAutocolumns = 1000;
@@ -338,6 +411,7 @@ class SiteController extends Controller
             $orgAutocolumns[$organizationGoodId]['cars'] = $carsSumsTotalOrganization;
             $orgAutocolumns[$organizationGoodId]['carsStatuses'] = $carsWithStatusesOrganization;
             $orgAutocolumns[$organizationGoodId]['bounds'] = $yMaxAutolumns ? "[[$xMinAutocolumns,$yMinAutocolumns], [$xMaxAutocolumns,$yMaxAutolumns]]" : false;
+            $badSpotsOrgnaization[$organizationGoodId]['bounds'] = $yMaxAutolumns ? "[[$xMinAutocolumns,$yMinAutocolumns], [$xMaxAutocolumns,$yMaxAutolumns]]" : false;
         }
         return $this->render('index1', [
             'totalCarsData' => Car::getTotalData(),
@@ -345,7 +419,8 @@ class SiteController extends Controller
             'totalStats' => Statistic::getTotalStatistic(),
             'spots' => $spotsAutocolumn,
             'autocolumns' => $orgAutocolumns,
-            'organizations' => $organizations
+            'organizations' => $organizations,
+            'badSpots' => $badSpotsOrgnaization
         ]);
     }
 

@@ -1,311 +1,635 @@
-<?php
-/**
- * @var $this \yii\web\View
- *
- * Russia coords
- * left - 63.240863, 47.606875
- * bottom - 54.182108, 98.191842
- * top - 70.727999, 100.564889
- * right - 65.687505, 132.805695
- */
-\app\assets\AppAsset::register($this);
-$json = file_get_contents('../web/data.json');
-$regions = file_get_contents('../web/regions.json');
-?>
 <?= $this->render('sidebar') ?>
-<script type="text/javascript">
-    var pWrap = function(e) {
-        return '<p>' + e + '</p>';
-    };
+<script>
 
     ymaps.ready( function() {
-        let sectionCompany = $('section#info-company'), sectionDepartment = $('section#info-department'), sectionTS = $('section#ts-info'),
-      MyIconContentLayout = ymaps.templateLayoutFactory.createClass(
-          '<div style="color: #FFFFFF; font-weight: bold;">$[properties.iconContent]</div>'
-      );
-        var regions = JSON.parse('<?= $regions ?>').features;
-        var myMap = new ymaps.Map('map', {
+
+        const levels = {
+            'company': 0,
+            'organization': 1,
+            'autocolumn': 2,
+            'spot': 3,
+            'car': 4
+        };
+
+        const levelsWithBadSpot = {
+            'company': 0,
+            'organization': 1,
+            'spot': 2,
+            'car': 3
+        };
+
+        const capitalize = function(s)
+        {
+            return s[0].toUpperCase() + s.slice(1);
+        };
+
+        const divine = $('input#divineInput');
+        const breadcrumpsDiv = $('.nav-sidebar');
+        const backButton = $('button.back');
+
+
+        let changeInfoForDepartment = function(obj) {
+            $('#totTs').html(obj.totTs);
+            $('#OnReady').html(obj.readyTs);
+            $('#OnLine').html(obj.onLine);
+            $('#OnRep').html(obj.onRep);
+            $('#onTo').html(obj.onTO);
+            $('#passCar').html(obj.passCar);
+            $('#freightCar').html(obj.freightCar);
+            $('#busCar').html(obj.busCar);
+            $('#specCar').html(obj.specCar);
+        };
+
+        let changeInfoForCar = function(obj) {
+            let keys = [
+                "car_id",
+                "driver",
+                "phone",
+                "start_time_plan",
+                "end_time_plan",
+                "work_time_plan",
+                "start_time_fact",
+                "work_time_fact",
+                "mileage",
+                "speed",
+                "fuel_norm",
+                "fuel_DUT",
+                "driver_mark",
+                "violations_count"
+            ];
+            keys.forEach(function(key) {
+               if (!obj.hasOwnProperty(key) || obj[key] === null) {
+                   obj[key] = 'н/д';
+               }
+               console.log(obj[key]);
+               $('#' + key).html(obj[key]);
+            });
+        };
+
+        let setBreadcrumps = function(badSpots = false) {
+            let breadcrumpsArray = ['<a onclick="window.setLevelCompany()" id="company" href="#">ООО Ресурс Транс</a>'];
+            let keys = Object.keys(window.currentElement);
+            keys.forEach(function (key) {
+                $.ajax({
+                    url: 'index.php',
+                    data: {
+                       r: key + '/get-name',
+                       id: window.currentElement[key]
+                    },
+                    success: function(data) {
+                        if (badSpots) {
+                            breadcrumpsArray[levelsWithBadSpot[key]] = '<a onclick="window.setLevel' + capitalize(key) + '(\'' + window.currentElement[key] + '\');" data-id="' + window.currentElement[key] + '" id="' + key + '" href="#">' + data + '</a>';
+                        } else {
+                            breadcrumpsArray[levels[key]] = '<a onclick="window.setLevel' + capitalize(key) + '(\'' + window.currentElement[key] + '\');" data-id="' + window.currentElement[key] + '" id="' + key + '" href="#">' + data + '</a>';
+                        }
+                    }
+                });
+            });
+
+            setTimeout( function() {
+                breadcrumpsDiv.html(breadcrumpsArray.join(' >>> '))
+            }, 300);
+
+        };
+
+
+        let myMap = new ymaps.Map('map', {
             center: [55.751574, 37.573856],
             zoom: 11,
-            behaviors: ['default', 'scrollZoom']
+            behaviors: ['default', 'scrollZoom'],
+            controls: []
         }, {
-            searchControlProvider: 'yandex#search'
+            searchControlProvider: 'yandex#search',
+            suppressMapOpenBlock: true
         });
 
-
-        /**
-         * Variable for determinate current depth-view level
-         * @type {number}
-         */
-        window.currentLevel = 0;
-
-        /**
-         * Variable for the choosen element
-         * @type {ymaps.Placemark}
-         */
-        window.currentElement = null;
-
-        /**
-         * Bread Crumbs
-         * @type {*|jQuery|HTMLElement}
-         */
-        var levelMenuTs = $('div.level-menu#ts'),
-            levelMenuTsDepartment = $('div.level-menu#ts > span#level-menu-department'),
-            levelMenuTsAutocolumn = $('div.level-menu#ts > span#level-menu-autocolumn'),
-            levelMenuTsSpot = $('div.level-menu#ts > span#level-menu-spot'),
-            levelMenuTsTs = $('div.level-menu#ts > span#level-menu-ts'),
-            levelMenuDepartment = $('div.level-menu#department'),
-                addLevelInBreadCrumbs = function(level, text) {
-                  levelMenuDepartment.innerHTML += '<img src="../../../yan/img/arrow.svg" alt=""><span id="level-menu-'+level+'" class="text-level-menu">'+text+'</span>';
-                };
-            levelMenuDepDepartment = $('div.level-menu#department > span#level-menu-department');
-
-        var setBoundsForPoints = function(map, array) {
-            if(array.length === 1) {
-                return map.setCenter(array[0].geometry._coordinates, 11);
-            }
-            var
-                minX = array[0].geometry._coordinates[0],
-                minY = array[0].geometry._coordinates[1],
-                maxX = array[0].geometry._coordinates[0],
-                maxY = array[0].geometry._coordinates[1];
-            for(var i=0;i<array.length;i++) {
-                minX = array[i].geometry._coordinates[0] < minX ? array[i].geometry._coordinates[0] : minX;
-                minY = array[i].geometry._coordinates[1] < minY ? array[i].geometry._coordinates[1] : minY;
-                maxX = array[i].geometry._coordinates[0] > maxX ? array[i].geometry._coordinates[0] : maxX;
-                maxY = array[i].geometry._coordinates[1] > maxY ? array[i].geometry._coordinates[1] : maxY;
-            }
-
-            return map.setBounds([[minX,minY],[maxX,maxY]]);
-        },
-            actionClickPoint = function(map, target) {
-                target.RTOptions.children.forEach(function(el) {
-                    map.geoObjects.add(el);
-                });
-                setBoundsForPoints(map, target.RTOptions.children);
-                if(target.RTOptions.master) {
-                    target.RTOptions.master.RTOptions.children.forEach(function(el) {
-                        map.geoObjects.remove(el);
-                    });
-                } else {
-                    map.geoObjects.remove(target);
-                }
-                window.currentElement = target;
-                if(window.currentLevel !== 0) {
-                    map.controls.add(oneLevelLess);
-                }
+        window.setLevelCar = function(id) {
+            window.currentElement.car = id;
+            divine.val('car_' + id).trigger('change');
+            window.pastElement = {
+                key: 'spot',
+                id: window.currentElement.spot
             };
-        var d_point, s_point, a_point, c_point, spots, autocolumns, cars;
-        for(var i = 0, d_len = regions.length, d_array = [];i < d_len;i++) {
-            autocolumns = regions[i].autocolumns;
-            d_point = new ymaps.Placemark(regions[i].geometry.coordinates,{
-                iconContent: 'Ф'
-                },{
-                iconLayout: 'default#imageWithContent',
-                iconImageHref: 'yan/img/union.png',
-                iconImageSize: [42, 47.5],
-                iconImageOffset: [-24, -24],
-                iconContentOffset: [15, 15],
-                iconContentLayout: MyIconContentLayout
+            $('div#info-department').addClass('hide');
+            $('div#ts-info').removeClass('hide');
+            $('div#info-company').addClass('hide');
+            $.ajax({
+                url: 'index.php',
+                data: {
+                    r: 'car/get-data',
+                    id: id
+                },
+                success: function(data) {
+                    let carData = JSON.parse(data);
+                    changeInfoForCar(carData);
+                },
+                error: function () {
+                    changeInfoForCar({});
+                }
             });
-            for(var j = 0, a_len = autocolumns.length, a_array = [];j < a_len;j++) {
-                spots = autocolumns[j].spots;
-                a_point = new ymaps.Placemark(autocolumns[j].geometry.coordinates,{
-                  iconContent: 'АК'
-                  },{
-                    iconLayout: 'default#imageWithContent',
-                    iconContentOffset: [15, 15],
-                    iconImageHref: 'yan/img/union.png',
-                    iconImageSize: [42, 47.5],
-                    iconImageOffset: [-24, -24],
-                    iconContentLayout: MyIconContentLayout
-                });
-                for (var k = 0, s_len = spots.length, s_array = [];k < s_len;k++) {
-                    cars = spots[k].cars;
-                    s_point = new ymaps.Placemark(spots[k].geometry.coordinates,{
-                      iconContent: 'У'
-                      },{
-                      iconLayout: 'default#imageWithContent',
-                      iconImageHref: 'yan/img/union.png',
-                      iconImageSize: [42, 47.5],
-                      iconContentOffset: [16, 13],
-                      iconImageOffset: [-24, -24],
-                      iconContentLayout: MyIconContentLayout
-                    });
-                    for (var l=0, c_len = cars.length, c_array = [], c_dep, c_autocolumn, c_spot;l < c_len;l++) {
-                        c_point = new ymaps.Placemark(cars[l].geometry.coordinates,{
-                          iconContent: ''
-                          },{
-                          iconLayout: 'default#imageWithContent',
-                          iconImageHref: 'yan/img/point_'+cars[l].type+'.png',
-                          iconImageSize: [42, 47.5],
-                          iconContentOffset: [9, 13],
-                          iconImageOffset: [-24, -24],
-                          iconContentLayout: MyIconContentLayout});
-                        c_point.RTOptions = {
-                            id: cars[l].id,
-                            master: s_point,
-                            status: cars[l].status,
-                            type: cars[l].type,
-                            applications: {done: cars[l].application.done, canceled: cars[l].application.canceled, st: cars[l].application.st},
-                            children: false,
-                            regionType: 'c'
-                        };
-                        c_point.RTInfo = {
-                            nameTS: cars[l].brand,
-                            oilChangeDist: accounting.formatNumber(cars[l].oilChangeDist, 0, ' ') + ' км',
-                            tireChangeDist: accounting.formatNumber(cars[l].tireChangeDist, 0, ' ') + ' км',
-                            accChangeDist: accounting.formatNumber(cars[l].accChangeDist, 0, ' ') + ' ч',
-                            toChangeDist: accounting.formatNumber(cars[l].toChangeDist, 0, ' ') + ' км',
-                            lb1: cars[l].lbs.lb1,
-                            lb2: cars[l].lbs.lb2,
-                            lb3: cars[l].lbs.lb3,
-                            lb4: cars[l].lbs.lb4
-                        };
-                        c_dep = regions[i];
-                        c_autocolumn = autocolumns[j];
-                        c_spot = spots[k];
-                        c_point.events.add('click', function(e) {
-                            var target = e.originalEvent.target;
-                            sectionDepartment.classList.add('hide');
-                            sectionCompany.classList.add('hide');
-                            sectionTS.classList.remove('hide');
-                            newInfoTs(target.RTInfo);
-                            levelMenuTsDepartment.innerText = c_dep.regionName;
-                            levelMenuTsAutocolumn.innerText = c_autocolumn.regionName;
-                            levelMenuTsSpot.innerText = c_spot.regionName;
-                            levelMenuTsTs.innerText = target.RTInfo.nameTS + ' ТС №' + target.RTOptions.id;
+        };
+
+
+        window.setLevelSpot = function(id) {
+            delete window.currentElement.car;
+            window.currentElement.spot = id;
+            divine.val('spot_' + id).trigger('change');
+            window.pastElement = {
+                key: window.badSpots ? 'organization' : 'autocolumn',
+                id: window.badSpots ? window.currentElement.organization : window.currentElement.autocolumn
+            };
+            let c_array = [];
+            myMap.geoObjects.removeAll();
+            $.ajax({
+               url: 'index.php',
+               data: {
+                   r: 'spot/get-stats',
+                   id: id
+               },
+                success: function(data) {
+                   let stats = JSON.parse(data);
+                    $('div#info-department').removeClass('hide');
+                    $('div#ts-info').addClass('hide');
+                    $('div#info-company').addClass('hide');
+                    changeInfoForDepartment(stats);
+                }, error: function(car) {
+                   //
+                }
+            });
+
+            /**
+             * Cars ajax
+             **/
+            $.ajax({
+                url: 'index.php',
+                data: {
+                   r: 'spot/get-cars',
+                   id: id
+                },
+                success: function(data) {
+                    let c_pm, carLayout, carLayoutUrl, carLayoutClass, carLayoutChecked, carLayoutUrlChecked, carLayoutClassChecked;
+                    let carBalloonContentLayout = ymaps.templateLayoutFactory.createClass([
+                        '<ul class=list>',
+                        '{% for geoObject in properties.geoObjects %}',
+                        '<li><a onclick="window.setLevelCar(\'{{geoObject.id}}\')" href=# id="{{geoObject.id}}" class="list_item car-baloon"><img src="yan/img/auto_icon/point_blue_{{geoObject.type}}.svg" alt="">{{ geoObject.properties.balloonContentHeader|raw }}</a></li>',
+                        '{% endfor %}',
+                        '</ul>'
+                    ].join(''));
+                    let carClusterLayout = ymaps.templateLayoutFactory.createClass(
+                        '<div class="bb-cluster-car"><span class="bb-num">{{ properties.geoObjects.length }}</span></div>'
+                    );
+                    let clustererCars = new ymaps.Clusterer(
+                        {
+                            clusterBalloonContentLayout: carBalloonContentLayout,
+                            clusterIcons: [{
+                                href: '',
+                                size: [62, 62],
+                                offset: [-26, -26]
+                            }],
+                            gridSize: 128,
+                            clusterIconContentLayout: carClusterLayout,
+                            zoomMargin : [50,50,50,50]
+                        }
+                    );
+                    console.log(carBalloonContentLayout);
+                    let response = JSON.parse(data);
+                    let cars = response.cars;
+                    cars.forEach( function (car) {
+                        carLayoutUrl =
+                            car.inline ?
+                            'yan/img/auto_icon/point_blue_' + car.type + '.svg' :
+                            'yan/img/auto_icon/point_noIn_' + car.type + '.svg';
+                        carLayoutClass = car.inline ? "bb-num-car" : "bb-num-car-inline";
+                        carLayout = ymaps.templateLayoutFactory.createClass(
+                            '<div class="bb"><span class="' +
+                            carLayoutClass +
+                            '"><img src="' +
+                            carLayoutUrl +
+                            '" alt="auto"></span></div>'
+                        );
+
+
+                        carLayoutClassChecked = car.inline ?
+                            "bb-num-car-white" :
+                            "bb-num-car-inline_checked";
+                        carLayoutUrlChecked = 'yan/img/auto_icon/point_' +
+                            (car.inline ? 'noIn_check_' : '') +
+                            car.type + '.svg';
+                        carLayoutChecked = ymaps.templateLayoutFactory.createClass(
+                            '<div class="bb"><span class="' +
+                            carLayoutClassChecked +
+                            '"><img src="' +
+                            carLayoutUrlChecked +
+                            '" alt="auto"></span></div>'
+                        );
+
+                        c_pm = new ymaps.Placemark([car.x_pos, car.y_pos], {
+                            balloonContent: car.description,
+                            balloonContentHeader: car.model,
+                            balloonContentBody: car.number,
+                            balloonContentFooter: car.status
+                        },{
+                            hasBalloon: false,
+                            iconLayout: 'default#imageWithContent',
+                            iconImageHref: '',
+                            iconImageSize: [62, 62],
+                            iconContentOffset: [-70, 75],
+                            iconImageOffset: [-24, -24],
+                            iconContentLayout: carLayout
                         });
-                        c_array.push(c_point);
+
+                        c_pm.layout = carLayout;
+                        c_pm.layoutChecked = carLayoutChecked;
+                        c_pm.id = car.id;
+                        c_pm.model = car.model;
+
+                        c_pm.events.add('click', function(c) {
+                            let currentClickCar = c.originalEvent.target;
+                            if (window.hasOwnProperty('currentCar')) {
+                                window.currentCar.options.set('iconContentLayout', window.currentCar.layout);
+                            }
+                            window.currentCar = currentClickCar;
+                            $('#nameTS').html(currentClickCar.model);
+                            currentClickCar.options.set('iconContentLayout', currentClickCar.layoutChecked);
+                            window.setLevelCar(currentClickCar.id);
+                        });
+
+                        c_array.push(c_pm);
+                        c_pm = null;
+                        carLayout = null;
+                        carLayoutClass = null;
+                        carLayoutUrl = null;
+                        carLayoutChecked = null;
+                        carLayoutClassChecked = null;
+                        carLayoutUrlChecked = null;
+                    });
+                    if (response.hasOwnProperty('bounds')) {
+                        myMap.setBounds(response.bounds)
+                    } else if (response.hasOwnProperty('center')) {
+                        myMap.setCenter(response.center);
                     }
-                    s_point.RTOptions = {
-                        id: spots[k].id,
-                        master: a_point,
-                        children: c_array,
-                        regionType: 's',
-                        regionName: spots[k].regionName
-                    };
-                    s_point.events.add('click', function(e) {
-                        var target = e.originalEvent.target;
-                        window.currentLevel = 3;
-                        actionClickPoint(myMap, target);
-                        addLevelInBreadCrumbs('spot',target.RTOptions.regionName);
-                    });
-                    s_array.push(s_point);
-                } // Iteration through the spots  for (var k = 0, s_len = spots.length, s_array = [];k < s_len;k++) {
-                a_point.RTOptions = {
-                    id: autocolumns[j].id,
-                    master: d_point,
-                    children: s_array,
-                    regionType: 'a',
-                    regionName: autocolumns[j].regionName
-                };
-                a_point.events.add('click', function(e) {
-                    var target = e.originalEvent.target;
-                    window.currentLevel = 2;
-                    actionClickPoint(myMap, target);
-                    addLevelInBreadCrumbs('autocolumn',target.RTOptions.regionName);
-                });
-                a_array.push(a_point);
-            } // Iteration through the autocolumns  for(var j = 0, a_len = autocolumns.length, a_array = [];j < a_len;j++) {
-            d_point.RTOptions = {
-                id: regions[i].id,
-                master: false,
-                children: a_array,
-                regionType: 'd',
-                regionName: regions[i].regionName
-            };
-            d_point.RTInfo = {
-              'spb': {
-                'spb1':0.2,
-                'spb2':0.5,
-                'spb3':1.0,
-                'spb4':0.6,
-                'spb5':0.9
-              }
-            };
-            d_point.events.add('click', function(e) {
-                var target = e.originalEvent.target;
-                window.currentLevel = 1;
-                actionClickPoint(myMap, target);
-                sectionCompany.classList.add('hide');
-                sectionTS.classList.add('hide');
-                sectionDepartment.classList.remove('hide');
-                console.log(levelMenuDepDepartment);
-                levelMenuDepDepartment.innerText = target.RTOptions.regionName;
-                newInfoDASTs(d_point.RTInfo);
+                    clustererCars.add(c_array);
+                    myMap.geoObjects.add(clustererCars);
+                }
             });
-            d_array.push(d_point);
-            myMap.geoObjects.add(d_point);
-        } //Iteration through the departments for(var i = 0, d_len = regions.length, d_array = [];i < d_len;i++) {
+        };
 
-        var oneLevelLess = new ymaps.control.Button('Вернуться на один уровень назад', {float: 'right'});
-        oneLevelLess.events.add('click', function(e) {
-            window.currentLevel--;
-            if (window.currentLevel === 0) {
-                window.currentElement.RTOptions.children.forEach(function(el) {
-                    myMap.geoObjects.remove(el);
-                });
-                d_array.forEach(function(el) {
-                   myMap.geoObjects.add(el);
-                });
-                a_array.forEach(function(el) {
-                   myMap.geoObjects.remove(el);
-                });
-                setBoundsForPoints(myMap, d_array);
-                myMap.controls.remove(oneLevelLess);
-                sectionDepartment.classList.add('hide');
-                sectionCompany.classList.remove('hide');
-                return true;
-            } else if (window.currentLevel === 2) {
-                sectionTS.classList.add('hide');
-                sectionDepartment.classList.remove('hide');
-            }
-            levelMenuDepartment.lastElementChild.remove();
-            levelMenuDepartment.lastElementChild.remove();
-            var
-                currentLevelElements = window.currentElement.RTOptions.master.RTOptions.children,
-                currentChildren = window.currentElement.RTOptions.children,
-                currentElementAfterClick = window.currentElement.RTOptions.master;
-            for(i=0;i<currentChildren.length;i++) {
-                myMap.geoObjects.remove(currentChildren[i]);
-            }
-            for(i=0;i<currentLevelElements.length;i++) {
-                myMap.geoObjects.add(currentLevelElements[i]);
-            }
-            setBoundsForPoints(myMap, currentLevelElements);
-            window.currentElement = currentElementAfterClick;
-        });
-        myMap.events.add('boundschange', function(e) {
-            if (e.get('newZoom') >= 12) {
-                if(window.currentElement === null) {
-                    d_array.forEach(function(el) {
-                        myMap.geoObjects.remove(el);
-                    });
-                } else {
-                    window.currentElement.RTOptions.children.forEach(function (el) {
-                        myMap.geoObjects.remove(el);
-                    });
-                }
-                c_array.forEach(function(el) {
-                    myMap.geoObjects.add(el);
-                });
-            } else {
-                c_array.forEach(function(el) {
-                    myMap.geoObjects.remove(el);
-                });
 
-                if(window.currentElement === null) {
-                    d_array.forEach(function(el) {
-                        myMap.geoObjects.add(el);
-                    });
-                } else {
-                    window.currentElement.RTOptions.children.forEach(function (el) {
-                        myMap.geoObjects.add(el);
-                    });
+        window.setLevelAutocolumn = function(id)
+        {
+            delete window.currentElement.spot;
+            delete window.currentElement.car;
+            window.currentElement.autocolumn = id;
+            divine.val('autocolumn_' + id).trigger('change');
+            window.pastElement = {
+                key: 'organization',
+                id: window.currentElement.organization
+            };
+            let s_array = [];
+            myMap.geoObjects.removeAll();
+            $.ajax({
+                url: 'index.php',
+                data: {
+                    r: 'autocolumn/get-stats',
+                    id: id
+                },
+                success: function(data) {
+                    let stats = JSON.parse(data);
+                    $('div#info-department').removeClass('hide');
+                    $('div#ts-info').addClass('hide');
+                    $('div#info-company').addClass('hide');
+                    changeInfoForDepartment(stats);
+                },
+                error: function() {
+                    //
                 }
-            }
+            });
+
+            /**
+             * Spots ajax
+             **/
+            $.ajax({
+                url: 'index.php',
+                data: {
+                    r: 'autocolumn/get-spots',
+                    id: id
+                },
+                success: function(data) {
+                    let spotBalloonContentLayout = ymaps.templateLayoutFactory.createClass([
+                        '<ul class=list>',
+                        '{% for geoObject in properties.geoObjects %}',
+                        '<li><a onclick="window.setLevelSpot(\'{{geoObject.id}}\')" href=# class="list_item car-baloon">{{ geoObject.name }} ({{ geoObject.carsTotal }})</a></li>',
+                        '{% endfor %}',
+                        '</ul>'
+                    ].join(''));
+                    let spotClusterLayout = ymaps.templateLayoutFactory.createClass(
+                        '<div class="bb-cluster-car"><span class="bb-num">{{ properties.geoObjects.length }}</span></div>'
+                    );
+                    let s_clusterer = new ymaps.Clusterer(
+                        {
+                            clusterBalloonContentLayout: spotBalloonContentLayout,
+                            clusterIcons: [{
+                                href: '',
+                                size: [62, 62],
+                                offset: [-26, -26]
+                            }],
+                            gridSize: 4,
+                            clusterIconContentLayout: spotClusterLayout,
+                            zoomMargin : [50,50,50,50]
+                        }
+                    );
+                    let s_pm, spotLayout;
+                    let response = JSON.parse(data);
+                    let spots = response.spots;
+                    spots.forEach( function (spot) {
+                        spotLayout = ymaps.templateLayoutFactory.createClass(
+                            '<div class="bb"><span class="bb-num-spot">' +
+                            spot.carsTotal +
+                            '</span><span id="spot_name" class="bb-name">' +
+                            spot.spot.name +
+                            '</span></div>'
+                        );
+
+                        s_pm = new ymaps.Placemark([spot.spot.x_pos, spot.spot.y_pos], {
+                        }, {
+                            iconLayout: 'default#imageWithContent',
+                            iconImageHref: '',
+                            iconImageSize: [62, 62.5],
+                            iconContentOffset: [-70, 75],
+                            iconImageOffset: [-24, -24],
+                            preset: 'islands#greenDotIconWithCaption',
+                            iconContentLayout: spotLayout
+                        });
+
+                        s_pm.events.add('click', function() {
+                           window.setLevelSpot(spot.spot.id);
+                           window.currentLevel = 3;
+                        });
+
+                        s_pm.id = spot.spot.id;
+                        s_pm.carsTotal = spot.carsTotal;
+                        s_pm.name = spot.spot.name;
+
+                        s_array.push(s_pm);
+                        s_pm = null;
+                        spotLayout = null;
+                    });
+                    s_clusterer.add(s_array);
+                    myMap.geoObjects.add(s_clusterer);
+                    if (response.hasOwnProperty('bounds')) {
+                        myMap.setBounds(response.bounds);
+                    } else if (response.hasOwnProperty('center')) {
+                        myMap.setCenter(response.center, 9);
+                    }
+                }
+            });
+            //myMap.setBounds(spots.getBounds(), {checkZoomRange: true});
+        };
+
+
+        window.setLevelOrganization = function(id)
+        {
+            delete window.currentElement.autocolumn;
+            delete window.currentElement.spot;
+            delete window.currentElement.car;
+            window.currentElement.organization = id;
+            divine.val('organization_' + id).trigger('change');
+            window.pastElement = {
+                key: 'company',
+                id: ''
+            };
+            let a_array = [], b_s_array = [];
+            myMap.geoObjects.removeAll();
+            $.ajax({
+                url: 'index.php',
+                data: {
+                    r: 'organization/get-stats',
+                    id: id
+                },
+                success: function(data) {
+                    let stats = JSON.parse(data);
+                    $('div#info-department').removeClass('hide');
+                    $('div#ts-info').addClass('hide');
+                    $('div#info-company').addClass('hide');
+                    changeInfoForDepartment(stats);
+                },
+                error: function() {
+                    //
+                }
+            });
+
+            /**
+             * Autocolumns ajax
+             **/
+            $.ajax({
+                url: 'index.php',
+                data: {
+                    r: 'organization/get-autocolumns',
+                    id: id
+                },
+                success: function(data) {
+                    let autocolumnBalloonContentLayout = ymaps.templateLayoutFactory.createClass([
+                        '<ul class=list>',
+                        '{% for geoObject in properties.geoObjects %}',
+                        '<li><a onclick="window.setLevelAutocolumn(\'{{geoObject.id}}\')" href=# class="list_item car-baloon">{{ geoObject.name }} ({{ geoObject.carsTotal }})</a></li>',
+                        '{% endfor %}',
+                        '</ul>'
+                    ].join(''));
+                    let autocolumnClusterLayout = ymaps.templateLayoutFactory.createClass(
+                        '<div class="bb-cluster-car"><span class="bb-num">{{ properties.geoObjects.length }}</span></div>'
+                    );
+                    let a_clusterer = new ymaps.Clusterer(
+                        {
+                            clusterBalloonContentLayout: autocolumnBalloonContentLayout,
+                            clusterIcons: [{
+                                href: '',
+                                size: [62, 62],
+                                offset: [-26, -26]
+                            }],
+                            gridSize: 4,
+                            clusterIconContentLayout: autocolumnClusterLayout,
+                            zoomMargin : [50,50,50,50]
+                        }
+                    );
+                    let a_pm, autoColLayout;
+                    let autocolumns = JSON.parse(data);
+                    autocolumns.forEach( function (autocolumn) {
+                        autoColLayout = ymaps.templateLayoutFactory.createClass(
+                            '<div class="bb"><span class="bb-num">'
+                            + autocolumn.carsTotal
+                            + '</span> <span id="auto_name" class="bb-name">'
+                            + autocolumn.autocolumn.name
+                            +'</span></div>'
+                        );
+                        a_pm = new ymaps.Placemark([autocolumn.autocolumn.x_pos, autocolumn.autocolumn.y_pos], {
+                        }, {
+                            iconLayout: 'default#imageWithContent',
+                            iconImageHref: '',
+                            iconImageSize: [62, 62.5],
+                            iconContentOffset: [-70, 75],
+                            iconImageOffset: [-24, -24],
+                            preset: 'islands#greenDotIconWithCaption',
+                            iconContentLayout: autoColLayout
+                        });
+
+                        a_pm.events.add('click', function() {
+                            window.setLevelAutocolumn(autocolumn.autocolumn.id);
+                            window.currentLevel = 2;
+                        });
+
+                        a_pm.id = autocolumn.autocolumn.id;
+                        a_pm.name = autocolumn.autocolumn.name;
+                        a_pm.carsTotal = autocolumn.carsTotal;
+
+                        a_array.push(a_pm);
+                        a_pm = null;
+                        autoColLayout = null;
+                    });
+                    a_clusterer.add(a_array);
+                    myMap.geoObjects.add(a_clusterer);
+                }
+            });
+
+            /**
+             * Bad spots ajax
+             **/
+            $.ajax({
+                url: 'index.php',
+                data: {
+                    r: 'organization/get-bad-spots',
+                    id: id
+                },
+                success: function(data) {
+                    let badSpotBalloonContentLayout = ymaps.templateLayoutFactory.createClass([
+                        '<ul class=list>',
+                        '{% for geoObject in properties.geoObjects %}',
+                        '<li><a onclick="window.setLevelSpot(\'{{geoObject.id}}\')" href=# class="list_item car-baloon">{{ geoObject.name }} ({{ geoObject.carsTotal }})</a></li>',
+                        '{% endfor %}',
+                        '</ul>'
+                    ].join(''));
+                    let badSpotClusterLayout = ymaps.templateLayoutFactory.createClass(
+                        '<div class="bb-cluster-car"><span class="bb-num">{{ properties.geoObjects.length }}</span></div>'
+                    );
+                    let b_s_clusterer = new ymaps.Clusterer(
+                        {
+                            clusterBalloonContentLayout: badSpotBalloonContentLayout,
+                            clusterIcons: [{
+                                href: '',
+                                size: [62, 62],
+                                offset: [-26, -26]
+                            }],
+                            gridSize: 4,
+                            clusterIconContentLayout: badSpotClusterLayout,
+                            zoomMargin : [50,50,50,50]
+                        }
+                    );
+                    let b_s_pm, badSpotLayout;
+                    let response = JSON.parse(data);
+                    let badSpots = response.badSpots;
+                    badSpots.forEach( function (badSpot) {
+                        badSpotLayout = ymaps.templateLayoutFactory.createClass(
+                            '<div class="bb"><span class="bb-num">'
+                            + badSpot.carsTotal
+                            + '</span> <span id="auto_name" class="bb-name">'
+                            + badSpot.badSpot.name
+                            +'</span></div>'
+                        );
+                        b_s_pm = new ymaps.Placemark([badSpot.badSpot.x_pos, badSpot.badSpot.y_pos], {
+                        }, {
+                            iconLayout: 'default#imageWithContent',
+                            iconImageHref: '',
+                            iconImageSize: [62, 62.5],
+                            iconContentOffset: [-70, 75],
+                            iconImageOffset: [-24, -24],
+                            preset: 'islands#greenDotIconWithCaption',
+                            iconContentLayout: badSpotLayout
+                        });
+
+                        b_s_pm.events.add('click', function() {
+                            window.setLevelSpot(badSpot.badSpot.id);
+                            window.currentLevel = 2;
+                        });
+
+                        b_s_pm.id = badSpot.badSpot.id;
+                        b_s_pm.name = badSpot.badSpot.name;
+                        b_s_pm.carsTotal = badSpot.carsTotal;
+
+                        b_s_array.push(b_s_pm);
+                        b_s_pm = null;
+                        badSpotLayout = null;
+                    });
+                    b_s_clusterer.add(b_s_array);
+                    myMap.geoObjects.add(b_s_clusterer);
+                    if (response.hasOwnProperty('bounds')) {
+                        myMap.setBounds(response.bounds);
+                    } else if (response.hasOwnProperty('center')) {
+                        myMap.setCenter(response.center, 9);
+                    }
+                }
+            });
+        };
+
+
+
+        window.setLevelCompany = function()
+        {
+            myMap.setBounds(<?= \app\models\Organization::getMaxAndMinCoordinatesForAPI() ?>, {checkZoomRange: true});
+            window.currentElement = {
+                company: 'ООО Ресурс Транс'
+            };
+            let o_pm, orgLayout, o_array = [];
+            myMap.geoObjects.removeAll();
+            $('div#info-department').addClass('hide');
+            $('div#ts-info').addClass('hide');
+            $('div#info-company').removeClass('hide');
+
+            <?php
+                foreach ($organizations as $organization) {
+            ?>
+                orgLayout = ymaps.templateLayoutFactory.createClass(
+                    '<div class="bb">' +
+                    '<span class="bb-num-org">' +
+                    <?= $organization->carsTotal ?> +
+                    '</span><span class="bb-name"><?= $organization->getTown() ?>' +
+                    '</span></div>'
+                );
+            o_pm = new ymaps.Placemark([<?= $organization->x_pos ?>, <?= $organization->y_pos ?>], {
+                iconCaption : '<?= $organization->getTown() ?>'
+            }, {
+                iconLayout: 'default#imageWithContent',
+                iconImageHref: '',
+                iconImageSize: [62, 67.5],
+                iconContentOffset: [-74, 83],
+                iconImageOffset: [-24, -24],
+                preset: 'islands#greenDotIconWithCaption',
+                iconContentLayout: orgLayout
+            });
+            o_pm.events.add('click', function() {
+                window.setLevelOrganization('<?= $organization->id ?>');
+            });
+            o_array.push(o_pm);
+            myMap.geoObjects.add(o_pm);
+            o_pm = null;
+            <?php } ?>
+            divine.val('company').trigger('change');
+        };
+
+
+        window.setLevelCompany();
+
+        divine.change(function () {
+            console.log(window.currentElement);
+            window.badSpots = window.currentElement.hasOwnProperty('spot') && !window.currentElement.hasOwnProperty('autocolumn');
+            console.log(window.pastElement);
+            console.log('badSpots',window.badSpots);
+            setBreadcrumps(window.badSpots);
+
         });
-    }); // ymaps.ready(function() {
+
+        backButton.click( function() {
+            window['setLevel' + capitalize(window.pastElement.key)](window.pastElement.id);
+        });
+
+    }); //ymaps.ready()
+
 </script>
-</html>

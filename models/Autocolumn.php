@@ -30,6 +30,11 @@ class Autocolumn extends \yii\db\ActiveRecord
     public $bounds;
 
     /**
+     * @var integer
+     */
+    public $carsTotal;
+
+    /**
      * {@inheritdoc}
      */
     public static function tableName()
@@ -195,4 +200,57 @@ class Autocolumn extends \yii\db\ActiveRecord
         return (boolean)self::find($id)->one();
     }
 
+    /**
+     * @return array
+     */
+    public function getBounds()
+    {
+        return Division::getBoundsAsArray($this->spots);
+    }
+
+    /**
+     * @return int|string
+     */
+    public function getTotalCars()
+    {
+        $spots = Autocolumn::getSpots()->where(['!=', 'x_pos', 0])->all();
+        $result = 0;
+        foreach ($spots as $spot) {
+            $result += Car::find()->where(['spot_id' => $spot->id])->andWhere(['!=', 'x_pos', 0])->count();
+        }
+        return $result;
+    }
+
+    /**
+     * @return array
+     */
+    public function getCarsNumberWithStatuses()
+    {
+        /**
+         * @var $cars Car[]
+         */
+        $spots = $this->spots;
+        $result = [
+            'total' => 0,
+            'types' => [0,0,0,0],
+            'statuses_count' => [
+                'G' => 0,
+                'R' => 0,
+                'TO' => 0
+            ],
+            'inline' => 0
+        ];
+        foreach($spots as $spot) {
+            $spotRes = $spot->getCarsNumberWithStatuses();
+            $result['total'] += $spotRes['total'];
+            $result['inline'] += $spotRes['inline'];
+            foreach ($result['types'] as $key => $value) {
+                $result['types'][$key] += $spotRes['types'][$key];
+            }
+            foreach ($result['statuses_count'] as $key => $value) {
+                $result['statuses_count'][$key] += $spotRes['statuses_count'][$key];
+            }
+        }
+        return $result;
+    }
 }

@@ -62,4 +62,43 @@ class Division
         }
         return $resultArray;
     }
+
+    /**
+     * @param $objArray
+     * @param string $x_pos
+     * @param string $y_pos
+     * @return array|null
+     */
+    public static function getBoundsAsArray($objArray, $x_pos='x_pos', $y_pos='y_pos')
+    {
+        if ($objArray === null) {
+            return null;
+        }
+        if (count($objArray) === 1) {
+            return [
+                'x' => $objArray[0]->x_pos,
+                'y' => $objArray[0]->y_pos
+            ];
+        }
+        $xMin = 1000;
+        $xMax = 0;
+        $yMin = 1000;
+        $yMax = 0;
+        foreach ($objArray as $item) {
+            if ($item->$x_pos < $xMin)
+                $xMin = $item->$x_pos;
+            if ($item->$x_pos > $xMax)
+                $xMax = $item->$x_pos;
+            if ($item->$y_pos < $yMin)
+                $yMin = $item->$y_pos;
+            if ($item->$y_pos > $yMax)
+                $yMax = $item->$y_pos;
+        }
+        return [
+            'x_min' => $xMin,
+            'x_max' => $xMax,
+            'y_min' => $yMin,
+            'y_max' => $yMax
+        ];
+    }
 }

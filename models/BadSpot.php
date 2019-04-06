@@ -2,32 +2,29 @@
 
 namespace app\models;
 
-use DeepCopy\f001\A;
 use Yii;
-use yii\db\ActiveQuery;
-use yii\db\Exception;
 
 /**
- * This is the model class for table "spots".
+ * This is the model class for table "bad_spots".
  *
  * @property string $id
  * @property string $company_id
  * @property string $organization_id
  * @property string $autocolumn_id
  * @property string $description
- * @property string $address
- * @property string $town
  * @property string $name
+ * @property string $town
+ * @property string $address
  * @property double $x_pos
  * @property double $y_pos
  *
  * @property Company $company
  * @property Autocolumn $autocolumn
  * @property Organization $organization
- * @property Car[]|Car $cars
  */
-class Spot extends \yii\db\ActiveRecord
+class BadSpot extends \yii\db\ActiveRecord
 {
+
     /**
      * @var string
      */
@@ -41,6 +38,11 @@ class Spot extends \yii\db\ActiveRecord
     /**
      * @var integer
      */
+    public $carsTotal;
+
+    /**
+     * @var integer
+     */
     public $carsStatuses;
 
     /**
@@ -48,12 +50,13 @@ class Spot extends \yii\db\ActiveRecord
      */
     public $carsTypes;
 
+
     /**
      * {@inheritdoc}
      */
     public static function tableName()
     {
-        return 'spots';
+        return 'bad_spots';
     }
 
     /**
@@ -67,6 +70,8 @@ class Spot extends \yii\db\ActiveRecord
             [['x_pos', 'y_pos'], 'number'],
             [['id', 'company_id', 'organization_id', 'autocolumn_id'], 'string', 'max' => 36],
             [['description'], 'string', 'max' => 512],
+            [['name'], 'string', 'max' => 128],
+            [['town'], 'string', 'max' => 32],
             [['id'], 'unique'],
             [['company_id'], 'exist', 'skipOnError' => true, 'targetClass' => Company::className(), 'targetAttribute' => ['company_id' => 'id']],
             [['autocolumn_id'], 'exist', 'skipOnError' => true, 'targetClass' => Autocolumn::className(), 'targetAttribute' => ['autocolumn_id' => 'id']],
@@ -85,6 +90,8 @@ class Spot extends \yii\db\ActiveRecord
             'organization_id' => 'Organization ID',
             'autocolumn_id' => 'Autocolumn ID',
             'description' => 'Description',
+            'name' => 'Name',
+            'town' => 'Town',
             'address' => 'Address',
             'x_pos' => 'X Pos',
             'y_pos' => 'Y Pos',
@@ -115,6 +122,7 @@ class Spot extends \yii\db\ActiveRecord
         return $this->hasOne(Organization::className(), ['id' => 'organization_id']);
     }
 
+
     /**
      * @param $id
      * @return self|null|static
@@ -126,19 +134,11 @@ class Spot extends \yii\db\ActiveRecord
     }
 
     /**
-     * @return ActiveQuery
+     * @return \yii\db\ActiveQuery
      */
     public function getCars()
     {
         return Car::find()->where(['spot_id' => $this->id])->andWhere(['!=','x_pos',0]);
-    }
-
-    /**
-     * @return int|string
-     */
-    public function getTotalCars()
-    {
-        return Car::find()->where(['spot_id' => $this->id])->andWhere(['!=', 'x_pos', 0])->count();
     }
 
     /**
@@ -186,59 +186,6 @@ class Spot extends \yii\db\ActiveRecord
         return isset($resultArray) ? $resultArray : null;
     }
 
-    public static function getSpotsFromSoapAndSaveInDB()
-    {
-        $divis = new Division();
-        $spots = $divis->getSpots();
-        foreach ($spots as $spot) {
-            $spotMod = self::getOrCreate($spot->ID);
-            $spotMod->id = $spot->ID;
-            $spotMod->company_id = '762b8f6f-1a46-11e5-be74-00155dc6002b';
-            $spotMod->organization_id = $spot->FirmsID;
-            $spotMod->autocolumn_id = $spot->ParentID;
-            $spotMod->description = $spot->Description;
-            $haveParams = isset(Yii::$app->params['spots'][$spot->ID]);
-            $spotMod->town = $haveParams ? Yii::$app->params['spots'][$spot->ID][1] : null;
-            $spotMod->name = $haveParams ? Yii::$app->params['spots'][$spot->ID][0] : null;
-            $spotMod->address = $spot->Address;
-            $spotMod->x_pos = $spot->XPos;
-            $spotMod->y_pos = $spot->YPos;
-            $spotMod->save();
-        }
-        return true;
-    }
-
-    /**
-     * @return bool
-     */
-    public static function fixBadSpots()
-    {
-        $badSpots = self::find()->where(['!=', 'x_pos', 0])->andWhere(['autocolumn_id' => null])->andWhere(['!=', 'organization_id', 0])->all();
-        foreach ($badSpots as $spot) {
-            $badSpot = new BadSpot();
-            $badSpot->id = $spot->id;
-            $badSpot->organization_id = $spot->organization_id;
-            $badSpot->company_id = $spot->company_id;
-            $badSpot->description = $spot->description;
-            $badSpot->name = $spot->name;
-            $badSpot->town = $spot->town;
-            $badSpot->address =  $spot->address;
-            $badSpot->x_pos = $spot->x_pos;
-            $badSpot->y_pos = $spot->y_pos;
-            $badSpot->save();
-        }
-        return true;
-    }
-
-    /**
-     * @param $id
-     * @return bool
-     */
-    public static function isExist($id)
-    {
-        return (boolean) self::find($id)->one();
-    }
-
     /**
      * @return array
      */
@@ -254,7 +201,7 @@ class Spot extends \yii\db\ActiveRecord
             ],
             'inline' => 0
         ];
-        $cars = $this->getCars()->all();
+        $cars = $this->cars;
         if ($cars === null) {
             return $result;
         }
@@ -276,4 +223,12 @@ class Spot extends \yii\db\ActiveRecord
         return $result;
     }
 
+
+    /**
+     * @return int|string
+     */
+    public function getTotalCars()
+    {
+        return Car::find()->where(['spot_id' => $this->id])->andWhere(['!=', 'x_pos', 0])->count();
+    }
 }

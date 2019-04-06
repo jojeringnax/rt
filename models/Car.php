@@ -31,12 +31,12 @@ use yii\helpers\Console;
 class Car extends \yii\db\ActiveRecord
 {
 
-    const MODELS = array(
+    const MODELS = [
         'Легковые ТС' => 0,
         'Грузовые ТС' => 1,
         'Автобусы' => 2,
         'Спецтехника' => 3
-    );
+    ];
 
     const LIGHT = 0;
     const TRUCK = 1;
@@ -312,7 +312,7 @@ class Car extends \yii\db\ActiveRecord
     /**
      * @return int|string
      */
-    public static function getNUmberOfTerminals()
+    public static function getNumberOfTerminals()
     {
         return self::find()->where(['terminal' => 1])->andWhere(['not', ['x_pos' => null]])->count();
     }

@@ -4,23 +4,10 @@
  * @var $autocolumns \app\models\Autocolumn[]
  * @var $spots \app\models\Spot[]
  * @var $this \yii\web\View
+ * @var $badSpots \app\models\BadSpot[]
  */
 ?>
 
-<!--<script type="text/javascript">-->
-<!--    $(document).ready(function(){-->
-<!--        console.log('asd')-->
-<!--        $('.transort-department').mouseover(function(){-->
-<!--            let img = $(this).children('.transport-title').children('.span-h3-filial').children('img');-->
-<!--            img.attr('src', 'yan/img/auto_icon/point_'+img.data('type')+'.svg');-->
-<!--        });-->
-<!--        $('.transort-department').mouseleave(function(){-->
-<!--            let img = $(this).children('.transport-title').children('.span-h3-filial').children('img');-->
-<!--            img.attr('src', 'yan/img/auto_icon/point_blue_'+img.data('type')+'.svg');-->
-<!--        });-->
-<!---->
-<!--    });-->
-<!--</script>-->
 
 <?= $this->render('sidebar') ?>
 <?php $breadcrumps = []; ?>
@@ -120,6 +107,17 @@ let c_data =[];
     let firmsData = <?= json_encode($totalStats->getAttributes()) ?>;
     let totalTerminals =<?= json_encode($totalTerminals) ?>;
     let totalCarsData =<?= json_encode($totalCarsData) ?>;
+    let changeInfoForOsACsSs = function(obj) {
+        $('#totTs').html(obj.totTs);
+        $('#OnReady').html(obj.readyTs);
+        $('#OnLine').html(obj.onLine);
+        $('#OnRep').html(obj.onRep);
+        $('#onTo').html(obj.onTO);
+        $('#passCar').html(obj.passCar);
+        $('#freightCar').html(obj.freightCar);
+        $('#busCar').html(obj.busCar);
+        $('#specCar').html(obj.specCar);
+    };
     let changeInfo = function(totTs, readyTs, onRep, onTO, onLine, passCar, freightCar, busCar, specCar) {
         $('#totTs').html(totTs);
         $('#OnReady').html(readyTs);
@@ -238,6 +236,13 @@ let c_data =[];
                     s_array = [];
                 }
             }
+            if (b_s_array.length) {
+                //myMap.geoObjects.remove(clustererSpots);
+                removeArrayFromMap(b_s_array, myMap);
+                if (level > 0) {
+                    b_s_array = [];
+                }
+            }
             if(c_array.length) {
                 removeArrayFromMap(c_array, myMap);
                 if (level > 1) {
@@ -247,7 +252,7 @@ let c_data =[];
         };
 
         let town_autocol, town_spot;
-        var c_array = [], s_array = [], a_array = [], o_array = [];
+        var c_array = [], s_array = [], b_s_array = [], a_array = [], o_array = [];
 
         var ClusterLayout = ymaps.templateLayoutFactory.createClass(
             '<div class="bb-cluster"><span class="bb-num">{{ properties.geoObjects.length }}</span></div>'
@@ -291,9 +296,6 @@ let c_data =[];
         ].join(''));
 
 
-
-
-
         let clustererCars = new ymaps.Clusterer(
             {
                 clusterBalloonContentLayout: carBalloonContentLayout,
@@ -307,7 +309,6 @@ let c_data =[];
                 zoomMargin : [50,50,50,50]
             }
         );
-
 
         var myMap = new ymaps.Map('map', {
             center: [55.751574, 37.573856],
@@ -442,6 +443,532 @@ let c_data =[];
                         applicationAdd('terminals', terminals);
                     }
                 }); //end ajax request
+
+
+            <?php
+              foreach($badSpots[$organizationPrettyId] as $badKey => $badSpot) {
+                if ($badKey !== 'bounds' && $badKey !== 'cars' && $badKey !== 'carsStatuses' && $badKey !== 'carsTypes') {
+                $badSpotPrettyID = $badSpot->getIdWithoutNumbers();
+            ?>
+                town_bad_spot = "<?= $badSpot->name ?>";
+                if(town_bad_spot.match('-')){
+                    town_bad_spot = town_bad_spot.replace('-', '&minus;');
+                }
+
+                var SpotsLayout = ymaps.templateLayoutFactory.createClass(
+                    '<div class="bb"><span class="bb-num-spot"><?= $badSpot->carsNumber ?></span><span id="spot_name" class="bb-name">'+town_bad_spot+'</span></div>'
+                );
+
+                b_s_pm = new ymaps.Placemark([<?= $badSpot->x_pos ?>, <?= $badSpot->y_pos ?>],{
+
+                }, {
+                    iconLayout: 'default#imageWithContent',
+                    iconImageHref: '',
+                    iconImageSize: [62, 62],
+                    iconContentOffset: [-68, 75],
+                    iconImageOffset: [-24, -24],
+                    preset: 'islands#greenDotIconWithCaption',
+                    iconContentLayout: SpotsLayout
+                });
+
+                b_s_array.push(b_s_pm);
+
+                b_s_pm.breadcrumps = '<?= $badSpot->name ?>';
+                <?php if ($badSpot->carsNumber) { ?>
+                b_s_pm.events.add('click', function(s) {
+                    changeInfo(
+                        <?= $badSpot->carsNumber ?>,
+                        <?= $badSpot->carsStatuses["G"] ?>,
+                        <?= $badSpot->carsStatuses["R"] ?>,
+                        <?= $badSpot->carsStatuses["TO"] ?>,
+                        <?= $badSpot->carsStatuses["inline"] ?>,
+                        <?= $badSpot->carsTypes[\app\models\Car::LIGHT] ?>,
+                        <?= $badSpot->carsTypes[\app\models\Car::TRUCK] ?>,
+                        <?= $badSpot->carsTypes[\app\models\Car::BUS] ?>,
+                        <?= $badSpot->carsTypes[\app\models\Car::SPEC] ?>
+                    );
+                    $('.loading-layout').css({'display':'flex'});
+                    $('#info-company').addClass('hide');
+                    $('#info-department').removeClass('hide');
+                    $('#ts-info').addClass('hide');
+                    $('#all').addClass('active-transport');
+
+
+
+                    //ajax request -> SPOT
+                    idOfCurrentElement['spot'] = "<?= $badSpot->id ?>";
+                    $.ajax({
+                        url: "index.php?r=site/get-spot-statistic&spot_id=" + "<?= $badSpot->id ?>",
+                        type: 'get',
+                        success: function(res) {
+                            let terminals = JSON.parse(res)['terminals'];
+                            let data = JSON.parse(res)['statistic'];
+
+                            //executed_app
+                            applicationAdd('applications_executed',data['applications_executed']);
+
+                            //canceled_app
+                            applicationAdd('applications_canceled',data['applications_canceled']);
+
+                            //sub_app
+                            applicationAdd('applications_sub',data['applications_sub']);
+
+                            //ac_app
+                            circleBar('applications_ac', (data['applications_ac']/data['applications_total']).toFixed(2));
+
+                            //waybills = waybills_processed / waybills_total
+                            circleBar('waybills_total', (data['waybills_processed']/data['waybills_total']).toFixed(2));
+
+                            //accidents = accidents_guilty / accidents_total
+                            circleBar('accidents_total', (data['accidents_guilty']/data['accidents_total']).toFixed(2));
+
+                            //GetWBMonitoring =  CountM/CountAll
+                            circleBar('WB_M', (Math.round(data['WB_M'])/data['WB_ALL']).toFixed(2));
+
+                            // TMCH = fuel/time
+                            applicationAdd('fuel', (Math.round(data['fuel'])/data['time']).toFixed(2));
+
+                            //terminals =
+                            applicationAdd('terminals', terminals);
+
+                            let waybills_total = (data['waybills_processed']/data['waybills_total']).toFixed(2);
+                            let accidents_total = (data['accidents_guilty']/data['accidents_total']).toFixed(2);
+                            let applications_ac = (data['waybills_processed']/data['waybills_total']).toFixed(2);
+                            let fuel = (Math.round(data['fuel'])/data['time']).toFixed(2);
+                            let WB_M = (Math.round(data['WB_M'])/data['WB_ALL']).toFixed(2);
+
+                            dataLevel['spot'] = {
+                                totalCars: <?= $badSpot->carsNumber ?>,
+                                onReady:  <?= $badSpot->carsStatuses["G"] ?>,
+                                onRep: <?= $badSpot->carsStatuses["R"] ?>,
+                                onTO: <?= $badSpot->carsStatuses["TO"] ?>,
+                                onLine:  <?= $badSpot->carsStatuses["inline"] ?>,
+                                light: <?= $badSpot->carsTypes[\app\models\Car::LIGHT] ?>,
+                                truck: <?= $badSpot->carsTypes[\app\models\Car::TRUCK] ?>,
+                                bus: <?= $badSpot->carsTypes[\app\models\Car::BUS] ?>,
+                                spec: <?= $badSpot->carsTypes[\app\models\Car::SPEC] ?>,
+                                applications_executed: data['applications_executed'],
+                                applications_canceled: data['applications_canceled'],
+                                applications_sub: data['applications_sub'],
+                                applications_ac: applications_ac,
+                                waybills_total: waybills_total,
+                                accidents_total: accidents_total,
+                                WB_M: WB_M,
+                                fuel: fuel,
+                                terminals: terminals
+                            };
+                        }
+                    }); //end ajax request
+
+
+
+                    $.ajax({
+                        url: 'index.php?r=site/carsforspot&id=<?= $badSpot->id ?>',
+                        method: 'GET',
+                        dataType: 'json',
+                        success: function(data) {
+                            if(c_array.length) {
+                                c_array = [];
+                                myMap.geoObjects.remove(clustererCars);
+                                clustererCars.removeAll();
+                            }
+                            removeArrayFromMap(s_array, myMap);
+                            //myMap.geoObjects.remove(clustererSpots);
+                            // 'Легковые ТС' => 0,
+                            // 'Грузовые ТС' => 1,
+                            // 'Автобусы' => 2,
+                            // 'Спецтехника' => 3
+
+                            jQuery(document).on( "click", "a.list_item", function() {
+                                let car__id = $(this).attr('id');
+                                //console.log('---click',c_data);
+                                $('.loading-layout').css({'display':'flex'});
+
+                                c_data.forEach(function(car){
+                                    if (car__id == car.id) {
+                                        console.log('---yes', c_data);
+                                        $('.bbb > span').html(car.data.model);
+                                        $('.nav-sidebar').html('<a id="firm">Компания </a> >> ' + '<a id="organization">' + window.currentElement.organization.breadcrumps+ '</a>' + ' >> ' + '<a id="spot">' +window.currentElement.spot.breadcrumps + '</a>' +  ' >> ' + '<a id="car">' + car.data.model + '</a>');
+
+                                        let url_img = "yan/img/auto_icon/point_blue_" + car.data.type + ".svg";
+
+                                        document.getElementById('img-ts').setAttribute('src', url_img);
+
+                                        applicationAdd('nameTS', car.data['model']);
+
+                                        applicationAdd('profitabilities', car.data['profitability']);
+
+                                        applicationAdd('seasonality', car.data['tire_season']);
+
+                                        applicationAdd('tier-change', car.data['tire_change_days']);
+
+                                        applicationAdd('battery-change', car.data['battery_change_days']);
+
+                                        applicationAdd('untilTO', car.data['technical_inspection_days']);
+                                    }
+
+
+
+                                });
+                                // if (window.currentElement.hasOwnProperty('car')) {
+                                //     let carOldLayout = ymaps.templateLayoutFactory.createClass(
+                                //         '<div class="bb"><span class="bb-num-car"><img src="yan/img/auto_icon/point_blue_' + window.currentElement.car.type + '.svg" alt="auto"></span></div>'
+                                //     );
+                                //     window.currentElement.car.options.set('iconContentLayout', carOldLayout);
+                                // }
+                                // carsLayout = ymaps.templateLayoutFactory.createClass(
+                                //     '<div class="bb"><span class="bb-num-car-white"><img src="yan/img/auto_icon/point_' + el.type + '.svg" alt="auto"></span></div>'
+                                // );
+                                // c.originalEvent.target.options.set('iconContentLayout', carsLayout);
+                                // window.currentElement.car = c.originalEvent.target;
+                                // myMap.setCenter(window.currentElement.car.geometry._coordinates, 19);
+                                $('#info-company').addClass('hide');
+                                $('#info-department').addClass('hide');
+                                $('#ts-info').removeClass('hide');
+
+                                console.log(window.currentElement);
+
+
+                                $.ajax({
+                                    url: "index.php?r=site/get-car-data&car_id=" + car__id,
+                                    type: 'get',
+                                    success: function(res) {
+                                        console.log('---keys', Object.keys(res).length);
+                                        let obj = new Object();
+                                        obj = JSON.parse(res);
+                                        if (Object.keys(res).length === 2) {
+                                            // console.log('huy')
+                                            applicationAdd('driver-name', 'н/д');
+
+                                            applicationAdd('driver-phone', 'н/д');
+
+                                            applicationAdd('plan-start', 'н/д');
+
+                                            applicationAdd('fact-start', 'н/д');
+
+                                            applicationAdd('fact-end', 'н/д');
+
+                                            applicationAdd('fuel-time-plan', 'н/д');
+
+                                            applicationAdd('fuel-time-work', 'н/д');
+
+                                            applicationAdd('mileage', 'н/д');
+
+                                            applicationAdd('average-speed', 'н/д');
+
+                                            applicationAdd('fuel-norm', 'н/д');
+
+                                            applicationAdd('fuel-dut', 'н/д');
+
+                                            applicationAdd('numb-of-violations', 'н/д');
+
+                                            applicationAdd('quality-of-driving', 'н/д');
+
+
+                                        } else {
+
+                                            console.log(obj, obj['car_id']);
+
+                                            applicationAdd('driver-name', obj['driver']);
+
+                                            applicationAdd('driver-phone', obj['phone']);
+
+                                            applicationAdd('plan-start', obj['start_time_plan']);
+
+                                            applicationAdd('fact-start', obj['start_time_fact']);
+
+                                            applicationAdd('fact-end', obj['end_time_plan']);
+
+                                            applicationAdd('fuel-time-plan', obj['work_time_plan']);
+
+                                            applicationAdd('fuel-time-work', obj['work_time_fact']);
+
+                                            applicationAdd('mileage', obj['mileage']);
+
+                                            applicationAdd('average-speed', obj['speed']);
+
+                                            applicationAdd('fuel-norm', obj['fuel_norm']);
+
+                                            applicationAdd('fuel-dut', obj['fuel_DUT']);
+
+                                            applicationAdd('numb-of-violations', obj['violations_count']);
+
+                                            applicationAdd('quality-of-driving', obj['driver_mark']);
+                                        }
+
+                                        $('.loading-layout').css({'display':'none'});
+                                    },
+                                    complete: function() {
+
+                                        navigation();
+                                    },
+                                    error: function(err) {
+                                        $('.loading-layout').css({'display':'none'});
+                                        console.log('---err',err);
+                                        applicationAdd('driver-name', 'н/д');
+
+                                        applicationAdd('driver-phone', 'н/д');
+
+                                        applicationAdd('plan-start', 'н/д');
+
+                                        applicationAdd('fact-start', 'н/д');
+
+                                        applicationAdd('fact-end', 'н/д');
+
+                                        applicationAdd('fuel-time-plan', 'н/д');
+
+                                        applicationAdd('fuel-time-work', 'н/д');
+
+                                        applicationAdd('mileage', 'н/д');
+
+                                        applicationAdd('average-speed', 'н/д');
+
+                                        applicationAdd('fuel-norm', 'н/д');
+
+                                        applicationAdd('fuel-dut', 'н/д');
+
+                                        applicationAdd('numb-of-violations', 'н/д');
+
+                                        applicationAdd('quality-of-driving', 'н/д');
+                                    }
+
+                                })
+                            });
+                            c_data = [];
+                            data.cars.forEach(function(el) {
+                                let url_car, classCar;
+                                url_car = el.inline ? 'yan/img/auto_icon/point_blue_' + el.type + '.svg' : 'yan/img/auto_icon/point_noIn_' + el.type + '.svg';
+                                classCar = el.inline ? "bb-num-car" : "bb-num-car-inline";
+
+                                let carsLayout = ymaps.templateLayoutFactory.createClass(
+                                    '<div class="bb"><span class="' + classCar + '"><img src="'+url_car+'" alt="auto"></span></div>'
+                                );
+                                c_pm = new ymaps.Placemark([el.x_pos, el.y_pos], {
+                                    balloonContent: el.description,
+                                    balloonContentHeader: el.model,
+                                    balloonContentBody: el.number,
+                                    balloonContentFooter: el.status
+                                },{
+                                    hasBalloon: false,
+                                    iconLayout: 'default#imageWithContent',
+                                    iconImageHref: '',
+                                    iconImageSize: [62, 62],
+                                    iconContentOffset: [-70, 75],
+                                    iconImageOffset: [-24, -24],
+                                    iconContentLayout: carsLayout
+                                });
+
+                                c_data.push({id: el.id, data: el});
+                                c_pm.type = el.type;
+                                c_pm.breadcrumps = el.description;
+                                c_pm.carID = el.id;
+                                c_pm.inline = el.inline;
+                                c_pm.events.add('click', function (c) {
+                                    let url_car, classCar,classCarChecked,urlCarChecked;
+                                    $('.loading-layout').css({'display':'flex'});
+                                    if (window.currentElement.hasOwnProperty('car')) {
+                                        url_car = 'yan/img/auto_icon/point_' + (window.currentElement.car.inline ? 'blue_' : 'noIn_') + window.currentElement.car.type + '.svg';
+                                        classCar = window.currentElement.car.inline ? "bb-num-car" : "bb-num-car-inline";
+
+                                        let carOldLayout = ymaps.templateLayoutFactory.createClass(
+                                            '<div class="bb"><span class="'+ classCar +'"><img src="'+ url_car +'" alt="auto"></span></div>'
+                                        );
+                                        window.currentElement.car.options.set('iconContentLayout', carOldLayout);
+                                    }
+                                    classCarChecked = c.originalEvent.target.inline ? "bb-num-car-white" : "bb-num-car-inline_checked";
+                                    urlCarChecked = 'yan/img/auto_icon/point_' + (c.originalEvent.target.inline ? 'noIn_check_' : '') + c.originalEvent.target.type + '.svg';
+
+                                    carsLayout = ymaps.templateLayoutFactory.createClass(
+                                        '<div class="bb"><span class="'+ classCarChecked +'"><img src="'+ urlCarChecked +'" alt="auto"></span></div>'
+                                    );
+                                    c.originalEvent.target.options.set('iconContentLayout', carsLayout);
+                                    window.currentElement.car = c.originalEvent.target;
+                                    //myMap.setCenter(window.currentElement.car.geometry._coordinates);
+                                    $('#info-company').addClass('hide');
+                                    $('#info-department').addClass('hide');
+                                    $('#ts-info').removeClass('hide');
+                                    $('.bbb > span').html(window.currentElement.car.breadcrumps);
+                                    $('.nav-sidebar').html('<a id="firm">Компания </a> >> ' + '<a id="organization">' + window.currentElement.organization.breadcrumps+ '</a>' + ' >> ' + '<a id="autocolumn">' +window.currentElement.autocolumn.breadcrumps + '</a>'  + ' >> ' + '<a id="spot">' +window.currentElement.spot.breadcrumps + '</a>' +  ' >> ' + '<a id="car">' + window.currentElement.car.breadcrumps + '</a>');
+
+                                    console.log(window.currentElement);
+
+
+                                    //battery_change_days: 248
+                                    //description: "Х009СС197 - (УАЗ 390995)"
+                                    //id: "f6310338-481b-11e5-b89f-00155d630038"
+                                    //inline: 1
+                                    //model: "УАЗ 390995"
+                                    //number: "Х009СС197"
+                                    //profitability: 81
+                                    //spot_id: "137b4a11-4e39-11e6-80be-1cc1def361b0"
+                                    //status: "G"
+                                    //technical_inspection_days: 1612
+                                    //terminal: 1
+                                    //tire_change_days: 10772
+                                    //tire_season: "Всесезонные"
+                                    //type: 1
+                                    //x_pos: 55.3855
+                                    //y_pos: 36.7841
+                                    //year: 2011
+                                    //add cars information
+                                    let url_img = "yan/img/auto_icon/point_blue_" + el.type + ".svg";
+
+                                    document.getElementById('img-ts').setAttribute('src', url_img);
+
+                                    applicationAdd('nameTS', el['model']);
+
+                                    applicationAdd('profitabilities', el['profitability']);
+
+                                    applicationAdd('seasonality', el['tire_season']);
+
+                                    applicationAdd('tier-change', el['tire_change_days']);
+
+                                    applicationAdd('battery-change', el['battery_change_days']);
+
+                                    applicationAdd('untilTO', el['technical_inspection_days']);
+
+                                    $.ajax({
+                                        url: "index.php?r=site/get-car-data&car_id=" + el.id,
+                                        type: 'get',
+                                        success: function(res) {
+                                            let obj = new Object();
+                                            obj = JSON.parse(res);
+                                            if (Object.keys(res).length === 2) {
+                                                // console.log('huy')
+                                                applicationAdd('driver-name', 'н/д');
+
+                                                applicationAdd('driver-phone', 'н/д');
+
+                                                applicationAdd('plan-start', 'н/д');
+
+                                                applicationAdd('fact-start', 'н/д');
+
+                                                applicationAdd('fact-end', 'н/д');
+
+                                                applicationAdd('fuel-time-plan', 'н/д');
+
+                                                applicationAdd('fuel-time-work', 'н/д');
+
+                                                applicationAdd('mileage', 'н/д');
+
+                                                applicationAdd('average-speed', 'н/д');
+
+                                                applicationAdd('fuel-norm', 'н/д');
+
+                                                applicationAdd('fuel-dut', 'н/д');
+
+                                                applicationAdd('numb-of-violations', 'н/д');
+
+                                                applicationAdd('quality-of-driving', 'н/д');
+
+
+                                            } else {
+
+                                                console.log(obj, obj['car_id']);
+
+                                                applicationAdd('driver-name', obj['driver']);
+
+                                                applicationAdd('driver-phone', obj['phone']);
+
+                                                applicationAdd('plan-start', obj['start_time_plan']);
+
+                                                applicationAdd('fact-start', obj['start_time_fact']);
+
+                                                applicationAdd('fact-end', obj['end_time_plan']);
+
+                                                applicationAdd('fuel-time-plan', obj['work_time_plan']);
+
+                                                applicationAdd('fuel-time-work', obj['work_time_fact']);
+
+                                                applicationAdd('mileage', obj['mileage']);
+
+                                                applicationAdd('average-speed', obj['speed']);
+
+                                                applicationAdd('fuel-norm', obj['fuel_norm']);
+
+                                                applicationAdd('fuel-dut', obj['fuel_DUT']);
+
+                                                applicationAdd('numb-of-violations', obj['violations_count']);
+
+                                                applicationAdd('quality-of-driving', obj['driver_mark']);
+                                            }
+
+                                            $('.loading-layout').css({'display':'none'});
+                                        },
+                                        complete: function() {
+
+                                            navigation();
+                                        },
+                                        error: function(err) {
+                                            $('.loading-layout').css({'display':'none'});
+                                            console.log('---err',err);
+                                            applicationAdd('driver-name', 'н/д');
+
+                                            applicationAdd('driver-phone', 'н/д');
+
+                                            applicationAdd('plan-start', 'н/д');
+
+                                            applicationAdd('fact-start', 'н/д');
+
+                                            applicationAdd('fact-end', 'н/д');
+
+                                            applicationAdd('fuel-time-plan', 'н/д');
+
+                                            applicationAdd('fuel-time-work', 'н/д');
+
+                                            applicationAdd('mileage', 'н/д');
+
+                                            applicationAdd('average-speed', 'н/д');
+
+                                            applicationAdd('fuel-norm', 'н/д');
+
+                                            applicationAdd('fuel-dut', 'н/д');
+
+                                            applicationAdd('numb-of-violations', 'н/д');
+
+                                            applicationAdd('quality-of-driving', 'н/д');
+                                        }
+
+                                    })
+                                });
+
+                                c_array.push(c_pm);
+                                clustererCars.add(c_array);
+                                myMap.geoObjects.add(clustererCars);
+                                if (data.cars.length === 1) {
+                                    s.originalEvent.target.center = c_pm.geometry._coordinates;
+                                    myMap.setCenter(s.originalEvent.target.center, 6);
+                                } else {
+                                    s.originalEvent.target.bounds = data.bounds;
+                                    myMap.setBounds(data.bounds, {checkZoomRange: false});
+                                }
+
+                            });
+                            $('.loading-layout').css({'display':'none'});
+                        }
+                    });
+                    window.currentElement.spot = s.originalEvent.target;
+                    $('.bbb > span').html(window.currentElement.spot.breadcrumps);
+                    $('.nav-sidebar').html('<a id="firm">Компания </a> >> ' + '<a id="organization">' + window.currentElement.organization.breadcrumps + '</a>' + ' >> ' + '<a id="spot">' +window.currentElement.spot.breadcrumps + '</a>');
+                    console.log(window.currentElement);
+                }); //bad_spots click
+
+                if(b_s_array.length) {
+                    //clustererSpots.removeAll();
+                    //clustererSpots.add(s_array, myMap);
+                    //myMap.geoObjects.add(clustererSpots);
+                    addArrayOnMap(b_s_array, myMap);
+                }
+                <?php }
+                }
+              } ?>
+
+
+
+
+
+
+
 
             <?php
                 foreach ($autocolumns[$organizationPrettyId] as $key1 => $autocolumn) {
@@ -1079,7 +1606,6 @@ let c_data =[];
                                 window.currentElement.spot = s.originalEvent.target;
                                 $('.bbb > span').html(window.currentElement.spot.breadcrumps);
                                 $('.nav-sidebar').html('<a id="firm">Компания </a> >> ' + '<a id="organization">' + window.currentElement.organization.breadcrumps + '</a>' + ' >> ' + '<a id="autocolumn">' + window.currentElement.autocolumn.breadcrumps + '</a>'  + ' >> ' + '<a id="spot">' +window.currentElement.spot.breadcrumps + '</a>');
-                                console.log(window.currentElement);
                                 console.log(window.currentElement);
                             }); //spots click
                     <?php } ?>
@@ -1861,7 +2387,7 @@ let c_data =[];
 
                             //end add data -> COMPANY
 
-                            
+
                             if(window.currentElement.hasOwnProperty('organization')) {
                                 delete window.currentElement.organization;
                                 removeArrayFromMap(a_array, myMap);

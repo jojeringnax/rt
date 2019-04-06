@@ -9,9 +9,15 @@ $client = new SoapClient("http://d.rg24.ru:5601/PUP_WS/ws/PUP.1cws?wsdl", [
     'debug'=>true,
     'trace'=> true,
 ]);
-$ac = \app\models\Organization::findOne(' 5b050580-4a6b-11e5-b89f-00155d630038');
+$ac = \app\models\Autocolumn::findOne('5f9c7542-2eca-11e5-b05a-00155dc6002b');
+$sp = \app\models\Spot::findOne('f72053f5-2fa9-11e5-b05a-00155dc6002b');
+$org = \app\models\Organization::findOne('762b8f6f-1a46-11e5-be74-00155dc6002b');
+
+//var_dump($ac->getCarsNumberWithStatuses());
+//var_dump($sp->getTotalCars());
+//var_dump($sp->getCarsNumberWithStatuses());
 //var_dump($ac->getNumberOfTerminals());
-var_dump(json_decode($client->GetCarsData(['CarsID' => 'fc345c34-481b-11e5-b89f-00155d630038'])->return));
+//var_dump(json_decode($client->GetCarsData(['CarsID' => 'fc345c34-481b-11e5-b89f-00155d630038'])->return));
 //print_r(\app\models\Spot::fixBadSpots());
 //var_dump(\app\models\Car::getTotalData());
 
