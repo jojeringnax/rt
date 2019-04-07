@@ -74,8 +74,11 @@ class OrganizationController extends \yii\web\Controller
         $organization = Organization::findOne($id);
         $badSpots = $organization->getBadSpots()->where(['!=', 'x_pos', 0])->all();
         $autocolumns = $organization->getAutocolumns()->where(['!=', 'x_pos', 0])->all();
-        if (empty($autocolumns) && empty($badSpots)) {
-            return 'NaN';
+        if (empty($badSpots)) {
+            if (empty($autocolumns)) {
+                return 'NaN';
+            }
+            $resultArray['badSpots'] = [];
         }
         foreach ($badSpots as $badSpot) {
             $resultArray['badSpots'][] = [

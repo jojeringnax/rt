@@ -1,7 +1,53 @@
+<?php
+/**
+ * @var $organizations \app\models\Organization[]
+ * @var $this \yii\web\View
+ */
+$this->registerCss('
+.overlay_block{
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: url("https://web-finder.ru/files/preloader1.gif") center center no-repeat;
+  z-index: 9999;
+}
+.loading_process{
+  -webkit-filter: blur(5px);
+  -moz-filter: blur(5px);
+  filter: blur(5px);
+}
+');
+?>
+
 <?= $this->render('sidebar') ?>
 <script>
 
+    function loading_animation_start(block){
+        block.wrap( '<div class="main_overlay_block"></div>');
+        const overlay_block = block.parent('.main_overlay_block').children('.overlay_block');
+        $('.main_overlay_block').prepend('<div class="overlay_block"></div>');
+        overlay_block.width(block.width());
+        block.addClass('loading_process');
+    }
+
+    function loading_animation_end(block){
+        const overlay_block = block.parent('.main_overlay_block').children('.overlay_block');
+        block.unwrap();
+        overlay_block.remove();
+        block.removeClass('loading_process');
+    }
+
+    function start_stop_animation(block){
+        if ($(block).parent().is('.main_overlay_block')){
+            loading_animation_end(block);
+        } else {
+            loading_animation_start(block);
+        }
+    }
+
     ymaps.ready( function() {
+
+
         window.stop = false;
 
         const levels = {
@@ -27,6 +73,8 @@
         const divine = $('input#divineInput');
         const breadcrumpsDiv = $('.nav-sidebar');
         const backButton = $('button.back');
+        const divMap = $('div#map');
+        const divSidebar = $('div.result');
 
 
         let changeInfoForDepartment = function(obj) {
@@ -113,6 +161,7 @@
             $('div#info-department').addClass('hide');
             $('div#ts-info').removeClass('hide');
             $('div#info-company').addClass('hide');
+            loading_animation_start(divSidebar);
             $.ajax({
                 url: 'index.php',
                 data: {
@@ -125,13 +174,16 @@
                 },
                 error: function () {
                     changeInfoForCar({});
+                },
+                complete: function() {
+                    loading_animation_end(divSidebar);
                 }
             });
         };
 
 
         window.setLevelSpot = function(id) {
-
+            loading_animation_start(divMap);
             /**
              * Cars ajax
              **/
@@ -260,12 +312,15 @@
                     }
                     clustererCars.add(c_array);
                     myMap.geoObjects.add(clustererCars);
+                },
+                complete: function() {
+                    loading_animation_end(divMap);
                 }
             });
 
 
 
-
+            loading_animation_start(divSidebar);
             $.ajax({
                 url: 'index.php',
                 data: {
@@ -280,8 +335,12 @@
                         $('div#info-company').addClass('hide');
                         changeInfoForDepartment(stats);
                     }
-                }, error: function(car) {
+                },
+                error: function(data) {
                     //
+                },
+                complete: function() {
+                    loading_animation_end(divSidebar);
                 }
             });
         };
@@ -289,7 +348,7 @@
 
         window.setLevelAutocolumn = function(id)
         {
-
+            loading_animation_start(divMap);
             /**
              * Spots ajax
              **/
@@ -386,10 +445,13 @@
                     } else if (response.hasOwnProperty('center')) {
                         myMap.setCenter(response.center, 9);
                     }
+                },
+                complete: function() {
+                    loading_animation_end(divMap);
                 }
             });
 
-
+            loading_animation_start(divSidebar);
             $.ajax({
                 url: 'index.php',
                 data: {
@@ -407,6 +469,9 @@
                 },
                 error: function() {
                     //
+                },
+                complete: function() {
+                    loading_animation_end(divSidebar);
                 }
             });
         };
@@ -414,6 +479,7 @@
 
         window.setLevelOrganization = function(id)
         {
+            loading_animation_start(divMap);
             /**
              * Autocolumns ajax
              **/
@@ -584,6 +650,9 @@
                     } else if (response.hasOwnProperty('center')) {
                         myMap.setCenter(response.center, 9);
                     }
+                },
+                complete: function() {
+                    loading_animation_end(divMap);
                 }
             });
 
@@ -597,6 +666,7 @@
                 id: ''
             };
 
+            loading_animation_start(divSidebar);
             $.ajax({
                 url: 'index.php',
                 data: {
@@ -614,6 +684,9 @@
                 },
                 error: function() {
                     //
+                },
+                complete: function() {
+                    loading_animation_end(divSidebar);
                 }
             });
         };
@@ -665,7 +738,6 @@
             <?php } ?>
             divine.val('company').trigger('change');
         };
-
 
         window.setLevelCompany();
 
