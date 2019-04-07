@@ -49,6 +49,9 @@ class OrganizationController extends \yii\web\Controller
          */
         $organization = Organization::findOne($id);
         $autocolumns = $organization->getAutocolumns()->where(['!=', 'x_pos', 0])->all();
+        if (empty($autocolumns)) {
+            return 'NaN';
+        }
         $resultArray = [];
         foreach ($autocolumns as $autocolumn) {
             $resultArray[] = [
@@ -71,6 +74,9 @@ class OrganizationController extends \yii\web\Controller
         $organization = Organization::findOne($id);
         $badSpots = $organization->getBadSpots()->where(['!=', 'x_pos', 0])->all();
         $autocolumns = $organization->getAutocolumns()->where(['!=', 'x_pos', 0])->all();
+        if (empty($autocolumns) && empty($badSpots)) {
+            return 'NaN';
+        }
         foreach ($badSpots as $badSpot) {
             $resultArray['badSpots'][] = [
                 'badSpot' => $badSpot,
@@ -87,11 +93,6 @@ class OrganizationController extends \yii\web\Controller
             $resultArray['center'] = [$bounds['x'], $bounds['y']];
         }
         return Json::encode($resultArray);
-    }
-
-    public function getBounds()
-    {
-
     }
 
     /**

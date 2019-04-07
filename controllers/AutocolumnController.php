@@ -48,6 +48,9 @@ class AutocolumnController extends \yii\web\Controller
          */
         $autocolumn = Autocolumn::findOne($id);
         $spots = $autocolumn->getSpots()->where(['!=', 'x_pos', 0])->all();
+        if (empty($spots)) {
+            return 'NaN';
+        }
         $resultArray = [];
         foreach ($spots as $spot) {
             $resultArray['spots'][] = [

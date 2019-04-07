@@ -2,6 +2,7 @@
 <script>
 
     ymaps.ready( function() {
+        window.stop = false;
 
         const levels = {
             'company': 0,
@@ -61,7 +62,6 @@
                if (!obj.hasOwnProperty(key) || obj[key] === null) {
                    obj[key] = 'н/д';
                }
-               console.log(obj[key]);
                $('#' + key).html(obj[key]);
             });
         };
@@ -131,31 +131,6 @@
 
 
         window.setLevelSpot = function(id) {
-            delete window.currentElement.car;
-            window.currentElement.spot = id;
-            divine.val('spot_' + id).trigger('change');
-            window.pastElement = {
-                key: window.badSpots ? 'organization' : 'autocolumn',
-                id: window.badSpots ? window.currentElement.organization : window.currentElement.autocolumn
-            };
-            let c_array = [];
-            myMap.geoObjects.removeAll();
-            $.ajax({
-               url: 'index.php',
-               data: {
-                   r: 'spot/get-stats',
-                   id: id
-               },
-                success: function(data) {
-                   let stats = JSON.parse(data);
-                    $('div#info-department').removeClass('hide');
-                    $('div#ts-info').addClass('hide');
-                    $('div#info-company').addClass('hide');
-                    changeInfoForDepartment(stats);
-                }, error: function(car) {
-                   //
-                }
-            });
 
             /**
              * Cars ajax
@@ -167,6 +142,21 @@
                    id: id
                 },
                 success: function(data) {
+                    if (data === 'NaN') {
+                        alert('На данном участке нет активных машин');
+                        window.stop = true;
+                        return;
+                    }
+                    window.stop = false;
+                    delete window.currentElement.car;
+                    window.currentElement.spot = id;
+                    divine.val('spot_' + id).trigger('change');
+                    window.pastElement = {
+                        key: window.badSpots ? 'organization' : 'autocolumn',
+                        id: window.badSpots ? window.currentElement.organization : window.currentElement.autocolumn
+                    };
+                    let c_array = [];
+                    myMap.geoObjects.removeAll();
                     let c_pm, carLayout, carLayoutUrl, carLayoutClass, carLayoutChecked, carLayoutUrlChecked, carLayoutClassChecked;
                     let carBalloonContentLayout = ymaps.templateLayoutFactory.createClass([
                         '<ul class=list>',
@@ -186,7 +176,7 @@
                                 size: [62, 62],
                                 offset: [-26, -26]
                             }],
-                            gridSize: 128,
+                            gridSize: 1024,
                             clusterIconContentLayout: carClusterLayout,
                             zoomMargin : [50,50,50,50]
                         }
@@ -272,38 +262,33 @@
                     myMap.geoObjects.add(clustererCars);
                 }
             });
+
+
+
+
+            $.ajax({
+                url: 'index.php',
+                data: {
+                    r: 'spot/get-stats',
+                    id: id
+                },
+                success: function(data) {
+                    if (!window.stop) {
+                        let stats = JSON.parse(data);
+                        $('div#info-department').removeClass('hide');
+                        $('div#ts-info').addClass('hide');
+                        $('div#info-company').addClass('hide');
+                        changeInfoForDepartment(stats);
+                    }
+                }, error: function(car) {
+                    //
+                }
+            });
         };
 
 
         window.setLevelAutocolumn = function(id)
         {
-            delete window.currentElement.spot;
-            delete window.currentElement.car;
-            window.currentElement.autocolumn = id;
-            divine.val('autocolumn_' + id).trigger('change');
-            window.pastElement = {
-                key: 'organization',
-                id: window.currentElement.organization
-            };
-            let s_array = [];
-            myMap.geoObjects.removeAll();
-            $.ajax({
-                url: 'index.php',
-                data: {
-                    r: 'autocolumn/get-stats',
-                    id: id
-                },
-                success: function(data) {
-                    let stats = JSON.parse(data);
-                    $('div#info-department').removeClass('hide');
-                    $('div#ts-info').addClass('hide');
-                    $('div#info-company').addClass('hide');
-                    changeInfoForDepartment(stats);
-                },
-                error: function() {
-                    //
-                }
-            });
 
             /**
              * Spots ajax
@@ -315,10 +300,30 @@
                     id: id
                 },
                 success: function(data) {
+                    if (data === 'NaN') {
+                        alert('Не получено участков');
+                        window.stop = true;
+                        return;
+                    }
+                    window.stop = false;
+                    delete window.currentElement.spot;
+                    delete window.currentElement.car;
+                    window.currentElement.autocolumn = id;
+                    divine.val('autocolumn_' + id).trigger('change');
+                    window.pastElement = {
+                        key: 'organization',
+                        id: window.currentElement.organization
+                    };
+                    let s_array = [];
+                    myMap.geoObjects.removeAll();
                     let spotBalloonContentLayout = ymaps.templateLayoutFactory.createClass([
                         '<ul class=list>',
                         '{% for geoObject in properties.geoObjects %}',
-                        '<li><a onclick="window.setLevelSpot(\'{{geoObject.id}}\')" href=# class="list_item car-baloon">{{ geoObject.name }} ({{ geoObject.carsTotal }})</a></li>',
+                            '{% if geoObject.carsTotal == 0 %}',
+                                '<li>{{ geoObject.name }} ({{ geoObject.carsTotal }})</li>',
+                            '{% else %}',
+                                '<li><a onclick="window.setLevelSpot(\'{{geoObject.id}}\')" href=# class="list_item car-baloon">{{ geoObject.name }} ({{ geoObject.carsTotal }})</a></li>',
+                            '{% endif %}',
                         '{% endfor %}',
                         '</ul>'
                     ].join(''));
@@ -383,41 +388,32 @@
                     }
                 }
             });
-            //myMap.setBounds(spots.getBounds(), {checkZoomRange: true});
-        };
 
 
-        window.setLevelOrganization = function(id)
-        {
-            delete window.currentElement.autocolumn;
-            delete window.currentElement.spot;
-            delete window.currentElement.car;
-            window.currentElement.organization = id;
-            divine.val('organization_' + id).trigger('change');
-            window.pastElement = {
-                key: 'company',
-                id: ''
-            };
-            let a_array = [], b_s_array = [];
-            myMap.geoObjects.removeAll();
             $.ajax({
                 url: 'index.php',
                 data: {
-                    r: 'organization/get-stats',
+                    r: 'autocolumn/get-stats',
                     id: id
                 },
                 success: function(data) {
-                    let stats = JSON.parse(data);
-                    $('div#info-department').removeClass('hide');
-                    $('div#ts-info').addClass('hide');
-                    $('div#info-company').addClass('hide');
-                    changeInfoForDepartment(stats);
+                    if (!window.stop) {
+                        let stats = JSON.parse(data);
+                        $('div#info-department').removeClass('hide');
+                        $('div#ts-info').addClass('hide');
+                        $('div#info-company').addClass('hide');
+                        changeInfoForDepartment(stats);
+                    }
                 },
                 error: function() {
                     //
                 }
             });
+        };
 
+
+        window.setLevelOrganization = function(id)
+        {
             /**
              * Autocolumns ajax
              **/
@@ -428,10 +424,18 @@
                     id: id
                 },
                 success: function(data) {
+                    if (data === 'NaN') {
+                        return;
+                    }
+                    let a_array = [];
                     let autocolumnBalloonContentLayout = ymaps.templateLayoutFactory.createClass([
                         '<ul class=list>',
                         '{% for geoObject in properties.geoObjects %}',
-                        '<li><a onclick="window.setLevelAutocolumn(\'{{geoObject.id}}\')" href=# class="list_item car-baloon">{{ geoObject.name }} ({{ geoObject.carsTotal }})</a></li>',
+                            '{% if geoObject.carsTotal == 0 %}',
+                                '<li>{{ geoObject.name }} ({{ geoObject.carsTotal }})</li>',
+                            '{% else %}',
+                                '<li><a onclick="window.setLevelAutocolumn(\'{{geoObject.id}}\')" href=# class="list_item car-baloon">{{ geoObject.name }} ({{ geoObject.carsTotal }})</a></li>',
+                            '{% endif %}',
                         '{% endfor %}',
                         '</ul>'
                     ].join(''));
@@ -487,6 +491,9 @@
                     });
                     a_clusterer.add(a_array);
                     myMap.geoObjects.add(a_clusterer);
+                },
+                error: function() {
+                    alert('Что-то пошло не так c получением автоколонн');
                 }
             });
 
@@ -500,10 +507,22 @@
                     id: id
                 },
                 success: function(data) {
+                    if (data === 'NaN') {
+                        alert('Не получено участков без автоколонн и/или автоколонн');
+                        window.stop = true;
+                        return;
+                    }
+                    window.stop = false;
+                    myMap.geoObjects.removeAll();
+                    let b_s_array = [];
                     let badSpotBalloonContentLayout = ymaps.templateLayoutFactory.createClass([
                         '<ul class=list>',
                         '{% for geoObject in properties.geoObjects %}',
-                        '<li><a onclick="window.setLevelSpot(\'{{geoObject.id}}\')" href=# class="list_item car-baloon">{{ geoObject.name }} ({{ geoObject.carsTotal }})</a></li>',
+                            '{% if geoObject.carsTotal == 0 %}',
+                                '<li>{{ geoObject.name }} ({{ geoObject.carsTotal }})</li>',
+                            '{% else %}',
+                                '<li><a onclick="window.setLevelSpot(\'{{geoObject.id}}\')" href=# class="list_item car-baloon">{{ geoObject.name }} ({{ geoObject.carsTotal }})</a></li>',
+                            '{% endif %}',
                         '{% endfor %}',
                         '</ul>'
                     ].join(''));
@@ -567,6 +586,36 @@
                     }
                 }
             });
+
+            delete window.currentElement.autocolumn;
+            delete window.currentElement.spot;
+            delete window.currentElement.car;
+            window.currentElement.organization = id;
+            divine.val('organization_' + id).trigger('change');
+            window.pastElement = {
+                key: 'company',
+                id: ''
+            };
+
+            $.ajax({
+                url: 'index.php',
+                data: {
+                    r: 'organization/get-stats',
+                    id: id
+                },
+                success: function(data) {
+                    if (!window.stop) {
+                        let stats = JSON.parse(data);
+                        $('div#info-department').removeClass('hide');
+                        $('div#ts-info').addClass('hide');
+                        $('div#info-company').addClass('hide');
+                        changeInfoForDepartment(stats);
+                    }
+                },
+                error: function() {
+                    //
+                }
+            });
         };
 
 
@@ -607,8 +656,11 @@
             o_pm.events.add('click', function() {
                 window.setLevelOrganization('<?= $organization->id ?>');
             });
+
             o_array.push(o_pm);
+
             myMap.geoObjects.add(o_pm);
+
             o_pm = null;
             <?php } ?>
             divine.val('company').trigger('change');
@@ -623,7 +675,6 @@
             console.log(window.pastElement);
             console.log('badSpots',window.badSpots);
             setBreadcrumps(window.badSpots);
-
         });
 
         backButton.click( function() {

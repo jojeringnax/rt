@@ -47,6 +47,9 @@ class SpotController extends \yii\web\Controller
         $spot = Spot::findOne($id);
         Car::resetPositions($spot->getCars()->select('id')->column());
         $cars = $spot->getCars()->all();
+        if (empty($cars)) {
+            return 'NaN';
+        }
         $resultArray = [];
         $bounds = Division::getBoundsAsArray($cars);
         $resultArray['cars'] = $cars;
