@@ -18,7 +18,6 @@ $this->registerCss('
 }
 ');
 ?>
-
 <?= $this->render('sidebar') ?>
 <script>
 
@@ -74,7 +73,7 @@ $this->registerCss('
         const breadcrumpsDiv = $('.nav-sidebar');
         const backButton = $('button.back');
         const divMap = $('div#map');
-        const divSidebar = $('div.result');
+        const divSidebar = $('div.sidebar');
 
 
         let changeInfoForDepartment = function(obj) {
