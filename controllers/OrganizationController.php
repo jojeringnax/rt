@@ -88,10 +88,14 @@ class OrganizationController extends \yii\web\Controller
         }
         $bounds = Division::getBoundsAsArray(array_merge($badSpots, $autocolumns));
         if (count($bounds) === 4) {
-            $resultArray['bounds'] = [
-                [$bounds['x_min'], $bounds['y_min']],
-                [$bounds['x_max'], $bounds['y_max']]
-            ];
+            if ($bounds['x_min'] == $bounds['x_max'] && $bounds['y_min'] == $bounds['y_max']) {
+                $resultArray['center'] = [$bounds['x_min'], $bounds['y_min']];
+            } else {
+                $resultArray['bounds'] = [
+                    [$bounds['x_min'], $bounds['y_min']],
+                    [$bounds['x_max'], $bounds['y_max']]
+                ];
+            }
         } else {
             $resultArray['center'] = [$bounds['x'], $bounds['y']];
         }

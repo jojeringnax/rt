@@ -433,7 +433,7 @@ $this->registerCss('
                     if (response.hasOwnProperty('bounds')) {
                         myMap.setBounds(response.bounds)
                     } else if (response.hasOwnProperty('center')) {
-                        myMap.setCenter(response.center);
+                        myMap.setCenter(response.center, 19);
                     }
                     clustererCars.add(c_array);
                     myMap.geoObjects.add(clustererCars);
@@ -607,7 +607,7 @@ $this->registerCss('
                     if (response.hasOwnProperty('bounds')) {
                         myMap.setBounds(response.bounds);
                     } else if (response.hasOwnProperty('center')) {
-                        myMap.setCenter(response.center, 9);
+                        myMap.setCenter(response.center, 19);
                     }
                 },
                 complete: function() {
@@ -824,10 +824,11 @@ $this->registerCss('
                     });
                     b_s_clusterer.add(b_s_array);
                     myMap.geoObjects.add(b_s_clusterer);
+                    console.log(response);
                     if (response.hasOwnProperty('bounds')) {
                         myMap.setBounds(response.bounds);
                     } else if (response.hasOwnProperty('center')) {
-                        myMap.setCenter(response.center, 9);
+                        myMap.setCenter(response.center, 19);
                     }
                 },
                 complete: function() {
