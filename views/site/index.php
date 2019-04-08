@@ -2,6 +2,9 @@
 /**
  * @var $organizations \app\models\Organization[]
  * @var $this \yii\web\View
+ * @var $totalCarsData array
+ * @var $totalTerminals integer
+ * @var $totalStats \app\models\Statistic
  */
 $this->registerCss('
 .overlay_block{
@@ -20,6 +23,85 @@ $this->registerCss('
 ?>
 <?= $this->render('sidebar') ?>
 <script>
+
+    const carTypes = {
+        light: 0,
+        truck: 1,
+        bus: 2,
+        spec: 3
+    };
+
+    const circleBarsDepartment = {
+        applications_ac: new ProgressBar.Circle('#applications_ac', {
+            strokeWidth: 12,
+            easing: 'easeInOut',
+            duration: 1400,
+            color: '#27AE60',
+            trailColor: '#eee',
+            trailWidth: 12,
+            svgStyle: null
+        }),
+        waybills_total: new ProgressBar.Circle('#waybills_total', {
+            strokeWidth: 12,
+            easing: 'easeInOut',
+            duration: 1400,
+            color: '#27AE60',
+            trailColor: '#eee',
+            trailWidth: 12,
+            svgStyle: null
+        }),
+        accidents_total: new ProgressBar.Circle('#accidents_total', {
+            strokeWidth: 12,
+            easing: 'easeInOut',
+            duration: 1400,
+            color: '#27AE60',
+            trailColor: '#eee',
+            trailWidth: 12,
+            svgStyle: null
+        }),
+        WB_M: new ProgressBar.Circle('#WB_M', {
+            strokeWidth: 12,
+            easing: 'easeInOut',
+            duration: 1400,
+            color: '#27AE60',
+            trailColor: '#eee',
+            trailWidth: 12,
+            svgStyle: null
+        })
+
+    };
+
+    const divsWithCarTypes = $('#info-department .div-transport').children('.item-info');
+
+    const clearClasses = function() {
+        divsWithCarTypes.each(function() {
+            $(this).removeClass('active-transport');
+        });
+    };
+
+
+    function circlesDepartmentFillFromObject(obj) {
+
+        let values = {
+            applications_ac: (obj.applications_ac/obj.applications_total).toFixed(2),
+            waybills_total: (obj.waybills_processed/obj.waybills_total).toFixed(2),
+            accidents_total: (obj.accidents_guilty/obj.accidents_total).toFixed(2),
+            WB_M: (Math.round(obj.WB_M)/obj.WB_ALL).toFixed(2)
+        };
+
+        Object.keys(values).forEach(function(key) {
+            if (values[key] === "NaN") {
+                values[key] = 0;
+            }
+            $('#' + key + '_per').html(values[key]*100 + '%');
+            circleBarsDepartment[key].animate(values[key]);
+        });
+    }
+
+
+    /**
+     * Functions for animation loading animation
+     **/
 
     function loading_animation_start(block){
         block.wrap( '<div class="main_overlay_block"></div>');
@@ -44,6 +126,13 @@ $this->registerCss('
         }
     }
 
+    const totalStats = JSON.parse('<?= $totalStats ?>');
+    circlesCompanyFillFromObject(totalStats);
+
+
+    /**
+     * The main code
+     **/
     ymaps.ready( function() {
 
 
@@ -76,7 +165,21 @@ $this->registerCss('
         const divSidebar = $('div.sidebar');
 
 
-        let changeInfoForDepartment = function(obj) {
+        const changeInfoForCompany = function() {
+            $('#compAmOfTs').html(<?= $totalCarsData['total'] ?>);
+            $('#compReady').html(<?= $totalCarsData['G'] ?>);
+            $('#compOnRep').html(<?= $totalCarsData['R'] ?>);
+            $('#compOnTo').html(<?= $totalCarsData['TO'] ?>);
+            $('#compOnLine').html(<?= $totalCarsData['totalInline'] ?>);
+            $('#comp_applications_executed').html(totalStats.applications_executed);
+            $('#comp_applications_canceled').html(totalStats.applications_canceled);
+            $('#comp_applications_sub').html(totalStats.applications_sub);
+            $('#comp_fuel').html((totalStats.fuel/totalStats.time).toFixed(2));
+            $('#comp_terminals').html(<?= $totalTerminals ?>);
+        };
+
+
+        const changeInfoForDepartment = function(obj) {
             $('#totTs').html(obj.totTs);
             $('#OnReady').html(obj.readyTs);
             $('#OnLine').html(obj.onLine);
@@ -86,6 +189,22 @@ $this->registerCss('
             $('#freightCar').html(obj.freightCar);
             $('#busCar').html(obj.busCar);
             $('#specCar').html(obj.specCar);
+        };
+
+        const changeStatsForDepartment = function(obj) {
+            const itemInfoDivs = $('#request-department').children('.item-info');
+            const indicBot = $('div.indic-bot');
+            const fuelTimeSpan = indicBot.children('.div-pr25').children('span#fuel');
+            const terminalsSpan = indicBot.children('.div-meanings').children('span#terminals');
+
+            terminalsSpan.html(obj.terminals);
+            fuelTimeSpan.html((obj.statistic.fuel/obj.statistic.time).toFixed(2));
+
+            itemInfoDivs.each(function() {
+                let finalP = $(this).children('.figures');
+                let id = finalP.attr('id');
+                finalP.html(obj.statistic[id]);
+            });
         };
 
         let changeInfoForCar = function(obj) {
@@ -183,6 +302,32 @@ $this->registerCss('
 
         window.setLevelSpot = function(id) {
             loading_animation_start(divMap);
+
+            let c_array = [];
+            let carBalloonContentLayout = ymaps.templateLayoutFactory.createClass([
+                '<ul class=list>',
+                '{% for geoObject in properties.geoObjects %}',
+                '<li><a onclick="window.setLevelCar(\'{{geoObject.id}}\')" href=# id="{{geoObject.id}}" class="list_item car-baloon"><img src="yan/img/auto_icon/point_blue_{{geoObject.type}}.svg" alt="">{{ geoObject.properties.balloonContentHeader|raw }}</a></li>',
+                '{% endfor %}',
+                '</ul>'
+            ].join(''));
+            let carClusterLayout = ymaps.templateLayoutFactory.createClass(
+                '<div class="bb-cluster-car"><span class="bb-num">{{ properties.geoObjects.length }}</span></div>'
+            );
+            let clustererCars = new ymaps.Clusterer(
+                {
+                    clusterBalloonContentLayout: carBalloonContentLayout,
+                    clusterIcons: [{
+                        href: '',
+                        size: [62, 62],
+                        offset: [-26, -26]
+                    }],
+                    gridSize: 1024,
+                    clusterIconContentLayout: carClusterLayout,
+                    zoomMargin : [50,50,50,50]
+                }
+            );
+
             /**
              * Cars ajax
              **/
@@ -206,33 +351,8 @@ $this->registerCss('
                         key: window.badSpots ? 'organization' : 'autocolumn',
                         id: window.badSpots ? window.currentElement.organization : window.currentElement.autocolumn
                     };
-                    let c_array = [];
                     myMap.geoObjects.removeAll();
                     let c_pm, carLayout, carLayoutUrl, carLayoutClass, carLayoutChecked, carLayoutUrlChecked, carLayoutClassChecked;
-                    let carBalloonContentLayout = ymaps.templateLayoutFactory.createClass([
-                        '<ul class=list>',
-                        '{% for geoObject in properties.geoObjects %}',
-                        '<li><a onclick="window.setLevelCar(\'{{geoObject.id}}\')" href=# id="{{geoObject.id}}" class="list_item car-baloon"><img src="yan/img/auto_icon/point_blue_{{geoObject.type}}.svg" alt="">{{ geoObject.properties.balloonContentHeader|raw }}</a></li>',
-                        '{% endfor %}',
-                        '</ul>'
-                    ].join(''));
-                    let carClusterLayout = ymaps.templateLayoutFactory.createClass(
-                        '<div class="bb-cluster-car"><span class="bb-num">{{ properties.geoObjects.length }}</span></div>'
-                    );
-                    let clustererCars = new ymaps.Clusterer(
-                        {
-                            clusterBalloonContentLayout: carBalloonContentLayout,
-                            clusterIcons: [{
-                                href: '',
-                                size: [62, 62],
-                                offset: [-26, -26]
-                            }],
-                            gridSize: 1024,
-                            clusterIconContentLayout: carClusterLayout,
-                            zoomMargin : [50,50,50,50]
-                        }
-                    );
-                    console.log(carBalloonContentLayout);
                     let response = JSON.parse(data);
                     let cars = response.cars;
                     cars.forEach( function (car) {
@@ -283,6 +403,7 @@ $this->registerCss('
                         c_pm.layoutChecked = carLayoutChecked;
                         c_pm.id = car.id;
                         c_pm.model = car.model;
+                        c_pm.type = car.type;
 
                         c_pm.events.add('click', function(c) {
                             let currentClickCar = c.originalEvent.target;
@@ -314,12 +435,51 @@ $this->registerCss('
                 },
                 complete: function() {
                     loading_animation_end(divMap);
+
+
+                    divsWithCarTypes.each(function() {
+                        let currentDiv = $(this);
+                        currentDiv.click(function() {
+                            if (!window.currentElement.hasOwnProperty('spot')) {
+                                return;
+                            }
+                            clearClasses();
+                            $(this).addClass('active-transport');
+
+                            if (currentDiv.attr('id') === 'all') {
+                                clustererCars.removeAll();
+                                clustererCars.add(c_array);
+                                return;
+                            }
+                            clustererCars.removeAll();
+                            let typeClicked = carTypes[$(this).attr('id')];
+                            c_array.forEach(function(car) {
+                                if(car.type === typeClicked) {
+                                   clustererCars.add(car);
+                                }
+                           });
+                       });
+                    });
                 }
             });
 
 
 
             loading_animation_start(divSidebar);
+
+            $.ajax({
+                url: 'index.php',
+                data: {
+                    r: 'spot/get-statistic',
+                    id: id
+                },
+                success: function(data) {
+                    let response = JSON.parse(data);
+                    changeStatsForDepartment(response);
+                    circlesDepartmentFillFromObject(response.statistic);
+                }
+            });
+
             $.ajax({
                 url: 'index.php',
                 data: {
@@ -451,6 +611,21 @@ $this->registerCss('
             });
 
             loading_animation_start(divSidebar);
+
+            $.ajax({
+                url: 'index.php',
+                data: {
+                    r: 'autocolumn/get-statistic',
+                    id: id
+                },
+                success: function(data) {
+                    let response = JSON.parse(data);
+                    changeStatsForDepartment(response);
+                    circlesDepartmentFillFromObject(response.statistic);
+                }
+            });
+
+
             $.ajax({
                 url: 'index.php',
                 data: {
@@ -666,6 +841,20 @@ $this->registerCss('
             };
 
             loading_animation_start(divSidebar);
+
+            $.ajax({
+                url: 'index.php',
+                data: {
+                    r: 'organization/get-statistic',
+                    id: id
+                },
+                success: function(data) {
+                    let response = JSON.parse(data);
+                    changeStatsForDepartment(response);
+                    circlesDepartmentFillFromObject(response.statistic);
+                }
+            });
+
             $.ajax({
                 url: 'index.php',
                 data: {
@@ -739,12 +928,13 @@ $this->registerCss('
         };
 
         window.setLevelCompany();
-
+        changeInfoForCompany();
         divine.change(function () {
             console.log(window.currentElement);
+            if (!window.currentElement.hasOwnProperty('spot')) {
+                clearClasses();
+            }
             window.badSpots = window.currentElement.hasOwnProperty('spot') && !window.currentElement.hasOwnProperty('autocolumn');
-            console.log(window.pastElement);
-            console.log('badSpots',window.badSpots);
             setBreadcrumps(window.badSpots);
         });
 
@@ -753,5 +943,4 @@ $this->registerCss('
         });
 
     }); //ymaps.ready()
-
 </script>

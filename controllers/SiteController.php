@@ -14,6 +14,7 @@ use app\models\Statistic;
 use Yii;
 use yii\filters\AccessControl;
 use yii\helpers\ArrayHelper;
+use yii\helpers\Json;
 use yii\web\Controller;
 use yii\web\Response;
 use yii\filters\VerbFilter;
@@ -82,7 +83,7 @@ class SiteController extends Controller
             'organizations' => $organizations,
             'totalCarsData' => Car::getTotalData(),
             'totalTerminals' => Car::getNumberOfTerminals(),
-            'totalStats' => Statistic::getTotalStatistic(),
+            'totalStats' => Json::encode(Statistic::getTotalStatistic()),
         ]);
     }
 

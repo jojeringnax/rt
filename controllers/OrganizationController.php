@@ -108,4 +108,15 @@ class OrganizationController extends \yii\web\Controller
         return $organization->description;
     }
 
+    /**
+     * @param $id
+     * @return string|null
+     */
+    public function actionGetStatistic($id)
+    {
+        $organization = Organization::findOne(['id' => $id]);
+        if ($organization == null) return null;
+        return Json::encode(['statistic' => $organization->getStatistic()->getAttributes(), 'terminals' => $organization->getNumberOfTerminals()]);
+    }
+
 }

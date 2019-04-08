@@ -213,7 +213,7 @@ class Organization extends \yii\db\ActiveRecord
      */
     public function getSpotIds()
     {
-        return Spot::find()->where(['organization_id' => $this->id])->select('id')->column();
+        return Spot::find()->where(['organization_id' => $this->id])->andWhere(['!=','x_pos',0])->select('id')->column();
     }
 
     /**

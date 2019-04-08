@@ -79,4 +79,15 @@ class AutocolumnController extends \yii\web\Controller
         $autocolumn = Autocolumn::findOne($id);
         return $autocolumn->name;
     }
+
+    /**
+     * @param $id
+     * @return false|string|null
+     */
+    public function actionGetStatistic($id)
+    {
+        $autocolumn = Autocolumn::findOne(['id' => $id]);
+        if ($autocolumn == null) return null;
+        return Json::encode(['statistic' => $autocolumn->getStatistic()->getAttributes(), 'terminals' => $autocolumn->getNumberOfTerminals()]);
+    }
 }

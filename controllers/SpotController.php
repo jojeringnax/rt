@@ -45,6 +45,7 @@ class SpotController extends \yii\web\Controller
          * @var $spots Spot[]
          */
         $spot = Spot::findOne($id);
+        if ($spot == null) return null;
         Car::resetPositions($spot->getCars()->select('id')->column());
         $cars = $spot->getCars()->all();
         if (empty($cars)) {
@@ -71,6 +72,18 @@ class SpotController extends \yii\web\Controller
     public function actionGetName($id)
     {
         $spot = Spot::findOne($id);
+        if ($spot == null) return null;
         return $spot->name;
+    }
+
+    /**
+     * @param $id
+     * @return false|string|null
+     */
+    public function actionGetStatistic($id)
+    {
+        $spot = Spot::findOne($id);
+        if ($spot == null) return null;
+        return Json::encode(['statistic' => $spot->getStatistic()->getAttributes(), 'terminals' => $spot->getNumberOfTerminals()]);
     }
 }
