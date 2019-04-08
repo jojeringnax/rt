@@ -78,7 +78,7 @@ $this->registerCss('
             $(this).removeClass('active-transport');
             if(all) {
                 if ($(this).attr('id') === 'all') {
-                    $(this).addClass('active-transport'));
+                    $(this).addClass('active-transport');
                 }
             }
         });
