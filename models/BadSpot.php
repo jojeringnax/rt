@@ -201,7 +201,7 @@ class BadSpot extends \yii\db\ActiveRecord
             ],
             'inline' => 0
         ];
-        $cars = $this->cars;
+        $cars = $this->getCars()->all();
         if ($cars === null) {
             return $result;
         }

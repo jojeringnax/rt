@@ -267,8 +267,14 @@ class Organization extends \yii\db\ActiveRecord
      */
     public function getCarsNumberWithStatuses()
     {
-        $spots = $this->getSpots()->where(['!=', 'x_pos', 0])->all();
-        $badSpots = $this->badSpots;
+        /**
+         * @var $spots Spot[]|null
+         * @var $badSpots BadSpot[]|null
+         *
+         */
+        $autocolumns = $this->getAutocolumns()->where(['!=', 'x_pos', 0])->all();
+
+        $badSpots = $this->getBadSpots()->where(['!=', 'x_pos', 0])->all();
         $result = [
             'total' => 0,
             'types' => [0, 0, 0, 0],
@@ -279,17 +285,21 @@ class Organization extends \yii\db\ActiveRecord
             ],
             'inline' => 0
         ];
-        foreach ($spots as $spot) {
-            $spotRes = $spot->getCarsNumberWithStatuses();
-            $result['total'] += $spotRes['total'];
-            $result['inline'] += $spotRes['inline'];
-            foreach ($result['types'] as $key => $value) {
-                $result['types'][$key] += $spotRes['types'][$key];
-            }
-            foreach ($result['statuses_count'] as $key => $value) {
-                $result['statuses_count'][$key] += $spotRes['statuses_count'][$key];
+        foreach ($autocolumns as $autocolumn) {
+            $spots = $autocolumn->getSpots()->where(['!=', 'x_pos', 0])->all();
+            foreach ($spots as $spot) {
+                $spotRes = $spot->getCarsNumberWithStatuses();
+                $result['total'] += $spotRes['total'];
+                $result['inline'] += $spotRes['inline'];
+                foreach ($result['types'] as $key => $value) {
+                    $result['types'][$key] += $spotRes['types'][$key];
+                }
+                foreach ($result['statuses_count'] as $key => $value) {
+                    $result['statuses_count'][$key] += $spotRes['statuses_count'][$key];
+                }
             }
         }
+
 
         foreach ($badSpots as $badSpot) {
             $spotRes = $badSpot->getCarsNumberWithStatuses();
