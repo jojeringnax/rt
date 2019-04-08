@@ -73,9 +73,14 @@ $this->registerCss('
 
     const divsWithCarTypes = $('#info-department .div-transport').children('.item-info');
 
-    const clearClasses = function() {
+    const clearClasses = function(all=false) {
         divsWithCarTypes.each(function() {
             $(this).removeClass('active-transport');
+            if(all) {
+                if ($(this).attr('id') === 'all') {
+                    $(this.addClass('active-transport'));
+                }
+            }
         });
     };
 
@@ -933,6 +938,8 @@ $this->registerCss('
             console.log(window.currentElement);
             if (!window.currentElement.hasOwnProperty('spot')) {
                 clearClasses();
+            } else {
+                clearClasses(true);
             }
             window.badSpots = window.currentElement.hasOwnProperty('spot') && !window.currentElement.hasOwnProperty('autocolumn');
             setBreadcrumps(window.badSpots);
