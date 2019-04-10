@@ -20,6 +20,7 @@ class CarController extends \yii\web\Controller
     public function actionGetData($id) {
         $client = new \SoapClient("http://d.rg24.ru:5601/PUP_WS/ws/PUP.1cws?wsdl");
         $carsData = json_decode($client->GetCarsData(['CarsID' => $id])->return);
+        $car = Car::findOne($id);
         $carsDataModel = CarsData::getOrCreate($id);
         $carsDataModel->car_id = $id;
         $carsDataModel->driver = isset($carsData->Driver) ? $carsData->Driver : null;
@@ -36,7 +37,7 @@ class CarController extends \yii\web\Controller
         $carsDataModel->driver_mark = isset($carsData->DriverMark) ? $carsData->DriverMark : null;
         $carsDataModel->violations_count = isset($carsData->ViolationsCount) ? (integer) $carsData->ViolationsCount : null;
         $carsDataModel->save();
-        return Json::encode($carsDataModel);
+        return Json::encode(['carsData' => $carsDataModel, 'type' => $car->type]);
     }
 
     /**
