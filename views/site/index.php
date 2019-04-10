@@ -212,7 +212,7 @@ $this->registerCss('
             });
         };
 
-        let changeInfoForCar = function(obj) {
+        let changeInfoForCar = function(obj, type=0) {
             let keys = [
                 "car_id",
                 "driver",
@@ -229,8 +229,10 @@ $this->registerCss('
                 "driver_mark",
                 "violations_count"
             ];
+            let src = "../web/yan/img/auto_icon/point_blue_" + type + ".svg";
+            $('#img-ts').attr('src', "<?= \yii\helpers\Url::to('yan/img/auto_icon') ?>" + "/point_blue_" + type + ".svg");
             keys.forEach(function(key) {
-               if (!obj.hasOwnProperty(key) || obj[key] === null) {
+               if (!obj.hasOwnProperty(key) || obj[key] === null || obj[key] === '') {
                    obj[key] = 'н/д';
                }
                $('#' + key).html(obj[key]);
@@ -292,8 +294,11 @@ $this->registerCss('
                     id: id
                 },
                 success: function(data) {
-                    let carData = JSON.parse(data);
-                    changeInfoForCar(carData);
+                    let response = JSON.parse(data);
+                    let carData = response.carsData;
+                    let type = response.type;
+
+                    changeInfoForCar(carData, type);
                 },
                 error: function () {
                     changeInfoForCar({});
