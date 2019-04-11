@@ -331,6 +331,8 @@ class Car extends \yii\db\ActiveRecord
      */
     public static function getTotalData()
     {
+        ini_set('memory_limit', '1000M');
+        ini_set('max_execution_time', '0');
         $cars = self::find()->all();
         $G = 0;
         $R = 0;
@@ -339,6 +341,13 @@ class Car extends \yii\db\ActiveRecord
         $totalCount = 0;
         foreach ($cars as $car) {
             if ($car->x_pos == null || $car->spot_id == null || $car->status == null) continue;
+            $spot = Spot::findOne($car->spot_id);
+            if ($spot === null || $spot->x_pos === null) continue;
+            $badSpot = BadSpot::findOne($car->spot_id);
+            if ($badSpot === null) {
+                $autocolumn = Autocolumn::findOne($spot->autocolumn_id);
+                if ($autocolumn === null || $autocolumn->x_pos === null) continue;
+            }
             $flag = $car->status;
             $$flag += 1;
             if ($car->inline) $totalInline += 1;
