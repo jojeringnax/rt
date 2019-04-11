@@ -242,8 +242,9 @@ $this->registerCss('
         let setBreadcrumps = function(badSpots = false) {
             let breadcrumpsArray = ['<a onclick="window.setLevelCompany()" id="company" href="#">ООО Ресурс Транс</a>'];
             let keys = Object.keys(window.currentElement);
-            keys.forEach(function (key) {
-                $.ajax({
+            console.log('---curr_element',window.currentElement);
+            keys.forEach(async function (key) {
+                await $.ajax({
                     url: 'index.php',
                     data: {
                        r: key + '/get-name',
@@ -260,7 +261,7 @@ $this->registerCss('
             });
 
             setTimeout( function() {
-                breadcrumpsDiv.html(breadcrumpsArray.join(' >>> '))
+                breadcrumpsDiv.html(breadcrumpsArray.join(' >> '))
             }, 300);
 
         };
