@@ -322,7 +322,7 @@ $totalStatistic = \app\models\Statistic::getTotalStatistic();
                                     <span id="end_time_plan" class="title-time-end text-ts">28.02.2019 19:00:00</span>
                                 </div>
                                 <div class="fuel-time item-ts-data">
-                                    <span class="title-fuel-time title-ts-text">Время работы (часов):</span>
+                                    <span class="title-fuel-time title-ts-text">Время работы, часов:</span>
                                     <div class="time d-flex">
                                         <span id="work_time_plan" class="fuel-time-start text-ts cross-out">12</span>
                                         <span id="work_time_fact" class="fuel-time-end text-ts blue-color" style="margin-left: 1vh">11.91</span>
@@ -340,12 +340,12 @@ $totalStatistic = \app\models\Statistic::getTotalStatistic();
                                     <img src="yan/img/info_auto_icon/speedometer.svg" alt="" style="height: 1.5vh">
                                 </div>
                                 <div class="d-flex flex-column align-items-start" style="margin-left: 1.5vh">
-                                    <span class="title-ts-text">Пробег:</span>
+                                    <span class="title-ts-text">Пробег, км:</span>
                                     <span id="mileage" class="text-ts">275 км</span>
                                 </div>
                             </div>
                             <div class="dada-ts-item">
-                                <span class="title-ts-text">Средняя скорость:</span>
+                                <span class="title-ts-text">Средняя скорость, км/ч:</span>
                                 <span id="speed" class="text-ts">37 км/ч</span>
                             </div>
                         </div>
@@ -355,12 +355,12 @@ $totalStatistic = \app\models\Statistic::getTotalStatistic();
                                     <img src="yan/img/info_auto_icon/gas-station.svg" alt="">
                                 </div>
                                 <div class="d-flex flex-column align-items-start" style="margin-left: 1.5vh">
-                                    <span class="title-ts-text">Топливо по <br />норме:</span>
+                                    <span class="title-ts-text">Топливо по <br />норме, л:</span>
                                     <span id="fuel_norm" class="text-ts">99.55</span>
                                 </div>
                             </div>
                             <div class="dada-ts-item">
-                                <span class="title-ts-text">Топливо <br />ДУТ:</span>
+                                <span class="title-ts-text">Топливо <br />ДУТ, л:</span>
                                 <span id="fuel_" class="text-ts">0</span>
                             </div>
                         </div>
