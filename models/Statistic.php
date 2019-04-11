@@ -113,8 +113,8 @@ class Statistic extends ActiveRecord
             $statistic->applications_executed = isset($application->CountPlan) ? $application->CountPlan : 0;
             $statistic->applications_canceled = isset($application->CountCancel) ? $application->CountCancel : 0;
             $statistic->applications_sub = isset($application->CountSub) ? $application->CountSub : 0;
-            $statistic->applications_ac = isset($application->countAC) ? $application->countAC : 0;
-            $statistic->applications_mp = isset($application->countMP) ? $application->countMP : 0;
+            $statistic->applications_ac = isset($application->CountAC) ? $application->CountAC : 0;
+            $statistic->applications_mp = isset($application->CountMP) ? $application->CountMP : 0;
             $statistic->save();
             Console::updateProgress($i, $count);
         }
