@@ -261,7 +261,7 @@ $this->registerCss('
             });
 
             setTimeout( function() {
-                breadcrumpsDiv.html(breadcrumpsArray.join(' >> '))
+                breadcrumpsDiv.html(breadcrumpsArray.join('<img src="../web/yan/img/arrows.svg" style="margin: 0 0.45vh 0 0.45vh; height: 0.7vh">'))
             }, 300);
 
         };
