@@ -710,7 +710,7 @@ $this->registerCss('
                     let autocolumns = JSON.parse(data);
                     autocolumns.forEach( function (autocolumn) {
                         autoColLayout = ymaps.templateLayoutFactory.createClass(
-                            '<div class="bb"><span class="bb-num">'
+                            '<div class="bb"><span class="bb-num-spot">'
                             + autocolumn.carsTotal
                             + '</span> <span id="auto_name" class="bb-name">'
                             + autocolumn.autocolumn.name
@@ -800,7 +800,7 @@ $this->registerCss('
                         badSpotLayout = ymaps.templateLayoutFactory.createClass(
                             '<div class="bb"><span class="bb-num">'
                             + badSpot.carsTotal
-                            + '</span> <span id="auto_name" class="bb-name">'
+                            + '</span> <span id="spot_name" class="bb-name">'
                             + badSpot.badSpot.name
                             +'</span></div>'
                         );
