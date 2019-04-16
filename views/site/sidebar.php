@@ -275,7 +275,7 @@ $totalStatistic = \app\models\Statistic::getTotalStatistic();
                         <img id="img-ts" src="" alt="" style="">
                     </div>
                     <div>
-                        <span id="nameTS" class="" style="color: #005498; margin-left: 1.5vh; font-weight: bold">ТС №93 BMW</span>
+                        <span id="nameTS" class="" style="color: #005498; margin-left: 1.5vh; font-weight: bold; font-size: 1.4vh">ТС №93 BMW</span>
                     </div>
 
                 </div>

@@ -368,10 +368,10 @@ $this->registerCss('
                     let cars = response.cars;
                     cars.forEach( function (car) {
                         carLayoutUrl =
-                            car.inline ?
+                            car.status !== 'R' && car.status !== 'TO' ?
                             'yan/img/auto_icon/point_blue_' + car.type + '.svg' :
                             'yan/img/auto_icon/point_noIn_' + car.type + '.svg';
-                        carLayoutClass = car.inline ? "bb-num-car" : "bb-num-car-inline";
+                        carLayoutClass = car.status !== 'R' && car.status !== 'TO' ? "bb-num-car" : "bb-num-car-inline";
                         carLayout = ymaps.templateLayoutFactory.createClass(
                             '<div class="bb"><span class="' +
                             carLayoutClass +
