@@ -245,21 +245,13 @@ class Organization extends \yii\db\ActiveRecord
         /**
          * @var $autocolumns Autocolumn[]
          */
-        $autocolumns = $this->getAutocolumns()->where(['!=', 'x_pos', 0])->all();
-        $badSpots = $this->getBadSpots()->where(['!=', 'x_pos', 0])->all();
-        $result = 0;
-        foreach ($autocolumns as $autocolumn) {
-            $spots = $autocolumn->getSpots()->where(['!=', 'x_pos', 0])->all();
-            if($spots !== null) {
-                foreach ($spots as $spot) {
-                    $result += Car::find()->where(['spot_id' => $spot->id])->andWhere(['!=', 'x_pos', 0])->count();
-                }
-            }
-        }
-        foreach ($badSpots as $badSpot) {
-            $result += Car::find()->where(['spot_id' => $badSpot->id])->andWhere(['!=', 'x_pos', 0])->count();
-        }
-        return $result;
+        $autocolumns = Autocolumn::find()->select('id')->where(['organization_id' => $this->id])->andWhere('x_pos is not null')->column();
+        $badSpots = BadSpot::find()->select('id')->where(['organization_id' => $this->id])->andWhere('x_pos is not null')->column();
+        $spots = Spot::find()->select('id')->where(['autocolumn_id' => $autocolumns])->andWhere('x_pos is not null')->column();
+        return Car::find()
+            ->where(['spot_id' => array_merge($badSpots, $spots)])
+            ->andWhere('x_pos is not null')
+            ->count();
     }
 
     /**

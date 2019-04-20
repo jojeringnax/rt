@@ -925,7 +925,7 @@ $this->registerCss('
 
         window.setLevelCompany = function()
         {
-            myMap.setBounds(<?= \app\models\Organization::getMaxAndMinCoordinatesForAPI() ?>, {checkZoomRange: true});
+            myMap.setBounds(<?= $bounds ?>, {checkZoomRange: true});
             window.currentElement = {
                 company: 'ООО Ресурс Транс'
             };

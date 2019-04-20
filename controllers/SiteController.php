@@ -84,6 +84,7 @@ class SiteController extends Controller
             'totalCarsData' => Car::getTotalData(),
             'totalTerminals' => Car::getNumberOfTerminals(),
             'totalStats' => Json::encode(Statistic::getTotalStatistic()),
+            'bounds' => Organization::getMaxAndMinCoordinatesForAPI()
         ]);
     }
 
