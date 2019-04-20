@@ -239,6 +239,23 @@ $this->registerCss('
             });
         };
 
+        let changeInfoFromCarForCar = function(obj, type=0) {
+            const mainDiv = $('.ts-car-data');
+            let keys = [
+                "profitability",
+                "technical_inspection_days",
+                "battery_change_days",
+                "tire_change_days",
+                "tire_season"
+            ];
+            keys.forEach(function(key) {
+                if (!obj.hasOwnProperty(key) || obj[key] === null || obj[key] === '') {
+                    obj[key] = 'н/д';
+                }
+                mainDiv.children('#' + key).html(obj[key]);
+            });
+        };
+
         let setBreadcrumps = function(badSpots = false) {
             let breadcrumpsArray = ['<a onclick="window.setLevelCompany()" id="company" href="#">ООО Ресурс Транс</a>'];
             let keys = Object.keys(window.currentElement);
@@ -381,11 +398,11 @@ $this->registerCss('
                         );
 
 
-                        carLayoutClassChecked = car.inline ?
-                            "bb-num-car-white" :
+                        carLayoutClassChecked = car.status !== 'R' && car.status !== 'TO' ?
+                            "bb-num-car-white":
                             "bb-num-car-inline_checked";
                         carLayoutUrlChecked = 'yan/img/auto_icon/point_' +
-                            (car.inline ? 'noIn_check_' : '') +
+                            (car.status !== 'R' && car.status !== 'TO' ? '' : 'noIn_check_') +
                             car.type + '.svg';
                         carLayoutChecked = ymaps.templateLayoutFactory.createClass(
                             '<div class="bb"><span class="' +
@@ -409,12 +426,24 @@ $this->registerCss('
                             iconImageOffset: [-24, -24],
                             iconContentLayout: carLayout
                         });
-
+                        let keys = [
+                            "profitability",
+                            "technical_inspection_days",
+                            "battery_change_days",
+                            "tire_change_days",
+                            "tire_season"
+                        ];
                         c_pm.layout = carLayout;
                         c_pm.layoutChecked = carLayoutChecked;
                         c_pm.id = car.id;
                         c_pm.model = car.model;
                         c_pm.type = car.type;
+                        c_pm.profitability = car.profitability;
+                        c_pm.technical_inspection_days = car.technical_inspection_days;
+                        c_pm.battery_change_days = car.battery_change_days;
+                        c_pm.tire_change_days = car.tire_change_days;
+                        c_pm.tire_season = car.tire_season;
+
 
                         c_pm.events.add('click', function(c) {
                             let currentClickCar = c.originalEvent.target;
@@ -425,6 +454,7 @@ $this->registerCss('
                             $('#nameTS').html(currentClickCar.model);
                             currentClickCar.options.set('iconContentLayout', currentClickCar.layoutChecked);
                             window.setLevelCar(currentClickCar.id);
+                            changeInfoFromCarForCar(currentClickCar);
                         });
 
                         c_array.push(c_pm);

@@ -388,11 +388,10 @@ $totalStatistic = \app\models\Statistic::getTotalStatistic();
                                 <div class="icon-ts">
                                     <img src="yan/img/info_auto_icon/percentage-discount.svg" alt="">
                                 </div>
-                                <div class="d-flex flex-column align-items-start" style="margin-left: 1.5vh; width: 170px">
+                                <div class="d-flex flex-column align-items-start ts-car-data" style="margin-left: 1.5vh; width: 170px">
                                     <span class="title-ts-text">Процент рентабельности за прошлый месяц:</span>
-                                    <span id="profitabilities" class="text-ts">50</span>
+                                    <span id="profitability" class="text-ts">50</span>
                                 </div>
-
                             </div>
                         </div>
                         <div class="row-2 d-flex flex-row item-ts-data">
@@ -400,15 +399,14 @@ $totalStatistic = \app\models\Statistic::getTotalStatistic();
                                 <div class="icon-ts">
                                     <img src="yan/img/info_auto_icon/tools-and-utensils.svg" alt="">
                                 </div>
-                                <div class="d-flex flex-column align-items-start" style="margin-left: 1.5vh">
+                                <div class="d-flex flex-column align-items-start ts-car-data" style="margin-left: 1.5vh">
                                     <span class="title-ts-text">Осталось км <br /> до ТО:</span>
-                                    <span id="untilTO" class="text-ts">1500</span>
+                                    <span id="technical_inspection_days" class="text-ts">1500</span>
                                 </div>
-
                             </div>
-                            <div class="dada-ts-item">
-                                <span class="title-ts-text ">Дней до замены <br /> аккумулятора:</span>
-                                <span id="battery-change" class="text-ts">911</span>
+                            <div class="dada-ts-item ts-car-data">
+                                <span class="title-ts-text">Дней до замены <br /> аккумулятора:</span>
+                                <span id="battery_change_days" class="text-ts">911</span>
                             </div>
                         </div>
                         <div class="row-3 d-flex flex-row item-ts-data">
@@ -416,15 +414,15 @@ $totalStatistic = \app\models\Statistic::getTotalStatistic();
                                 <div class="icon-ts">
                                     <img src="yan/img/info_auto_icon/car-wheel.svg" alt="">
                                 </div>
-                                <div class="d-flex flex-column align-items-start" style="margin-left: 1.5vh">
+                                <div class="d-flex flex-column align-items-start ts-car-data" style="margin-left: 1.5vh">
                                     <span class="title-ts-text">Км до замены шин:</span>
-                                    <span id="tier-change" class="text-ts">241</span>
+                                    <span id="tire_change_days" class="text-ts">241</span>
                                 </div>
 
                             </div>
-                            <div class="dada-ts-item">
+                            <div class="dada-ts-item ts-car-data">
                                 <span class="title-ts-text">Сезонность шин:</span>
-                                <span id="seasonality" class="text-ts">Межсезонные</span>
+                                <span id="tire_season" class="text-ts">Межсезонные</span>
                             </div>
                         </div>
                     </div>
