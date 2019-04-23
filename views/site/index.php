@@ -123,18 +123,8 @@ $this->registerCss('
         block.removeClass('loading_process');
     }
 
-    function start_stop_animation(block){
-        if ($(block).parent().is('.main_overlay_block')){
-            loading_animation_end(block);
-        } else {
-            loading_animation_start(block);
-        }
-    }
-
     const totalStats = JSON.parse('<?= $totalStats ?>');
     circlesCompanyFillFromObject(totalStats);
-
-
     /**
      * The main code
      **/
@@ -164,7 +154,7 @@ $this->registerCss('
         };
 
         const divine = $('input#divineInput');
-        const breadcrumpsDiv = $('.nav-sidebar');
+        const breadcrumpsDiv = $('#firm');
         const backButton = $('button.back');
         const divMap = $('div#map');
         const divSidebar = $('div.sidebar');
@@ -256,18 +246,20 @@ $this->registerCss('
             });
         };
 
-        let setBreadcrumps = function(badSpots = false) {
+        const setBreadcrumps = (badSpots = false) => {
             let breadcrumpsArray = ['<a onclick="window.setLevelCompany()" id="company" href="#">ООО Ресурс Транс</a>'];
             let keys = Object.keys(window.currentElement);
-            console.log('---curr_element',window.currentElement);
-            keys.forEach(async function (key) {
-                await $.ajax({
+            keys.forEach(key => {
+                if (key === 'company') {
+                    return ;
+                }
+                $.ajax({
                     url: 'index.php',
                     data: {
-                       r: key + '/get-name',
-                       id: window.currentElement[key]
+                        r: key + '/get-name',
+                        id: window.currentElement[key]
                     },
-                    success: function(data) {
+                    success: function (data) {
                         if (badSpots) {
                             breadcrumpsArray[levelsWithBadSpot[key]] = '<a onclick="window.setLevel' + capitalize(key) + '(\'' + window.currentElement[key] + '\');" data-id="' + window.currentElement[key] + '" id="' + key + '" href="#">' + data + '</a>';
                         } else {
@@ -276,11 +268,9 @@ $this->registerCss('
                     }
                 });
             });
-
-            setTimeout( function() {
-                breadcrumpsDiv.html(breadcrumpsArray.join('<img src='+ '<?= \yii\helpers\Url::to('yan/img/arrows.svg') ?>' +' style="margin: 0 0.45vh 0 0.45vh; height: 0.7vh">'))
+            setTimeout(() => {
+                breadcrumpsDiv.html(breadcrumpsArray.join('<img src=' + '<?= \yii\helpers\Url::to('yan/img/arrows.svg') ?>' + ' style="margin: 0 0.45vh 0 0.45vh; height: 0.7vh">'))
             }, 300);
-
         };
 
 
@@ -294,43 +284,10 @@ $this->registerCss('
             suppressMapOpenBlock: true
         });
 
-        window.setLevelCar = function(id) {
-            window.currentElement.car = id;
-            divine.val('car_' + id).trigger('change');
-            window.pastElement = {
-                key: 'spot',
-                id: window.currentElement.spot
-            };
-            $('div#info-department').addClass('hide');
-            $('div#ts-info').removeClass('hide');
-            $('div#info-company').addClass('hide');
-            loading_animation_start(divSidebar);
-            $.ajax({
-                url: 'index.php',
-                data: {
-                    r: 'car/get-data',
-                    id: id
-                },
-                success: function(data) {
-                    let response = JSON.parse(data);
-                    let carData = response.carsData;
-                    let type = response.type;
-
-                    changeInfoForCar(carData, type);
-                },
-                error: function () {
-                    changeInfoForCar({});
-                },
-                complete: function() {
-                    loading_animation_end(divSidebar);
-                }
-            });
-        };
-
-
-        window.setLevelSpot = function(id) {
-            loading_animation_start(divMap);
-
+        /**
+         *  get cars for spot
+         **/
+        const getCars = (id) => {
             let c_array = [];
             let carBalloonContentLayout = ymaps.templateLayoutFactory.createClass([
                 '<ul class=list>',
@@ -355,15 +312,14 @@ $this->registerCss('
                     zoomMargin : [50,50,50,50]
                 }
             );
-
             /**
              * Cars ajax
              **/
             $.ajax({
                 url: 'index.php',
                 data: {
-                   r: 'spot/get-cars',
-                   id: id
+                    r: 'spot/get-cars',
+                    id: id
                 },
                 success: function(data) {
                     if (data === 'NaN') {
@@ -371,14 +327,6 @@ $this->registerCss('
                         window.stop = true;
                         return;
                     }
-                    window.stop = false;
-                    delete window.currentElement.car;
-                    window.currentElement.spot = id;
-                    divine.val('spot_' + id).trigger('change');
-                    window.pastElement = {
-                        key: window.badSpots ? 'organization' : 'autocolumn',
-                        id: window.badSpots ? window.currentElement.organization : window.currentElement.autocolumn
-                    };
                     myMap.geoObjects.removeAll();
                     let c_pm, carLayout, carLayoutUrl, carLayoutClass, carLayoutChecked, carLayoutUrlChecked, carLayoutClassChecked;
                     let response = JSON.parse(data);
@@ -386,8 +334,8 @@ $this->registerCss('
                     cars.forEach( function (car) {
                         carLayoutUrl =
                             car.status !== 'R' && car.status !== 'TO' ?
-                            'yan/img/auto_icon/point_blue_' + car.type + '.svg' :
-                            'yan/img/auto_icon/point_noIn_' + car.type + '.svg';
+                                'yan/img/auto_icon/point_blue_' + car.type + '.svg' :
+                                'yan/img/auto_icon/point_noIn_' + car.type + '.svg';
                         carLayoutClass = car.status !== 'R' && car.status !== 'TO' ? "bb-num-car" : "bb-num-car-inline";
                         carLayout = ymaps.templateLayoutFactory.createClass(
                             '<div class="bb"><span class="' +
@@ -466,18 +414,11 @@ $this->registerCss('
                         carLayoutClassChecked = null;
                         carLayoutUrlChecked = null;
                     });
-                    if (response.hasOwnProperty('bounds')) {
-                        myMap.setBounds(response.bounds)
-                    } else if (response.hasOwnProperty('center')) {
-                        myMap.setCenter(response.center, 19);
-                    }
                     clustererCars.add(c_array);
                     myMap.geoObjects.add(clustererCars);
                 },
                 complete: function() {
                     loading_animation_end(divMap);
-
-
                     divsWithCarTypes.each(function() {
                         let currentDiv = $(this);
                         currentDiv.click(function() {
@@ -496,16 +437,68 @@ $this->registerCss('
                             let typeClicked = carTypes[$(this).attr('id')];
                             c_array.forEach(function(car) {
                                 if(car.type === typeClicked) {
-                                   clustererCars.add(car);
+                                    clustererCars.add(car);
                                 }
-                           });
-                       });
+                            });
+                        });
                     });
                 }
             });
+        };
 
 
 
+        window.setLevelCar = function(id) {
+            window.currentElement.car = id;
+            divine.val('car_' + id).trigger('change');
+            window.pastElement = {
+                key: 'spot',
+                id: window.currentElement.spot
+            };
+            $('div#info-department').addClass('hide');
+            $('div#ts-info').removeClass('hide');
+            $('div#info-company').addClass('hide');
+            loading_animation_start(divSidebar);
+            $.ajax({
+                url: 'index.php',
+                data: {
+                    r: 'car/get-data',
+                    id: id
+                },
+                success: function(data) {
+                    let response = JSON.parse(data);
+                    let carData = response.carsData;
+                    let type = response.type;
+                    changeInfoForCar(carData, type);
+                },
+                error: function () {
+                    changeInfoForCar({});
+                },
+                complete: function() {
+                    loading_animation_end(divSidebar);
+                }
+            });
+        };
+
+
+        window.setLevelSpot = function(id, interval=0) {
+            window.stop = false;
+            delete window.currentElement.car;
+            window.currentElement.spot = id;
+            divine.val('spot_' + id).trigger('change');
+            window.pastElement = {
+                key: window.badSpots ? 'organization' : 'autocolumn',
+                id: window.badSpots ? window.currentElement.organization : window.currentElement.autocolumn
+            };
+            if (interval) {
+                window.carInterval = setInterval( function() {
+                        getCars(id);
+                    }, interval
+                )
+            } else {
+                loading_animation_start(divMap);
+                getCars(id);
+            }
             loading_animation_start(divSidebar);
 
             $.ajax({
@@ -626,7 +619,7 @@ $this->registerCss('
                         });
 
                         s_pm.events.add('click', function() {
-                           window.setLevelSpot(spot.spot.id);
+                            window.setLevelSpot(spot.spot.id, 10000);
                            window.currentLevel = 3;
                         });
 
@@ -972,6 +965,11 @@ $this->registerCss('
         window.setLevelCompany();
         changeInfoForCompany();
         divine.change(function () {
+            setBreadcrumps(window.badSpots);
+            if (window.hasOwnProperty('carInterval')) {
+                clearInterval(window.carInterval);
+                delete window.carInterval;
+            }
             console.log(window.currentElement);
             if (!window.currentElement.hasOwnProperty('spot')) {
                 clearClasses();
@@ -979,7 +977,6 @@ $this->registerCss('
                 clearClasses(true);
             }
             window.badSpots = window.currentElement.hasOwnProperty('spot') && !window.currentElement.hasOwnProperty('autocolumn');
-            setBreadcrumps(window.badSpots);
         });
 
         backButton.click( function() {
