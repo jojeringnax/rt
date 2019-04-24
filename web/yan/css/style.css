@@ -1,3 +1,4 @@
+@charset "UTF-8";
 * {
   font-size: 1.1vh;
   margin: 0;
@@ -338,6 +339,86 @@ p {
     box-sizing: content-box;
     flex-grow: 1; }
 
+.bb-balloon {
+  display: flex;
+  justify-content: space-between;
+  align-items: center; }
+  .bb-balloon .bb-num-balloon {
+    width: 2.5vh;
+    height: 2.5vh;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-image: url("../img/elipse_spot.svg");
+    background-size: 100%;
+    background-repeat: no-repeat;
+    background-position: center;
+    z-index: 10;
+    font-size: 0.8vh; }
+  .bb-balloon .bb-name-balloon {
+    position: absolute;
+    margin-left: 1vh;
+    z-index: 1;
+    min-width: 50px;
+    background-color: white;
+    font-size: 0.60vh;
+    display: flex;
+    font-weight: bold;
+    line-height: 1;
+    align-items: center;
+    box-shadow: 0 3px 10px rgba(4, 67, 154, 0.12);
+    text-align: left;
+    box-sizing: content-box;
+    flex-grow: 1;
+    padding: 0.5vh 0.2vh 0.5vh 2vh; }
+
+#start_time_plan::after {
+  content: "план";
+  position: absolute;
+  left: 0;
+  bottom: -10px;
+  color: #c1c1c1;
+  font-weight: normal;
+  font-size: 1vh; }
+
+#start_time_fact::after {
+  content: "факт";
+  position: absolute;
+  left: 0;
+  bottom: -10px;
+  color: #c1c1c1;
+  font-weight: normal;
+  font-size: 1vh; }
+
+#work_time_plan::after {
+  content: "план";
+  position: absolute;
+  left: 0;
+  bottom: -10px;
+  color: #c1c1c1;
+  font-weight: normal;
+  font-size: 1vh; }
+
+#work_time_fact::after {
+  content: "факт";
+  position: absolute;
+  left: 0;
+  bottom: -10px;
+  color: #c1c1c1;
+  font-weight: normal;
+  font-size: 1vh; }
+
+#year {
+  position: relative; }
+  #year::after {
+    position: absolute;
+    content: 'г.в.';
+    right: -2.5vh;
+    /* left: 0.7vh; */
+    bottom: 0;
+    height: 101%; }
+
 .icon-ts {
   width: 2.5vh;
   text-align: center; }
@@ -500,6 +581,7 @@ p {
 
 .text-ts {
   display: block;
+  position: relative;
   font-size: 1.4vh;
   font-weight: bold; }
   .text-ts.cross-out {

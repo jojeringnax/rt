@@ -274,8 +274,10 @@ $totalStatistic = \app\models\Statistic::getTotalStatistic();
                     <div style="width: 2.5vh">
                         <img id="img-ts" src="" alt="" style="">
                     </div>
-                    <div>
+                    <div class="header-ts-info">
                         <span id="nameTS" class="" style="color: #005498; margin-left: 1.5vh; font-weight: bold; font-size: 1.4vh">ТС №93 BMW</span>
+                        <span id="number" class="" style="display: inline-block; padding:0.25vh 0.5vh 0.25vh 0.5vh; border: 1px solid black; color: black; margin-left: 1.5vh; font-weight: bold; font-size: 1.4vh">н/д</span>
+                        <span id="year" class="" style="color: black; margin-left: 1.5vh; font-weight: bold; font-size: 1.4vh">н/д</span>
                     </div>
 
                 </div>
@@ -313,8 +315,8 @@ $totalStatistic = \app\models\Statistic::getTotalStatistic();
                                 <div class="start flex flex-column">
                                     <span class="title-time-start title-ts-text">Время начала:</span>
                                     <div class="time d-flex justify-content-between" style="display: flex;">
-                                        <span id="start_time_plan" class="text-ts cross-out">28.02.2019 7:00:00</span>
-                                        <span id="start_time_fact" class="text-ts blue-color" style="margin-left: 1vh">28.02.2019 7:05:21</span>
+                                        <span id="start_time_plan" class="text-ts">28.02.2019 7:00:00</span>
+                                        <span id="start_time_fact" class="text-ts blue-color" style="margin-left: 1vh">28.02.2019 7:05:21<br /> <span style="color: #C1C1C1">факт</span></span>
                                     </div>
                                 </div>
                                 <div class="time-end item-ts-data">
@@ -324,8 +326,8 @@ $totalStatistic = \app\models\Statistic::getTotalStatistic();
                                 <div class="fuel-time item-ts-data">
                                     <span class="title-fuel-time title-ts-text">Время работы, часов:</span>
                                     <div class="time d-flex">
-                                        <span id="work_time_plan" class="fuel-time-start text-ts cross-out">12</span>
-                                        <span id="work_time_fact" class="fuel-time-end text-ts blue-color" style="margin-left: 1vh">11.91</span>
+                                        <span id="work_time_plan" class="fuel-time-start text-ts">12</span>
+                                        <span id="work_time_fact" class="fuel-time-end text-ts blue-color" style="margin-left: 3vh">11.91</span>
                                     </div>
                                 </div>
                             </div>

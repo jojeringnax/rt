@@ -227,6 +227,8 @@ $this->registerCss('
                }
                $('#' + key).html(obj[key]);
             });
+
+
         };
 
         let changeInfoFromCarForCar = function(obj, type=0) {
@@ -236,14 +238,17 @@ $this->registerCss('
                 "technical_inspection_days",
                 "battery_change_days",
                 "tire_change_days",
-                "tire_season"
+                "tire_season",
+                "number",
+                "year"
             ];
             keys.forEach(function(key) {
                 if (!obj.hasOwnProperty(key) || obj[key] === null || obj[key] === '') {
                     obj[key] = 'н/д';
                 }
-                mainDiv.children('#' + key).html(obj[key]);
+                $('#' + key).html(obj[key]);
             });
+
         };
 
         const setBreadcrumps = (badSpots = false) => {
@@ -391,6 +396,9 @@ $this->registerCss('
                         c_pm.battery_change_days = car.battery_change_days;
                         c_pm.tire_change_days = car.tire_change_days;
                         c_pm.tire_season = car.tire_season;
+                        c_pm.number = car.number;
+                        c_pm.year = car.year;
+
 
 
                         c_pm.events.add('click', function(c) {
@@ -490,15 +498,17 @@ $this->registerCss('
                 key: window.badSpots ? 'organization' : 'autocolumn',
                 id: window.badSpots ? window.currentElement.organization : window.currentElement.autocolumn
             };
-            if (interval) {
-                window.carInterval = setInterval( function() {
-                        getCars(id);
-                    }, interval
-                )
-            } else {
-                loading_animation_start(divMap);
-                getCars(id);
-            }
+            loading_animation_start(divMap);
+            getCars(id);
+            // if (interval) {
+            //     window.carInterval = setInterval( function() {
+            //
+            //         }, interval
+            //     )
+            // } else {
+            //     loading_animation_start(divMap);
+            //     getCars(id);
+            // }
             loading_animation_start(divSidebar);
 
             $.ajax({
