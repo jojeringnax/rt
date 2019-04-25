@@ -380,7 +380,7 @@ p {
   bottom: -10px;
   color: #c1c1c1;
   font-weight: normal;
-  font-size: 1vh; }
+  font-size: 1.1vh; }
 
 #start_time_fact::after {
   content: "факт";
@@ -389,7 +389,7 @@ p {
   bottom: -10px;
   color: #c1c1c1;
   font-weight: normal;
-  font-size: 1vh; }
+  font-size: 1.1vh; }
 
 #work_time_plan::after {
   content: "план";
@@ -398,7 +398,7 @@ p {
   bottom: -10px;
   color: #c1c1c1;
   font-weight: normal;
-  font-size: 1vh; }
+  font-size: 1.1vh; }
 
 #work_time_fact::after {
   content: "факт";
@@ -407,7 +407,7 @@ p {
   bottom: -10px;
   color: #c1c1c1;
   font-weight: normal;
-  font-size: 1vh; }
+  font-size: 1.1vh; }
 
 #year {
   position: relative; }
