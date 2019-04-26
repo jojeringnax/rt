@@ -25,7 +25,6 @@ class AppAsset extends AssetBundle
         'yan/css/style.css'
     ];
     public $js = [
-        'js_new/components/HelloWorld.js',
         'js_new/accounting.min.js',
         'js_new/progressbar.min.js',
         'js_new/main.js',

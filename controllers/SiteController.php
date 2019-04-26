@@ -160,7 +160,7 @@ class SiteController extends Controller
      * @return false|string
      */
     public function actionGetCarData($car_id) {
-        $client = new \SoapClient("http://d.rg24.ru:5601/PUP_WS/ws/PUP.1cws?wsdl");
+        $client = new \SoapClient(\Yii::$app->params['wsdl']);
         $carsData = json_decode($client->GetCarsData(['CarsID' => $car_id])->return);
         $carsDataModel = CarsData::getOrCreate($car_id);
         $carsDataModel->car_id = $car_id;

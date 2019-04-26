@@ -19,7 +19,7 @@ class Division
 
     public function __construct(array $config = [])
     {
-        $this->soapClient = new \SoapClient('http://d.rg24.ru:5601/PUP_WS/ws/PUP.1cws?wsdl');
+        $this->soapClient = new \SoapClient(\Yii::$app->params['wsdl']);
     }
 
     public function getAllDivisionsFromSoap()

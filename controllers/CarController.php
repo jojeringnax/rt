@@ -18,7 +18,7 @@ class CarController extends \yii\web\Controller
      * @return false|string
      */
     public function actionGetData($id) {
-        $client = new \SoapClient("http://d.rg24.ru:5601/PUP_WS/ws/PUP.1cws?wsdl");
+        $client = new \SoapClient(\Yii::$app->params['wsdl']);
         $carsData = json_decode($client->GetCarsData(['CarsID' => $id])->return);
         $car = Car::findOne($id);
         $carsDataModel = CarsData::getOrCreate($id);

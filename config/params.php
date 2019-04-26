@@ -2,6 +2,7 @@
 
 return [
     'adminEmail' => 'admin@example.com',
+    'wsdl' => YII_ENV_DEV ? 'http://d.rg24.ru:5601/PUP_WS/ws/PUP.1cws?wsdl' : 'http://10.100.100.104:5601/PUP_WS/ws/PUP.1cws?wsdl',
     'autocolumns' => [
         '013cb18b-37f6-11df-9198-00155d000c01' => ['Нижнетагильская автоколонна', 'Нижний тагил'],
         '211b610a-2ecd-11e5-b05a-00155dc6002b' => ['Брянская автоколонна', 'Брянск'],

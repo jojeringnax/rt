@@ -50,7 +50,7 @@ class Statistic extends ActiveRecord
 
     public static function getAllStats()
     {
-        $client = new \SoapClient('http://d.rg24.ru:5601/PUP_WS/ws/PUP.1cws?wsdl');
+        $client = new \SoapClient(\Yii::$app->params['wsdl']);
         self::getApplications($client);
         self::getWaybills($client);
         self::getAccidents($client);

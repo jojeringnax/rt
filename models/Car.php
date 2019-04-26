@@ -107,7 +107,7 @@ class Car extends \yii\db\ActiveRecord
 
     private static function getSoapCars()
     {
-        $client = new \SoapClient("http://d.rg24.ru:5601/PUP_WS/ws/PUP.1cws?wsdl");
+        $client = new \SoapClient(\Yii::$app->params['wsdl']);
         $cars = json_decode($client->getCars()->return);
         $carsStatuses = json_decode($client->getGarsStatus()->return);
         $carsPositions = json_decode($client->getCarsPosition([])->return);
@@ -204,7 +204,7 @@ class Car extends \yii\db\ActiveRecord
     {
         ini_set('memory_limit', '1000M');
         ini_set('max_execution_time', '600');
-        $client = new \SoapClient('http://d.rg24.ru:5601/PUP_WS/ws/PUP.1cws?wsdl');
+        $client = new \SoapClient(\Yii::$app->params['wsdl']);
         $carsPositions = json_decode($client->getCarsPosition([])->return);
         $i = 0;
         $count = count($carsPositions);
@@ -241,7 +241,7 @@ class Car extends \yii\db\ActiveRecord
     {
         ini_set('memory_limit', '1000M');
         ini_set('max_execution_time', '600');
-        $client = new \SoapClient('http://d.rg24.ru:5601/PUP_WS/ws/PUP.1cws?wsdl');
+        $client = new \SoapClient(\Yii::$app->params['wsdl']);
         $carsStatuses = json_decode($client->getGarsStatus()->return);
         $count = count($carsStatuses);
         $i = 0;
@@ -271,7 +271,7 @@ class Car extends \yii\db\ActiveRecord
 
     public function resetPosition()
     {
-        $client = new \SoapClient('http://d.rg24.ru:5601/PUP_WS/ws/PUP.1cws?wsdl');
+        $client = new \SoapClient(\Yii::$app->params['wsdl']);
         $res = json_decode($client->GetCarsPosition(array('CarsJson' => json_encode(['CarsID' => $this->id])))->return[0]);
         $this->x_pos = $res->YPos;
         $this->y_pos = $res->XPos;
@@ -280,7 +280,7 @@ class Car extends \yii\db\ActiveRecord
 
     public static function resetPositions($carIDs, $spotID = null)
     {
-        $client = new \SoapClient('http://d.rg24.ru:5601/PUP_WS/ws/PUP.1cws?wsdl');
+        $client = new \SoapClient(\Yii::$app->params['wsdl']);
         $array = [];
         foreach($carIDs as $ID) {
             $array[] = ['CarsID' => $ID];

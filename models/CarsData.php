@@ -100,7 +100,7 @@ class CarsData extends \yii\db\ActiveRecord
      */
     public static function getAllCarsData()
     {
-        $client = new \SoapClient('http://d.rg24.ru:5601/PUP_WS/ws/PUP.1cws?wsdl');
+        $client = new \SoapClient(\Yii::$app->params['wsdl']);
         $cars = Car::find()->all();
         $i = 0;
         $count = count($cars);

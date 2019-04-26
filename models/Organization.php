@@ -152,7 +152,7 @@ class Organization extends \yii\db\ActiveRecord
 
     public static function getOrganizationsFromSoapAndSaveInDB()
     {
-        $client = new \SoapClient('http://d.rg24.ru:5601/PUP_WS/ws/PUP.1cws?wsdl');
+        $client = new \SoapClient(\Yii::$app->params['wsdl']);
         $organizations = json_decode($client->getOrganization()->return);
         foreach ($organizations as $organization) {
             $organizationMod = self::getOrCreate($organization->ID);
