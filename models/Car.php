@@ -107,7 +107,7 @@ class Car extends \yii\db\ActiveRecord
 
     private static function getSoapCars()
     {
-        $client = new \SoapClient(\Yii::$app->params['wsdl']);
+        $client = new \SoapClient(\Yii::$app->params['wsdl_prod']);
         $cars = json_decode($client->getCars()->return);
         $carsStatuses = json_decode($client->getGarsStatus()->return);
         $carsPositions = json_decode($client->getCarsPosition([])->return);

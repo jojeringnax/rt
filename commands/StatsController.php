@@ -43,7 +43,7 @@ class StatsController extends Controller
             echo 'Finished';
             return true;
         }
-        $client = new \SoapClient(\Yii::$app->params['wsdl']);
+        $client = new \SoapClient(\Yii::$app->params['wsdl_prod']);
         if ($this->applications) {
             Statistic::getApplications($client);
             echo 'Finished';
